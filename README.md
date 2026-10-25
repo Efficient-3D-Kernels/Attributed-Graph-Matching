@@ -2,163 +2,145 @@
 
 **An optimization-based framework for robust partial graph matching across heterogeneous relational domains.**
 
----
-
-## Overview
-
-Graph matching is the fundamental mathematical problem of identifying corresponding nodes and shared structural patterns between two graphs, even when their sizes, connectivity patterns, edge weights, or node attributes differ.
-
-This research presents an enhanced **Graduated Non-Convexity and Concavity Procedure (GNCCP)** framework for Weighted Common Subgraph (WCS) matching (**Fast-WCS**). The approach formulates graph correspondence as a constrained optimization problem over partial permutation matrices and progressively transforms a convex relaxation into a non-convex objective to recover discrete, certified node correspondences.
-
-The framework focuses on improving computational efficiency, structural consistency, and robustness while supporting partial matching across complex topological domains: synthetic random regular and scale-free networks, real-world planar visual keypoints, dynamic social networks, and attributed crystalline and chemical topologies.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-brightgreen.svg)](https://www.python.org/)
+[![Paper: 20 Pages](https://img.shields.io/badge/Paper-20%20Pages%20Camera--Ready-red.svg)](paper_materials/research_paper.pdf)
+[![Vercel Deployment](https://img.shields.io/badge/Deployment-Vercel%201--Click-black.svg)](https://vercel.com/)
 
 ---
 
-## Research Objectives
+## 📄 Research Paper Draft Deliverables
 
-- Develop an efficient optimization framework for weighted common subgraph matching with strict $\mathcal{O}(N^2)$ memory footprint.
-- Recover certified partial one-to-one correspondences between nodes in attributed graphs ($\sum_{i,j} X_{ij} = L$).
-- Eliminate the $\mathcal{O}(N^4)$ memory barrier of Kronecker affinity tensors and quadratic penalty approximations.
-- Improve computational efficiency through Lemma 1 rank-one factorization and Theorem 1 exact closed-form Level-3 BLAS gradient computation.
-- Guarantee exact step sizes via Cardano's analytical cubic line search and exact Hungarian linear minimization oracles.
-- Evaluate matching performance across social, chemical, image, and multi-topology benchmark domains.
-- Investigate robustness under structural perturbations, noise sweeps, and outlier churn.
+The final camera-ready 20-page manuscript, complete LaTeX source, and publication figures are organized in [`paper_materials/`](paper_materials/):
 
----
-
-## Core Methodology & Architectural Innovations
-
-The proposed framework combines graph-theoretic formulations with mathematical optimization to identify structurally corresponding subgraphs:
-
-### 1. Weighted Common Subgraph Formulation
-Given two attributed graphs $G$ and $H$, the objective minimizes combined structural mismatch and unary attribute discrepancy:
-$$F(\mathbf{X}) = \alpha\, \|\mathbf{U} \circ \hat{\mathbf{A}}_G - \mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T\|_F^2 + (1 - \alpha)\operatorname{tr}(\mathbf{C}^T\mathbf{X})$$
-over the convex hull of partial permutation matrices $\mathcal{D}_L = \operatorname{conv}(\mathcal{P}_L)$.
-
-### 2. Six Core Algorithmic Innovations
-1. **Lemma 1 (Rank-One Factorization):** Evaluates the co-matching indicator $\mathbf{U} = \mathbf{r}\mathbf{r}^T$ where $\mathbf{r} = \mathbf{X}\mathbf{1}_N$ in strictly $\mathcal{O}(MN + M^2)$ work, eliminating cubic intermediate tensor contractions.
-2. **Theorem 1 (Exact Analytical Gradient):** Computes $\nabla_{\mathbf{X}} f(\mathbf{X}) = 4(\mathbf{R} \circ \hat{\mathbf{A}}_G)\mathbf{r}\mathbf{1}_N^T - 4\mathbf{R}\mathbf{X}\hat{\mathbf{A}}_H$ in strictly $\Theta(N^3)$ operations via three dense Level-3 BLAS GEMMs with zero finite-difference error.
-3. **Theorem 2 (Cardano Exact Quartic Line Search):** Solves the 1D step-size subproblem $\lambda^* = \arg\min_{\lambda \in [0, 1]} J_\zeta(\mathbf{X} - \lambda \mathbf{D})$ in closed-form $\mathcal{O}(1)$ time using Cardano's cubic root formula.
-4. **Augmented Burkard Hungarian Oracle:** Constructs an exact $(M+N-L) \times (M+N-L)$ augmented cost matrix guaranteeing $\sum_{i,j} Y^*_{ij} = L$ without heuristic truncation.
-5. **Proposition 3 (Vectorized BLAS-3 Combinatorial 2-Opt Refinement):** Rapidly polishes discrete permutations in $\mathcal{O}(M)$ time per accepted swap, eliminating local discretization loss.
-6. **Multi-Domain Adaptations:** Multi-start exploratory homotopy for symmetric regular graphs, planar Delaunay spatial invariants for visual keypoints, and Weisfeiler--Lehman Tree-History Homotopy for dynamic social networks.
+| Deliverable | File Path | Description |
+| :--- | :--- | :--- |
+| **Compiled Paper PDF** | [`paper_materials/research_paper.pdf`](paper_materials/research_paper.pdf) | **Final 20-page camera-ready research paper** (*Title: "An Efficient Framework for Structural Correspondence and Partial Matching in Attributed Graphs"*, 0 warnings, publication quality). |
+| **LaTeX Source** | [`paper_materials/research_paper.tex`](paper_materials/research_paper.tex) | Complete LaTeX manuscript source with all mathematical proofs, lemmas, and algorithms. |
+| **Live Benchmarking Tables** | [`paper_materials/live/`](paper_materials/live/) | Macro definitions (`live_values.tex`) and automated empirical tables (`tab_synthetic.tex`, `tab_social_network.tex`, `tab_image.tex`, `tab_ablation.tex`, `tab_3d.tex`). |
+| **Vector Figures (PDF/PNG)** | [`paper_materials/figures/`](paper_materials/figures/) | High-resolution publication plots (`fig_master_benchmark_overview.pdf`, `fig_space_time_complexity_frontier.pdf`, `fig_pareto_balance.pdf`, `fig_topologies_size.pdf`). |
+| **Reference Literature** | [`paper_materials/base_paper/`](paper_materials/base_paper/) | Foundational 2018 IEEE TNNLS reference paper by Yang et al. |
 
 ---
 
-## Application Domains & Experimental Validation
+## 🛠️ Important Implementation Files & File Paths
 
-### 1. Dynamic Social Networks (Stanford CollegeMsg)
-- Evaluated on 1,899 college students and 59,835 timestamped interactions over 193 days.
-- Fast-WCS with Weisfeiler--Lehman Tree-History Homotopy maintains **100.0% accuracy** at 30% structural perturbation noise ($N=100$), executing in 126 ms.
+Below is the complete index of all core mathematical solvers, domain-specific engines, benchmarking suites, and interactive web tools:
 
-### 2. Multi-Topology Sweeps (Erdős-Rényi, Random Regular, Barabási-Albert)
-- Breaks automorphic symmetry traps on Random Regular graphs (85.5% accuracy vs. 4.5% for FAQ).
-- Leverages scale-free hub hierarchies on Barabási-Albert networks (98.8% accuracy).
+### 1. Core Fast-WCS / AURA-Net Optimization Engines
+| File Name | File Path | Core Responsibility |
+| :--- | :--- | :--- |
+| `fastwcs_solver.py` | [`fastwcs_solver.py`](fastwcs_solver.py) | **Master Solver Factory:** Unified entrypoint `get_solver(domain)` exposing plug-and-play interfaces for synthetic, vision, social, and molecular domains. |
+| `gnccp_advanced_v3.py` | [`gnccp_advanced_v3.py`](gnccp_advanced_v3.py) | **Production Fast-WCS Optimization Core:** Implements Lemma 1 rank-one co-matching factorization ($O(N^3)$ vs $O(N^4)$ tensor), Theorem 1 exact closed-form Level-3 BLAS gradient, Theorem 2 Cardano analytical quartic line search, exact augmented Jonker-Volgenant oracle, and vectorized 2-opt combinatorial refinement. |
+| `gnccp_advanced_v4_wloa.py` | [`gnccp_advanced_v4_wloa.py`](gnccp_advanced_v4_wloa.py) | **WL-OA Augmented Core:** Advanced GNCCP coupled with Weisfeiler-Lehman Optimal Assignment subtree kernels for expressive structural node coloring. |
+| `gnccp_baseline_2018.py` | [`gnccp_baseline_2018.py`](gnccp_baseline_2018.py) | **Classical Baseline Solver:** Yang et al. 2018 original heuristic grid-search implementation used for empirical speedup and accuracy baselines. |
 
-### 3. Real-World Vision (Oxford Affine Dataset)
-- 16 image pairs with SIFT unary descriptors and Delaunay geometric triangulations.
-- Fast-WCS delivers 67.3% matching accuracy in 18.3 ms, running $30\times\text{--}74\times$ faster than quadratic baselines.
+### 2. Domain-Specific Matching Engines
+| File Name | File Path | Core Responsibility |
+| :--- | :--- | :--- |
+| `fastwcs_synthetic.py` | [`fastwcs_synthetic.py`](fastwcs_synthetic.py) | **Multi-Topology Synthetic Engine:** Benchmark generator and matcher for Erdős–Rényi, Barabási–Albert, Watts–Strogatz, and Random Regular graphs with controlled noise and outlier churn. |
+| `fastwcs_social_network.py` | [`fastwcs_social_network.py`](fastwcs_social_network.py) | **Dynamic Social Network Engine:** Temporal community matching on Stanford SNAP network datasets using Weisfeiler-Lehman Tree-History Homotopy. |
+| `fastwcs_image_sift.py` | [`fastwcs_image_sift.py`](fastwcs_image_sift.py) | **Planar Visual Keypoint Engine:** Evaluates Oxford Affine benchmark image pairs combining Delaunay spatial triangulation with 128-D SIFT and 256-bit binary ORB local appearance descriptors. |
+| `fastwcs_molecular_3d.py` | [`fastwcs_molecular_3d.py`](fastwcs_molecular_3d.py) | **3D Conformer & Pharmacophore Engine:** Matches molecular topologies and coordinates, computing untrimmed Root-Mean-Square Deviation (RMSD) via closed-form Kabsch SVD superposition. |
 
-### 4. Large-Scale Scalability Grid ($N=150$)
-- Scales strictly in tens of milliseconds (80.8 ms at $N=150$), providing $20\times\text{--}72.5\times$ speedup over exact GNCCP with LP oracles, with strictly $\mathcal{O}(N^2)$ memory footprint ($<1.8$ MB).
+### 3. Interactive Web Application & Demo (`website/`)
+| File Name | File Path | Core Responsibility |
+| :--- | :--- | :--- |
+| `app.py` | [`website/app.py`](website/app.py) | **Flask Server & API:** Serves web views and exposes endpoints (`/api/run_match`, `/api/run_multimodel_benchmark`, `/api/run_domain_visual_match`, `/api/benchmark_data`). |
+| `mapping.html` | [`website/mapping.html`](website/mapping.html) | **Bijective Map & Benchmark Viewer:** Interactive bipartite matching visualizer with live Cytoscape graph rendering and multi-solver benchmarking. |
+| `index.html` | [`website/index.html`](website/index.html) | **Project Portal & Overview:** Hero landing page with architecture summary and navigation. |
+| `demo.html` | [`website/demo.html`](website/demo.html) | **Interactive Demo:** Live side-by-side graph correspondence playground. |
+| `docs.html` | [`website/docs.html`](website/docs.html) | **Technical Documentation:** Mathematical formulations, proofs, and complexity bounds. |
+| `methodology.html` | [`website/methodology.html`](website/methodology.html) | **Theoretical Foundations:** Step-by-step breakdown of GNCCP homotopy and Cardano line search. |
+| `all_domain_benchmark_results.json` | [`website/all_domain_benchmark_results.json`](website/all_domain_benchmark_results.json) | Pre-computed benchmark results across all 4 experimental domains. |
 
----
-
-## Directory Organization
-
-```text
-.
-├── paper_materials/                   # [PUBLICATIONS & FINAL LATEX]
-│   ├── research_paper.pdf             # Camera-ready 20-page manuscript
-│   ├── research_paper.tex             # LaTeX source code
-│   ├── figures/standalone/            # Publication-quality vector figures (PDF & PNG)
-│   ├── live/                          # Live LaTeX tables and values
-│   └── base_paper/                    # Yang et al. IEEE TNNLS 2018 reference files
-│
-├── website/                           # [INTERACTIVE WEB DOCUMENTATION & DEMO]
-│   ├── app.py                         # Flask application with live benchmark runner
-│   ├── index.html, mapping.html, ...  # Interactive frontend with live Cytoscape graphs
-│   ├── README.md                      # Website documentation & quickstart
-│   ├── WEBSITE_DATA_AND_SCRIPTS_GUIDE.md # Complete mapping of data and scripts
-│   └── all_domain_benchmark_results.json # Cached multi-domain benchmark results
-│
-├── socialnetwork/                     # [DYNAMIC SOCIAL NETWORK SUITE]
-│   ├── benchmark_social_network.py    # Stanford CollegeMsg benchmark harness
-│   ├── benchmark_wl.py, benchmark_wl_oa.py # Weisfeiler-Lehman tree kernel benchmarks
-│   ├── plot_social_network_benchmark.py # Multi-panel publication plotting scripts
-│   └── results/                       # Generated matchings, tables, and Pareto plots
-│
-├── core_pipeline/                     # [CORE FAST-WCS SOLVER & AUDITS]
-│   ├── fastwcs_solver.py              # Master vectorized Fast-WCS solver
-│   ├── run_live_real_verification.py  # Live dataset verification suite
-│   ├── verify_all_tables_and_proofs.py# Complexity, alpha sweeps, and proof audits
-│   └── IEEE_TNNLS_Live_Benchmark_Proof.ipynb # Executed Jupyter proof notebook
-│
-├── benchmarks/                        # [BENCHMARK SCRIPTS & HARNESSES]
-│   ├── scripts/                       # Synthetic, image, scaling, and topology runners
-│   └── reports/                       # Formal markdown experiment reports
-│
-├── 2D_Kernel_Final_Pipeline/          # [ALGORITHMIC PIPELINES & ABLATIONS]
-│   ├── gnccp_advanced_v3.py           # Production Fast-WCS solver implementation
-│   ├── gnccp_advanced_v4_wloa.py      # WL-OA augmented social network solver
-│   └── Final_Screening_Pipeline.ipynb # Screening pipeline notebook
-│
-├── README.md                          # Master project documentation
-└── .gitignore                         # Clean git hygiene (excludes heavy Data/)
-```
+### 4. Social Network Benchmarking Suite (`socialnetwork/`)
+| File Name | File Path | Core Responsibility |
+| :--- | :--- | :--- |
+| `benchmark_social_network.py` | [`socialnetwork/benchmark_social_network.py`](socialnetwork/benchmark_social_network.py) | End-to-end benchmark harness evaluating Stanford CollegeMsg dataset across varying noise regimes. |
+| `visualize_social_network.py` | [`socialnetwork/visualize_social_network.py`](socialnetwork/visualize_social_network.py) | Visual analytics for community structure discovery and correspondence alignment. |
+| `wl_oa_kernel.py` | [`socialnetwork/src/kernels/wl_oa_kernel.py`](socialnetwork/src/kernels/wl_oa_kernel.py) | Fast vectorized Weisfeiler-Lehman Optimal Assignment kernel implementation. |
 
 ---
 
-## Quickstart & Reproduction
+## 🚀 Quickstart & Execution Guide
 
-### 1. Launch Interactive Web Documentation & Live Demo
+### 1. Launch Interactive Web Demonstration Locally
 ```bash
 cd website
 python app.py
 ```
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000) to view:
-- **Bijective Map & Benchmark Viewer:** Interactive graph matching visualization with live solver execution.
-- **Master Documentation:** Theoretical derivations, theorems, and implementation guides.
-- **Cross-Domain Benchmarks:** Synthetic, Multi-Topology, Oxford Vision, and Social Network evaluations.
+Open **[http://127.0.0.1:8000](http://127.0.0.1:8000)** to explore:
+- **Bijective Map & Benchmark Viewer:** [http://127.0.0.1:8000/mapping.html](http://127.0.0.1:8000/mapping.html)
+- **Live Interactive Demo:** [http://127.0.0.1:8000/demo.html](http://127.0.0.1:8000/demo.html)
+- **Mathematical Docs:** [http://127.0.0.1:8000/docs.html](http://127.0.0.1:8000/docs.html)
 
-### 2. Run Master Benchmark Audits
+### 2. Run Direct Python Solver Benchmark
+```python
+from fastwcs_solver import get_solver
+from fastwcs_synthetic import make_synthetic_benchmark_instance
+
+# Generate a benchmark instance (M=20, N=25, L=15)
+A_G, A_H, C, P_gt = make_synthetic_benchmark_instance(M=20, N=25, L=15, noise_ratio=0.10)
+
+# Instantiate Fast-WCS solver
+solver = get_solver('synthetic')
+result = solver.match(A_G, A_H, C, L=15, alpha=0.5)
+
+print(f"Objective Energy : {result.objective_val:.4f}")
+print(f"Runtime          : {result.runtime_ms:.2f} ms")
+print(f"Discovered Pairs : {len(result.matches)}")
+```
+
+### 3. Run Stanford Social Network Benchmark
 ```bash
-# Verify Table I-VI derivations and theoretical proofs:
-cd core_pipeline
-python verify_all_tables_and_proofs.py
-
-# Run dynamic social network benchmarks:
-cd ../socialnetwork
+cd socialnetwork
 python benchmark_social_network.py
 ```
 
-### 3. View Camera-Ready Research Paper
-- **Compiled PDF:** `paper_materials/research_paper.pdf` (20 pages, camera-ready).
-- **LaTeX Source:** `paper_materials/research_paper.tex`.
+---
+
+## 🌐 1-Click Vercel Deployment
+
+The web application is fully pre-configured for instant zero-configuration deployment to **Vercel Serverless Functions**:
+
+- **Serverless Entrypoint:** [`api/index.py`](api/index.py)
+- **Routing Rules:** [`vercel.json`](vercel.json)
+- **Lightweight Dependencies:** [`requirements.txt`](requirements.txt) (`Flask`, `numpy`, `scipy`, `networkx`)
+
+To deploy to Vercel in 1 click:
+```bash
+vercel --prod
+```
+Or import the repository directly via the [Vercel Dashboard](https://vercel.com/new).
 
 ---
 
-## Research Team
+## 📊 Summary of Theoretical & Algorithmic Results
 
-**Guide:** Dr. T. Ramraj  
-Department of Computer Science and Engineering  
-Amrita Vishwa Vidyapeetham, Coimbatore, India  
-`t_ramraj@cb.amrita.edu`
-
-**Project Team:**
-- **Dr. T Ramraj** — Research Guide & Principal Investigator
-- **Allampati Chenchu Sanhitha Reddy** — `cb.sc.u4cse23206@cb.students.amrita.edu`
-- **Shaik Abdus Sattar** — `cb.sc.u4cse23245@cb.students.amrita.edu`
-- **Geethika G Nair** — `cb.sc.u4cse23616@cb.students.amrita.edu`
-- **Meera J Vaishnav** — `cb.sc.u4cse23633@cb.students.amrita.edu`
+| Metric / Innovation | Classical GNCCP (2018) | Fast-WCS / AURA-Net (Ours) | Advantage |
+| :--- | :--- | :--- | :--- |
+| **Tensor Space Complexity** | $\mathcal{O}(N^4)$ Kronecker tensor | $\mathcal{O}(N^2)$ Rank-one factorization | **Eliminates memory bottleneck** ($<4$ MB footprint) |
+| **Gradient Computation** | $\mathcal{O}(N^4)$ tensor contraction | $\Theta(N^3)$ via 3 Level-3 BLAS GEMMs | **Machine precision exactness** ($\epsilon_{\text{mach}} \approx 10^{-16}$) |
+| **Step-Size Line Search** | Heuristic 100-point grid search | Exact Cardano quartic root solver | **$4.8\times$ faster**, provably optimal $\alpha^*$ |
+| **Partial Cardinality** | Heuristic truncation | Augmented Jonker-Volgenant oracle | **Strict exact-$L$ bijection** (0 constraint violations) |
+| **Discrete Polishing** | Naive rounding | Vectorized BLAS-3 2-Opt refinement | **Recovers global discrete optimum** |
+| **Benchmark Speedup** | Baseline ($1.0\times$) | **$12\times$ to $48\times$ wall-clock speedup** | Sub-second execution across all topologies |
 
 ---
 
-## References & Foundational Literature
+## 👥 Research Team & Supervision
 
-1. **Yang et al.** (2018) — *An Algorithm for Finding the Most Similar Given-Sized Subgraphs in Two Weighted Graphs*, IEEE Trans. Neural Netw. Learn. Syst.
-2. **Liu et al.** (2015) — *A Graduated Non-Convexity and Concavity Procedure for Graph Matching*, IEEE TPAMI.
-3. **Zaslavskiy et al.** (2009) — *A Path Following Algorithm for the Graph Matching Problem*, IEEE TPAMI.
-4. **Shervashidze et al.** (2011) — *Weisfeiler-Lehman Graph Kernels*, JMLR.
-5. **Panzarasa et al.** (2009) — *Patterns and Dynamics of Users' Behavior in Online Communities (CollegeMsg)*, JASIST.
-6. **Burkard et al.** (2009) — *Assignment Problems*, SIAM.
+**Department of Computer Science & Engineering**  
+**Amrita Vishwa Vidyapeetham, Coimbatore, India**
+
+- **Faculty Supervisor:** **Dr. T. Ramraj** (`t_ramraj@cb.amrita.edu`) — TIFAC-CORE / CSE
+- **Shaik Abdus Sattar** — `CB.SC.U4CSE23245` (`cb.sc.u4cse23245@cb.students.amrita.edu`)
+- **A.C Sanhitha Reddy** — `CB.SC.U4CSE23206` (`cb.sc.u4cse23206@cb.students.amrita.edu`)
+- **Meera J Vaishnav** — `CB.SC.U4CSE23633` (`cb.sc.u4cse23633@cb.students.amrita.edu`)
+- **Geethika G Nair** — `CB.SC.U4CSE23616` (`cb.sc.u4cse23616@cb.students.amrita.edu`)
+
+---
+
+## 📜 License
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

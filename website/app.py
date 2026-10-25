@@ -39,7 +39,7 @@ try:
 except Exception as e:
     print(f"[Warning] Fast-WCS domain solvers import note: {e}")
 
-app = Flask(__name__, static_folder='.', static_url_path='')
+app = Flask(__name__, static_folder=_THIS_DIR, static_url_path='')
 
 # Global cache
 _MOF_DIR = os.path.join(_PARENT_DIR, 'mof_project')
@@ -56,31 +56,50 @@ if mof_graphs and "UiO-66.cif" in mof_graphs and load_structure:
 
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    return send_from_directory(_THIS_DIR, 'index.html')
+
+@app.route('/index.html')
+def index_html():
+    return send_from_directory(_THIS_DIR, 'index.html')
 
 @app.route('/demo')
+@app.route('/demo.html')
 def demo():
-    return send_from_directory('.', 'demo.html')
+    return send_from_directory(_THIS_DIR, 'demo.html')
 
 @app.route('/mapping')
+@app.route('/mapping.html')
 def mapping():
-    return send_from_directory('.', 'mapping.html')
+    return send_from_directory(_THIS_DIR, 'mapping.html')
 
 @app.route('/docs')
+@app.route('/docs.html')
 def docs():
-    return send_from_directory('.', 'docs.html')
+    return send_from_directory(_THIS_DIR, 'docs.html')
 
 @app.route('/methodology')
+@app.route('/methodology.html')
 def methodology():
-    return send_from_directory('.', 'methodology.html')
+    return send_from_directory(_THIS_DIR, 'methodology.html')
 
 @app.route('/progress')
+@app.route('/progress.html')
 def progress():
-    return send_from_directory('.', 'progress.html')
+    return send_from_directory(_THIS_DIR, 'progress.html')
 
 @app.route('/team')
+@app.route('/team.html')
 def team():
-    return send_from_directory('.', 'team.html')
+    return send_from_directory(_THIS_DIR, 'team.html')
+
+@app.route('/<path:path>')
+def static_proxy(path):
+    target = os.path.join(_THIS_DIR, path)
+    if os.path.isfile(target):
+        return send_from_directory(_THIS_DIR, path)
+    if os.path.isfile(target + '.html'):
+        return send_from_directory(_THIS_DIR, path + '.html')
+    return send_from_directory(_THIS_DIR, 'index.html')
 
 @app.route('/api/run_match', methods=['POST'])
 def run_match():
