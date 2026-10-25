@@ -1,0 +1,10 @@
+LIVE REAL-TIME BENCHMARK AUDIT OUTPUT
+Sample size: 30 Actives, 30 Inactives (60 molecules, 1770 pairs)
+Throughput: 60.7 pairs/sec
+
+Fast-WCS Hybrid: Acc=73.3%, ROC-AUC=0.806, PR-AUC=0.809, EF10%=1.67x
+Fast-WCS 2D Only: Acc=71.7%, ROC-AUC=0.766, PR-AUC=0.805, EF10%=2.00x
+ECFP4 Morgan SVM: Acc=80.0%, ROC-AUC=0.899, PR-AUC=0.913, EF10%=2.00x
+
+Active-Active Mean RMSD: 4.845 A
+Active-Decoy Mean RMSD: 4.577 A

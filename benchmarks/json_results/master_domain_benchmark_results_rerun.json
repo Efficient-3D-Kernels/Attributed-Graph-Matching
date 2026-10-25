@@ -1,0 +1,171 @@
+{
+  "timestamp": "2026-10-15 23:27:09",
+  "total_elapsed_sec": 20.926486015319824,
+  "synthetic_benchmark": [
+    {
+      "method": "Fast-WCS v3 (Ours Desktop)",
+      "category": "Our Method",
+      "acc_mean": 100.0,
+      "acc_std": 0.0,
+      "time_ms": 15.864503999910085
+    },
+    {
+      "method": "GNCCP 2018 Baseline (RLX1F)",
+      "category": "Base Paper (2018)",
+      "acc_mean": 32.64,
+      "acc_std": 37.68806707699401,
+      "time_ms": 95.30781599991315
+    },
+    {
+      "method": "PyGMtools SM",
+      "category": "Base Paper Baseline",
+      "acc_mean": 2.24,
+      "acc_std": 2.5499803920814763,
+      "time_ms": 31.053008000017144
+    },
+    {
+      "method": "PyGMtools IPFP",
+      "category": "Base Paper Baseline",
+      "acc_mean": 2.72,
+      "acc_std": 2.932848444771738,
+      "time_ms": 45.08165999992343
+    },
+    {
+      "method": "PyGMtools RRWM",
+      "category": "Base Paper Baseline",
+      "acc_mean": 1.76,
+      "acc_std": 2.2852570971337123,
+      "time_ms": 372.537599999996
+    },
+    {
+      "method": "GRAMPA (ICML 2020)",
+      "category": "Post-2018 Modern",
+      "acc_mean": 11.52,
+      "acc_std": 7.699974025930217,
+      "time_ms": 1.4737200002127793
+    },
+    {
+      "method": "Fused Gromov-Wasserstein (FGW)",
+      "category": "Post-2018 Modern",
+      "acc_mean": 92.16,
+      "acc_std": 4.863578929142612,
+      "time_ms": 5.180467999889515
+    },
+    {
+      "method": "Partial Optimal Transport (POT)",
+      "category": "Post-2018 Modern",
+      "acc_mean": 80.48,
+      "acc_std": 7.864451665564485,
+      "time_ms": 0.9810799999104347
+    },
+    {
+      "method": "SciPy FAQ + 2-Opt",
+      "category": "Post-2018 Modern",
+      "acc_mean": 4.96,
+      "acc_std": 5.688444427081977,
+      "time_ms": 20.389415999743505
+    }
+  ],
+  "molecular_3d_benchmark": [
+    {
+      "method": "Fast-WCS v3 (Ours Balanced)",
+      "category": "Our Flagship Method",
+      "time_ms": 21.213074285645103,
+      "accuracy": 44.48979591836735,
+      "median_rmsd": 1.2473224982134903,
+      "subang_rate": 40.0,
+      "ultra_rate": 34.285714285714285,
+      "balance_score": 9.945549424130379
+    },
+    {
+      "method": "Fast-WCS v3 (Ours High-Acc)",
+      "category": "Our Flagship Method",
+      "time_ms": 27.16821142878741,
+      "accuracy": 50.00000000000001,
+      "median_rmsd": 1.0433216384396935,
+      "subang_rate": 48.57142857142857,
+      "ultra_rate": 31.428571428571427,
+      "balance_score": 10.382068302884065
+    },
+    {
+      "method": "Fast-WCS Classic (V1 - No 2-Opt)",
+      "category": "Ablation Baseline",
+      "time_ms": 15.790899999982296,
+      "accuracy": 19.999999999999996,
+      "median_rmsd": 2.250420245794728,
+      "subang_rate": 0.0,
+      "ultra_rate": 0.0,
+      "balance_score": 4.9144786644904785
+    },
+    {
+      "method": "GNCCP 2018 Baseline (RLX1F)",
+      "category": "Base Paper (2018)",
+      "time_ms": 74.36753142860003,
+      "accuracy": 100.0,
+      "median_rmsd": 0.03226164299511699,
+      "subang_rate": 100.0,
+      "ultra_rate": 100.0,
+      "balance_score": 16.036251589798656
+    },
+    {
+      "method": "PyGMtools SM",
+      "category": "Base Paper Baseline",
+      "time_ms": 5.221580000059995,
+      "accuracy": 2.4489795918367343,
+      "median_rmsd": 5.655313577392331,
+      "subang_rate": 0.0,
+      "ultra_rate": 0.0,
+      "balance_score": 0.928600170430818
+    },
+    {
+      "method": "GRAMPA (ICML 2020)",
+      "category": "Post-2018 Modern",
+      "time_ms": 1.0253571425502221,
+      "accuracy": 13.061224489795919,
+      "median_rmsd": 4.612902937738894,
+      "subang_rate": 0.0,
+      "ultra_rate": 0.0,
+      "balance_score": 12.828057497403208
+    },
+    {
+      "method": "Fused Gromov-Wasserstein (FGW)",
+      "category": "Post-2018 Modern",
+      "time_ms": 4.33067428582165,
+      "accuracy": 10.204081632653061,
+      "median_rmsd": 3.2054153776115224,
+      "subang_rate": 0.0,
+      "ultra_rate": 0.0,
+      "balance_score": 4.226486109714596
+    },
+    {
+      "method": "Partial Optimal Transport (POT)",
+      "category": "Post-2018 Modern",
+      "time_ms": 1.2624885711764884,
+      "accuracy": 5.1020408163265305,
+      "median_rmsd": 3.0941399506431058,
+      "subang_rate": 0.0,
+      "ultra_rate": 0.0,
+      "balance_score": 4.33143332767141
+    },
+    {
+      "method": "SciPy FAQ + 2-Opt",
+      "category": "Post-2018 Modern",
+      "time_ms": 15.980894285738552,
+      "accuracy": 14.081632653061225,
+      "median_rmsd": 2.6087208392933516,
+      "subang_rate": 0.0,
+      "ultra_rate": 0.0,
+      "balance_score": 3.4464469514116676
+    },
+    {
+      "method": "SciPy FAQ (Standard QAP)",
+      "category": "Post-2018 Modern",
+      "time_ms": 6.945148571477538,
+      "accuracy": 1.6326530612244896,
+      "median_rmsd": 6.778421347302656,
+      "subang_rate": 0.0,
+      "ultra_rate": 0.0,
+      "balance_score": 0.5460242633685477
+    }
+  ]
+}

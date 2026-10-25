@@ -1,0 +1,39 @@
+\begin{table}[!t]
+\centering
+\caption{Cumulative component ablation (one component added per stage; linear schedule, 10 levels $\times$ 6 FW steps; 50 instances per regime, $M{=}N$, $L{=}0.8N$). Median time, median per-trial speed-up over S0, median objective change vs.\ S0 ($+$: lower $F$), mean accuracy and share of instances solved (accuracy $\geq 90\%$).}
+\label{tab:ablation}
+\fontsize{6.0}{7.2}\selectfont
+\setlength{\tabcolsep}{1.5pt}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrrr@{}}
+\toprule
+Stage & ms & $\times$S0 & $\Delta F$ (\%) & Acc. (\%) & Solved (\%) \\
+\midrule
+\multicolumn{6}{l}{\textit{Small regime, $N{=}30$, $L{=}24$}} \\
+S0 Yang RLX1F~\cite{yang2018algorithm} & 93.0 & 1.00 & +0.0 & 37.8 & 24.0 \\
+S1 + Lemma~\ref{lem:rank1} ($\mathbf{U}{=}\mathbf{r}\mathbf{r}^T$) & 84.7 & 1.07 & +0.0 & 37.8 & 24.0 \\
+S2 + Thm.~\ref{thm:gradient} (exact $\nabla$) & 78.8 & 1.12 & +5.5 & 22.0 & 12.0 \\
+S3 + Thm.~\ref{thm:quartic_line_search} (Cardano) & 25.0 & 3.47 & +7.1 & 22.8 & 14.0 \\
+S4 + Burkard oracle (Sec.~\ref{subsec:burkard}) & 28.9 & 3.27 & +2.8 & 15.8 & 10.0 \\
+S5 + Prop.~\ref{prop:2opt} (2-opt) & 30.4 & 3.04 & +13.2 & 15.7 & 10.0 \\
+Fast-WCS v3 defaults & 13.5 & 6.92 & +4.7 & 8.1 & 0.0 \\
+\midrule
+\multicolumn{6}{l}{\textit{Medium regime, $N{=}60$, $L{=}48$}} \\
+S0 Yang RLX1F~\cite{yang2018algorithm} & 249 & 1.00 & +0.0 & 44.7 & 40.0 \\
+S1 + Lemma~\ref{lem:rank1} ($\mathbf{U}{=}\mathbf{r}\mathbf{r}^T$) & 204 & 1.22 & +0.0 & 44.7 & 40.0 \\
+S2 + Thm.~\ref{thm:gradient} (exact $\nabla$) & 173 & 1.50 & +3.8 & 25.7 & 22.0 \\
+S3 + Thm.~\ref{thm:quartic_line_search} (Cardano) & 48.7 & 5.20 & +4.3 & 22.8 & 20.0 \\
+S4 + Burkard oracle (Sec.~\ref{subsec:burkard}) & 51.9 & 4.93 & -6.2 & 7.8 & 2.0 \\
+S5 + Prop.~\ref{prop:2opt} (2-opt) & 61.8 & 3.97 & +8.4 & 7.8 & 2.0 \\
+Fast-WCS v3 defaults & 32.6 & 8.17 & +5.3 & 12.3 & 2.0 \\
+\midrule
+\multicolumn{6}{l}{\textit{Large regime, $N{=}100$, $L{=}80$}} \\
+S0 Yang RLX1F~\cite{yang2018algorithm} & 759 & 1.00 & +0.0 & 40.1 & 38.0 \\
+S1 + Lemma~\ref{lem:rank1} ($\mathbf{U}{=}\mathbf{r}\mathbf{r}^T$) & 527 & 1.42 & +0.0 & 40.1 & 38.0 \\
+S2 + Thm.~\ref{thm:gradient} (exact $\nabla$) & 435 & 1.71 & +6.2 & 14.4 & 12.0 \\
+S3 + Thm.~\ref{thm:quartic_line_search} (Cardano) & 105 & 7.15 & +9.0 & 20.0 & 16.0 \\
+S4 + Burkard oracle (Sec.~\ref{subsec:burkard}) & 130 & 5.82 & +1.1 & 10.5 & 8.0 \\
+S5 + Prop.~\ref{prop:2opt} (2-opt) & 152 & 4.94 & +16.6 & 10.8 & 8.0 \\
+Fast-WCS v3 defaults & 80.9 & 9.11 & +15.2 & 8.5 & 2.0 \\
+\bottomrule
+\end{tabular*}
+\end{table}

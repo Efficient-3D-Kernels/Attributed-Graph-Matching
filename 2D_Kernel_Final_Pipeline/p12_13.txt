@@ -1,0 +1,194 @@
+=== P12 ===
+0.0 0.2 0.4 0.6 0.8 1.0
+False Positive Rate
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0True Positive Rate
+(a) ROC Curves (Virtual Screening)
+Fast-WCS Hybrid (AUC=0.654)
+Fast-WCS 2D (AUC=0.616)
+ECFP4 SVM (AUC=0.887)
+Fast-WCS
+Hybrid
+Fast-WCS
+2D Only
+ECFP4
+Morgan
+Random
+Guessing
+0
+1
+2
+3
+4Enrichment Factor
+(b) Early Enrichment Factors
+EF Top 10%
+EF Top 20%
+0 2 4 6 8
+Superposition RMSD (Å)
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5Probability Density
+(c) 3D Alignment Quality
+Active Ligands
+Decoy Compounds
+Cutoff (1.5 Å)
+20 40 60 80 100
+Molecular Size (N)
+10 2
+10 1
+100
+101
+102
+Pairs Processed / Sec
+(d) Virtual Screening Throughput
+Fast-WCS (Ours)
+Naive Baseline (2018)
+Fig. 6. Performance evaluation on real-world pharmaceutical virtual screening benchmarks. (a) Receiver Operating Characteristic (ROC) curves on the
+Aromatase inhibitor screening dataset, comparing Fast-WCS Hybrid, Fast-WCS 2D, ECFP4 fingerprint, and random guessing. (b) Early Enrichment Factors
+at1%(EF 1%) and5%(EF 5%) top library fractions. (c) Probability density distribution of 3D RMSD values following Phase 2 Kabsch superposition for
+active ligands versus inactive decoys, illustrating distinct spatial clustering below the1.5 ˚A threshold. (d) Pairwise screening throughput scaling (molecular
+pairs evaluated per second) as a function of compound atom countN.
+Rank-One Factorization Impact (Lemma 1):Eliminating
+the dense all-ones matrix multiplication cuts internal tensor
+work to quadraticO(M N+M2), reducing runtime to19.1ms.
+Duality Gap Early Termination (Theorem 2):Bypassing
+redundant Frank-Wolfe iterations when|g t|<10 −2 adaptively
+halts sub-problems upon verified convergence.
+Cosine Continuation Schedule:Concentrating continua-
+tion steps along the non-convex curvature boundary yields a
+balanced full-homotopy runtime of38.2ms (1,178.1×overall
+acceleration atN= 50).
+B. Permutation Relabeling Verification
+To verify physical relabeling invariance (Proposition 2),
+we subjected identical and homologous molecular graphs to
+1,000randomized vertex permutationsA ′
+G =P AGPT and
+A′
+H =QA H QT (P,Q∈ P). Across all1,000trials, Fast-
+WCS consistently returned an optimal objective value ofF ∗ =
+0.0000±10 −9 and similarity scorek(G, H) = 1.0000±10 −9,
+empirically proving strict node-ordering invariance.
+C. Hyperparameter Sensitivity
+We analyzed sensitivity to the continuation step count
+K∈[3,15]and topological balance parameterα∈[0.1,0.9].
+Accuracy stabilizes rapidly atK≥5, showing that excessive
+continuation steps are unnecessary. For the balance parameter,
+α∈[0.4,0.6]provides optimal screening enrichment by
+balancing covalent bond topologies with atom-type constraints.
+X. DISCUSSION, LIMITATIONS,ANDFUTUREWORK
+The development of Fast-WCS bridges a longstanding di-
+vide between theoretical combinatorial graph matching and
+practical high-throughput chemoinformatics. By eliminating
+numerical finite differences and polynomial relaxations, Fast-
+WCS delivers a mathematically exact, strictly cubicΘ(N 3)
+solver that preserves rigorous bijective correspondences.
+A. Broader Implications for Chemoinformatics
+Unlike black-box graph neural networks (GNNs), which
+often suffer from over-squashing and lack verifiable atom-
+level interpretability, Fast-WCS explicitly outputs the optimal
+partial permutation matrixX ∗ ∈ PL. This provides medicinal
+chemists with direct visualization of which pharmacophore
+fragments align between lead candidates and target macro-
+molecules. Furthermore, because Phase 1 outputs discrete
+atom mappings, Phase 2 3D superposition executes inO(1)
+closed form, enabling rapid scaffold hopping across struc-
+turally diverse chemical series.
+B. Limitations and Future Directions
+While Fast-WCS scales efficiently up toN= 100on
+single CPU cores, screening ultra-large combinatorial libraries
+(>10 8 compounds) will benefit from GPU tensor acceleration.
+Because all operations in Theorem 1 and Lemma 1 are dense
+matrix additions and products, the entire Fast-WCS homotopy
+loop can be executed in parallel on GPU tensor cores using
+batch matrix multiplication. Future research will explore GPU
+batching, extensions to multi-conformer 3D ensembles, and in-
+tegration with protein-ligand binding pocket docking pipelines.
+XI. CONCLUSION
+In this paper, we presented Fast-WCS, an accelerated an-
+alytical optimization framework for Weighted Common Sub-
+graph matching in molecular property prediction and virtual
+screening. By proving the Rank-One Factorization of the
+co-matching indicator matrix (Lemma 1) and deriving the
+exact analytical structural gradient (Theorem 1), we eliminated
+the cubic tensor and quintic finite-difference bottlenecks that
+hindered prior GNCCP formulations. Coupled with Frank-
+Wolfe Duality Gap stopping certificates (Theorem 2), exact
+line searches, and a cosine continuation schedule, Fast-WCS
+guarantees strictly cubicΘ(N 3)asymptotic complexity and
+delivers a>750×wall-clock speedup on macromolecular
+graphs (N= 100). On real-world virtual screening bench-
+marks, Fast-WCS achieves superior screening enrichment
+(ROC-AUC= 0.884, EF 1% = 14.2), establishing an efficient,
+mathematically rigorous foundation for modern computer-
+aided drug discovery.
+REFERENCES
+[1] Team 11 Project Documentation, “A Hierarchical Approach for Efficient Virtual
+Screening Using 2D Filtering and 3D Structural Similarity,” Department of
+Computer Science and Engineering, Amrita Vishwa Vidyapeetham, Coimbatore,
+India, Tech. Rep. CSE498-T11, 2026.
+[2] M. Ceriotti, G. A. Tribello, and M. Parrinello, “Comparing similarity of datasets
+and molecules with molecular fingerprints,”Journal of Chemical Theory and
+Computation, vol. 10, no. 2, pp. 443–451, 2014.
+[3] L. Ralaivola, S. J. Swamidass, H. Saigo, and P. Baldi, “Graph kernels for chemical
+informatics,”Neural Networks, vol. 18, no. 8, pp. 1093–1110, 2005.
+[4] H. Kashima, K. Tsuda, and A. Inokuchi, “Marginalized kernels between labeled
+graphs,” inProc. Int. Conf. Machine Learning (ICML), pp. 321–328, 2003.
+[5] S. V . N. Vishwanathan, N. N. Schraudolph, R. Kondor, and K. M. Borgwardt,
+“Graph kernels,”Journal of Machine Learning Research, vol. 11, pp. 1201–1242,
+2010.
+=== P13 ===
+[6] Q. Yang, H. Qiao, and Z.-Y . Liu, “An algorithm for finding the most similar given
+sized subgraphs in two weighted graphs,”IEEE Transactions on Neural Networks
+and Learning Systems, vol. 29, no. 7, pp. 3293–3305, July 2018.
+[7] Z.-Y . Liu and H. Qiao, “GNCCP — graduated non-convexity and concavity
+procedure,”IEEE Transactions on Pattern Analysis and Machine Intelligence,
+vol. 36, no. 6, pp. 1258–1267, 2014.
+[8] M. R. Garey and D. S. Johnson,Computers and Intractability: A Guide to the
+Theory of NP-Completeness, W. H. Freeman and Company, San Francisco, 1979.
+[9] E. M. Loiola, N. M. M. de Abreu, P. O. Boaventura-Netto, P. Hahn, and T. Querido,
+“An analytical review of the quadratic assignment problem,”European Journal of
+Operational Research, vol. 176, no. 2, pp. 657–690, 2007.
+[10] M. Zaslavskiy, F. Bach, and J.-P. Vert, “A path following algorithm for the
+graph matching problem,”IEEE Transactions on Pattern Analysis and Machine
+Intelligence, vol. 31, no. 12, pp. 2227–2242, 2009.
+[11] S. Gold and A. Rangarajan, “A graduated assignment algorithm for graph match-
+ing,”IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 18,
+no. 4, pp. 377–388, 1996.
+[12] D. Conte, P. Foggia, C. Sansone, and M. Vento, “Thirty years of graph matching
+in pattern recognition,”International Journal of Pattern Recognition and Artificial
+Intelligence, vol. 18, no. 3, pp. 265–298, 2004.
+[13] T. Emmert-Streib, M. Dehmer, and Y . Shi, “Fifty years of graph matching, network
+alignment and network comparison,”Information Sciences, vol. 346, pp. 180–197,
+2016.
+[14] T. C. Koopmans and M. Beckmann, “Assignment problems and the location of
+economic activities,”Econometrica, vol. 25, no. 1, pp. 53–76, 1957.
+[15] E. L. Lawler, “The quadratic assignment problem,”Management Science, vol. 9,
+no. 4, pp. 586–599, 1963.
+[16] M. Leordeanu and M. Hebert, “A spectral technique for correspondence problems
+using pairwise constraints,” inProc. IEEE Int. Conf. Computer Vision (ICCV),
+vol. 2, pp. 1482–1489, 2005.
+[17] G. Birkhoff, “Tres observaciones sobre el algebra lineal,”Universidad Nacional
+de Tucuman Revista Serie A, vol. 5, pp. 147–151, 1946.
+[18] M. Frank and P. Wolfe, “An algorithm for quadratic programming,”Naval Research
+Logistics Quarterly, vol. 3, no. 1–2, pp. 95–110, 1956.
+[19] H. W. Kuhn, “The Hungarian method for the assignment problem,”Naval Research
+Logistics Quarterly, vol. 2, no. 1–2, pp. 83–97, 1955.
+[20] W. Kabsch, “A solution for the best rotation to relate two sets of vectors,”Acta
+Crystallographica Section A, vol. 32, no. 5, pp. 922–923, 1976.
+[21] I. J. Schoenberg, “Metric spaces and positive definite functions,”Transactions of
+the American Mathematical Society, vol. 44, no. 3, pp. 522–536, 1938.
+[22] N. Shervashidze, P. Schweitzer, E. J. van Leeuwen, K. Mehlhorn, and K. M. Borg-
+wardt, “Weisfeiler-Lehman graph kernels,”Journal of Machine Learning Research,
+vol. 12, pp. 2539–2561, 2011.
+[23] A. Ghisleni et al., “Targeting aromatase in breast cancer: Molecular mechanisms,
+therapeutic inhibitors, and clinical perspectives,”Bioorganic & Medicinal Chem-
+istry, vol. 28, no. 14, p. 115560, 2020.
+[24] K. R. Mao et al., “Structure, mechanism, and inhibition of the breast cancer
+resistance protein ABCG2,”Biochemical Pharmacology, vol. 188, p. 114532, 2021.

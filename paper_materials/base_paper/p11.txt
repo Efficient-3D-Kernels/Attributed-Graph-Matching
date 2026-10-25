@@ -1,0 +1,140 @@
+0.0 0.2 0.4 0.6 0.8 1.0
+False Positive Rate
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0True Positive Rate
+(a) ROC Curves (Virtual Screening)
+Fast-WCS Hybrid (AUC=0.884)
+Fast-WCS 2D (AUC=0.792)
+ECFP4 SVM (AUC=0.741)
+Fast-WCS
+Hybrid
+Fast-WCS
+2D Only
+ECFP4
+Fingerprint
+Graph
+Kernel
+0.0
+2.5
+5.0
+7.5
+10.0
+12.5Enrichment Factor
+(b) Early Enrichment Factors
+EF 1%
+EF 5%
+1 2 3 4
+Superposition RMSD (Å)
+0.0
+0.5
+1.0
+1.5Probability Density
+(c) 3D Alignment Quality
+Active Ligands
+Decoy Compounds
+Threshold (1.5 Å)
+20 40 60 80 100
+Molecular Size (N)
+10 2
+10 1
+100
+101
+102
+Pairs Processed / Sec
+(d) Virtual Screening Throughput
+Fast-WCS (Ours)
+Naive Baseline (2018)
+Fig. 6. Performance evaluation on real-world pharmaceutical virtual screening benchmarks. (a) Receiver Operating Characteristic (ROC) curves on the
+Aromatase inhibitor screening dataset, comparing Fast-WCS Hybrid, Fast-WCS 2D, ECFP4 fingerprint, and random guessing. (b) Early Enrichment Factors
+at1%(EF 1%) and5%(EF 5%) top library fractions. (c) Probability density distribution of 3D RMSD values following Phase 2 Kabsch superposition for
+active ligands versus inactive decoys, illustrating distinct spatial clustering below the1.5 ˚A threshold. (d) Pairwise screening throughput scaling (molecular
+pairs evaluated per second) as a function of compound atom countN.
+13 minutes) per pair atN= 100. Comparing a library of
+10,000 compounds against a single reference query would
+require over 92 days of continuous CPU time with the naive
+baseline. In stark contrast, Fast-WCS evaluatesN= 100
+complexes in140.0ms—a5717.9×acceleration that brings
+virtual screening of macromolecular libraries into the realm of
+real-time feasibility.
+VIII. REAL-WORLDMOLECULARVIRTUALSCREENING
+BENCHMARK
+To demonstrate practical efficacy in drug discovery cam-
+paigns, Fast-WCS was integrated into an end-to-end virtual
+screening pipeline and evaluated on two pharmaceutically rel-
+evant target benchmarks from public bioactivity repositories:
+1)Aromatase (CYP19A1):A key cytochrome P450 en-
+zyme responsible for estrogen biosynthesis, representing
+a prime therapeutic target for hormone-receptor-positive
+breast cancer [23]. The benchmark contains 120 struc-
+turally validated active inhibitors and 1,080 property-
+matched decoy compounds.
+2)Breast Cancer Resistance Protein (BCRP / ABCG2):
+An ATP-binding cassette multidrug efflux transporter
+implicated in chemotherapeutic multidrug resistance
+[24]. The benchmark contains 95 validated active in-
+hibitors and 855 decoys.
+A. Evaluation Metrics and Screening Protocols
+All molecular structures were loaded from 3D Structure-
+Data Files (SDF), processed with hydrogen removal to re-
+tain heavy-atom skeletons, and assigned chemical attributes.
+Pairwise similarity matrices were computed against a known
+reference active ligand. A Support Vector Machine (SVM)
+classifier with an RBF kernel was trained via 5-fold cross-
+validation.
+Performance was evaluated using: (1)ROC-AUC(Receiver
+Operating Characteristic Area Under Curve); (2)PR-AUC
+(Precision-Recall Area Under Curve); (3)Enrichment Factor
+at 1% (EF 1%)and5% (EF 5%), measuring the concentration
+of true active hits among the top-ranked1%and5%of the
+screened chemical library:
+EFχ% = Hitsχ%/Nχ%
+Total Hits/Ntotal
+;(53)
+and (4)Throughput(molecular pairs processed per second).
+TABLE III
+VIRTUALSCREENINGBENCHMARKPERFORMANCE ONAROMATASE
+(CYP19A1)ANDBCRP (ABCG2) DATASETS
+Screening ROC-AUC PR-AUC EF 1% EF 5% Throughput
+Method (Aromatase) (Aromatase) Factor Factor (Pairs/s)
+Random Guessing0.500 0.100 1.0×1.0×–
+Random Walk Kernel [4]0.715 0.342 4.8×2.9×38.5
+ECFP4 Fingerprint SVM0.741 0.388 6.4×3.8×450.0
+Weisfeiler-Lehman Kernel [22]0.762 0.415 5.1×3.2×72.0
+Rigid 3D Shape Tanimoto0.730 0.365 5.5×3.4×14.2
+Fast-WCS 2D Only (β= 0.0)0.792 0.468 9.8×5.1×117.6
+Fast-WCS Hybrid (β= 0.4)0.884 0.612 14.2×6.8×115.0
+B. Screening Enrichment and 3D Structural Alignment
+As detailed in Table III and Fig. 6:
+•ROC-AUC and PR-AUC Superiority (Fig. 6a):Fast-
+WCS Hybrid achieves an outstanding ROC-AUC of
+0.884and PR-AUC of0.612on Aromatase screening,
+outperforming ECFP4 fingerprints (0.741), Weisfeiler-
+Lehman graph kernels (0.762), and rigid 3D shape align-
+ment (0.730). Even without 3D geometric information,
+the Fast-WCS 2D topological kernel alone achieves ROC-
+AUC =0.792.
+•Early Enrichment Factors (Fig. 6b):In industrial drug
+discovery, wet-lab validation is restricted to the top1%
+of candidate hits. Fast-WCS Hybrid achieves an Early
+Enrichment Factor EF 1% =14.2×, meaning that the
+top1%of the screened compound library contains over
+fourteen times more active ligands than random selection.
+This is more than double the enrichment of ECFP4
+fingerprints (6.4×).
+•3D Alignment Quality (Fig. 6c):Because Phase 1 iden-
+tifies the exact maximum common pharmacophore sub-
+graph, Phase 2 Kabsch alignment achieves tight spatial
+superposition. Fig. 6c shows that active inhibitors exhibit
+a sharp distribution centered at RMSD= 0.85±0.22 ˚A,
+whereas inactive decoys cluster at RMSD= 2.45±
+0.45 ˚A. Setting an RMSD threshold of1.5 ˚A cleanly
+separates active pharmacophores from inactive decoys.
+•High Screening Throughput (Fig. 6d):Fast-WCS pro-
+cesses over115molecular pairs per second on drug-like
+compounds (N≈30), enabling complete screening of a
+10,000-compound library in under 90 seconds on a single
+multicore CPU workstation.

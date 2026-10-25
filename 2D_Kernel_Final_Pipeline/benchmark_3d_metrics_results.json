@@ -1,0 +1,224 @@
+{
+  "Scenario A: Moderate Outliers (M=16, N=22, L=12, \u03c3=0.015 \u00c5)": {
+    "Fast-WCS Advanced (Ours V2)": {
+      "mean_acc": 49.75,
+      "ci95_acc": [
+        42.41666666666667,
+        57.08750000000001
+      ],
+      "mean_rmsd": 1.1290461367097995,
+      "median_rmsd": 1.1209212430759121,
+      "pct_subang": 42.0,
+      "pct_ultra": 1.0,
+      "mean_time_ms": 30.693382999816095
+    },
+    "Fast-WCS Classic (V1 - No 2-Opt)": {
+      "mean_acc": 19.916666666666664,
+      "ci95_acc": [
+        16.58333333333333,
+        23.41666666666667
+      ],
+      "mean_rmsd": 2.479117815206064,
+      "median_rmsd": 2.42388170393311,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 19.49094999981753
+    },
+    "SciPy FAQ + 2-Opt Refinement": {
+      "mean_acc": 11.583333333333332,
+      "ci95_acc": [
+        8.166666666666666,
+        15.16875
+      ],
+      "mean_rmsd": 2.907683650712234,
+      "median_rmsd": 2.741861062297861,
+      "pct_subang": 1.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 12.067367000272498
+    },
+    "Partial Optimal Transport (POT)": {
+      "mean_acc": 4.083333333333332,
+      "ci95_acc": [
+        2.9166666666666656,
+        5.416666666666666
+      ],
+      "mean_rmsd": 2.8982450355841753,
+      "median_rmsd": 2.720769013038823,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 1.089393000002019
+    },
+    "Fused Gromov-Wasserstein (FGW)": {
+      "mean_acc": 6.583333333333334,
+      "ci95_acc": [
+        4.916666666666665,
+        8.418749999999998
+      ],
+      "mean_rmsd": 3.6358027209210144,
+      "median_rmsd": 3.3739810305088582,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 2.659554999845568
+    },
+    "SciPy FAQ (QAP Baseline)": {
+      "mean_acc": 2.9999999999999987,
+      "ci95_acc": [
+        1.9999999999999998,
+        4.166666666666665
+      ],
+      "mean_rmsd": 5.495477951954268,
+      "median_rmsd": 5.405164419021705,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 5.499489000212634
+    }
+  },
+  "Scenario B: Dense Subgraph in Noise (M=20, N=28, L=15, \u03c3=0.025 \u00c5)": {
+    "Fast-WCS Advanced (Ours V2)": {
+      "mean_acc": 47.400000000000006,
+      "ci95_acc": [
+        39.6,
+        55.135
+      ],
+      "mean_rmsd": 1.19640514117986,
+      "median_rmsd": 1.1130232462371135,
+      "pct_subang": 42.0,
+      "pct_ultra": 1.0,
+      "mean_time_ms": 36.83843899976637
+    },
+    "Fast-WCS Classic (V1 - No 2-Opt)": {
+      "mean_acc": 19.2,
+      "ci95_acc": [
+        15.933333333333335,
+        22.734999999999992
+      ],
+      "mean_rmsd": 2.5150198866283917,
+      "median_rmsd": 2.3640397953795125,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 23.328412999544526
+    },
+    "SciPy FAQ + 2-Opt Refinement": {
+      "mean_acc": 11.266666666666667,
+      "ci95_acc": [
+        7.866666666666667,
+        14.733333333333334
+      ],
+      "mean_rmsd": 3.1836720756312373,
+      "median_rmsd": 2.9336368423614783,
+      "pct_subang": 1.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 16.07773000076122
+    },
+    "Partial Optimal Transport (POT)": {
+      "mean_acc": 4.133333333333334,
+      "ci95_acc": [
+        2.8666666666666676,
+        5.468333333333333
+      ],
+      "mean_rmsd": 2.9115304787259673,
+      "median_rmsd": 2.766169645629053,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 1.156019000118249
+    },
+    "Fused Gromov-Wasserstein (FGW)": {
+      "mean_acc": 6.333333333333332,
+      "ci95_acc": [
+        4.864999999999999,
+        7.933333333333333
+      ],
+      "mean_rmsd": 3.749405896572241,
+      "median_rmsd": 3.629623280408078,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 3.1412289996660547
+    },
+    "SciPy FAQ (QAP Baseline)": {
+      "mean_acc": 2.0,
+      "ci95_acc": [
+        1.3333333333333335,
+        2.666666666666667
+      ],
+      "mean_rmsd": 5.867726273840333,
+      "median_rmsd": 5.877406624351607,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 7.262359000233118
+    }
+  },
+  "Scenario C: High-Outlier Stress (M=24, N=36, L=16, \u03c3=0.035 \u00c5)": {
+    "Fast-WCS Advanced (Ours V2)": {
+      "mean_acc": 30.0625,
+      "ci95_acc": [
+        23.121875,
+        36.6265625
+      ],
+      "mean_rmsd": 1.2819878822560462,
+      "median_rmsd": 1.4112344090638738,
+      "pct_subang": 31.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 40.5056029996922
+    },
+    "Fast-WCS Classic (V1 - No 2-Opt)": {
+      "mean_acc": 11.4375,
+      "ci95_acc": [
+        8.8109375,
+        14.317187499999996
+      ],
+      "mean_rmsd": 2.5390484791448973,
+      "median_rmsd": 2.3639194408902497,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 26.456461000125273
+    },
+    "SciPy FAQ + 2-Opt Refinement": {
+      "mean_acc": 7.375,
+      "ci95_acc": [
+        4.75,
+        10.376562499999999
+      ],
+      "mean_rmsd": 3.064676112083599,
+      "median_rmsd": 2.946500688664555,
+      "pct_subang": 1.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 19.203792000407702
+    },
+    "Partial Optimal Transport (POT)": {
+      "mean_acc": 2.875,
+      "ci95_acc": [
+        1.8734375,
+        3.9375
+      ],
+      "mean_rmsd": 2.705368844719155,
+      "median_rmsd": 2.5032565663444486,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 1.2859270000626566
+    },
+    "Fused Gromov-Wasserstein (FGW)": {
+      "mean_acc": 5.5625,
+      "ci95_acc": [
+        4.0609375,
+        7.375
+      ],
+      "mean_rmsd": 3.796907431536916,
+      "median_rmsd": 3.688978031223143,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 2.784268999384949
+    },
+    "SciPy FAQ (QAP Baseline)": {
+      "mean_acc": 1.4375,
+      "ci95_acc": [
+        0.8734375000000001,
+        2.0625
+      ],
+      "mean_rmsd": 5.885810895307429,
+      "median_rmsd": 5.837542404913682,
+      "pct_subang": 0.0,
+      "pct_ultra": 0.0,
+      "mean_time_ms": 9.815227999861236
+    }
+  }
+}

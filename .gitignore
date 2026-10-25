@@ -1,0 +1,42 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# LaTeX build artifacts (preserve final .tex and .pdf)
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+
+# Operating System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Redundant temporary files
+redundant_files/
+*.tmp
+
+# Large Datasets and Molecular Dumps (keep repository lightweight)
+Data/
+*.sdf
+*.mol2
+*.cif
+

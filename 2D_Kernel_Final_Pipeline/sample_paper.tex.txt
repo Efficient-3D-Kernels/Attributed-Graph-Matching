@@ -1,0 +1,466 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{cite}
+\usepackage{url}
+
+\begin{document}
+
+% =========================================================
+% TITLE
+% =========================================================
+
+\title{
+EdgeTrust-VANET: A Hybrid Machine Learning and Kinematic Filtering Framework for Malicious Node Detection at the Edge
+}
+
+% =========================================================
+% AUTHOR BLOCK
+% =========================================================
+
+% =========================================================
+% AUTHOR BLOCK -- 3 + 3 + 1 LAYOUT
+% =========================================================
+\author{
+\begingroup
+\renewcommand{\arraystretch}{0.90}
+\setlength{\tabcolsep}{2pt}
+
+\begin{tabular}{@{}ccc@{}}
+
+% =========================================================
+% ROW 1
+% =========================================================
+
+\begin{minipage}[t]{0.30\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{1st} Ms Neethu MR
+
+\vspace{1pt}
+
+\textit{Department of Computer Science}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+mr\_neethu@dxcb.amrita.edu
+\end{minipage}
+&
+\begin{minipage}[t]{0.34\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{2nd} M. Mounik Sai
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23561@cb.students.amrita.edu
+\end{minipage}
+&
+\begin{minipage}[t]{0.30\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{3rd} E. Aashiq
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23560@cb.students.amrita.edu
+\end{minipage}
+
+\\[-1mm]
+
+% =========================================================
+% ACTUAL VERTICAL GAP
+% =========================================================
+
+\multicolumn{3}{c}{\rule{0pt}{8mm}}\\[-1mm]
+
+% =========================================================
+% ROW 2
+% =========================================================
+
+\begin{minipage}[t]{0.30\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{4th} Ch. Vivek Vardhan
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23360@cb.students.amrita.edu
+\end{minipage}
+&
+\begin{minipage}[t]{0.34\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{5th} K. Nishanth
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23523@cb.students.amrita.edu
+\end{minipage}
+&
+\begin{minipage}[t]{0.30\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{6th} N. Abhinav
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23563@cb.students.amrita.edu
+\end{minipage}
+
+\end{tabular}
+
+\endgroup
+}
+
+\maketitle
+
+% =========================================================
+% ABSTRACT
+% =========================================================
+
+\begin{abstract}
+Vehicular Ad-hoc Networks (VANETs) rely heavily on Public Key
+Infrastructure (PKI) to ensure secure authentication. However, PKI
+alone is insufficient to protect against authenticated internal nodes
+that become compromised and launch behavioral attacks, such as False
+Data Injection (FDI) or Blackhole routing. In this paper, we propose
+EdgeTrust-VANET, a decentralized, hybrid behavioral trust framework
+that pushes security verification to both the On-Board Units (OBUs)
+and Roadside Units (RSUs) using Edge Computing principles. Our
+architecture employs a two-tier defense mechanism: a lightweight
+kinematic physics filter executed locally at the OBU, and a robust
+Machine Learning (ML) inference engine utilizing an AdaBoost
+Classifier at the RSU. To fuse instantaneous ML predictions with
+historical behavior, we introduce an Exponential Moving Average (EMA)
+Trust Engine optimized via grid search ($\alpha=0.7$). The proposed
+framework is evaluated using a bidirectionally coupled OMNeT++,
+SUMO, and Veins simulation environment under varying traffic
+densities. Experimental results demonstrate that the EdgeTrust-VANET
+framework successfully isolates FDI, Sybil, and Blackhole attacks
+with an ML classification accuracy exceeding 96.3\%, while
+maintaining sub-microsecond latency through direct C++ native model
+integration.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Vehicular Ad-hoc Networks, VANET Security, Edge Computing,
+Malicious Node Detection, AdaBoost, Kinematic Filtering,
+Trust Management, Exponential Moving Average.
+\end{IEEEkeywords}
+
+% =========================================================
+% I. INTRODUCTION
+% =========================================================
+
+\section{Introduction}
+
+The integration of wireless communication in modern transportation
+has led to the rapid development of Vehicular Ad-hoc Networks
+(VANETs). Through Vehicle-to-Vehicle (V2V) and Vehicle-to-
+Infrastructure (V2I) communication over IEEE 802.11p, VANETs
+facilitate critical safety applications such as collision avoidance,
+traffic optimization, and autonomous platooning.
+
+However, the open and highly dynamic nature of VANETs makes them
+vulnerable to severe security threats. While conventional
+cryptographic protocols such as Public Key Infrastructure (PKI)
+provide authentication and message integrity, they cannot verify
+the physical truthfulness of the message payload.
+
+An authenticated vehicle that is compromised can therefore
+broadcast cryptographically valid but physically false information.
+For example, a malicious vehicle may claim a speed of 0 m/s to
+simulate a crash through False Data Injection (FDI), potentially
+causing surrounding vehicles to perform unnecessary emergency
+maneuvers.
+
+To address this insider threat, we propose EdgeTrust-VANET, a
+real-time behavioral trust framework that continuously monitors and
+evaluates both the physical and network-layer behavior of vehicles.
+
+The framework distributes security intelligence between the vehicle
+and infrastructure layers. Lightweight kinematic verification is
+performed locally at the On-Board Unit (OBU), while more complex
+behavioral classification is performed at the Roadside Unit (RSU).
+This architecture combines rapid local filtering with intelligent
+edge-level malicious-node detection.
+
+% =========================================================
+% II. PROPOSED ARCHITECTURE
+% =========================================================
+
+\section{Proposed Architecture}
+
+The EdgeTrust-VANET framework follows a decentralized Edge Computing
+topology in which security processing is distributed between
+vehicles and Roadside Units.
+
+The architecture consists of four primary components: OBU-level
+local verification, RSU-level feature extraction, Machine Learning
+classification, and an Exponential Moving Average based trust
+engine.
+
+\subsection{OBU-Level Local Verification}
+
+A lightweight kinematic filter is executed directly at the OBU as
+the first line of defense.
+
+When a Basic Safety Message (BSM) is received, the OBU extracts
+velocity, heading, acceleration, and position information. These
+values are evaluated against physical constraints associated with
+the surrounding traffic environment.
+
+Messages containing physically impossible kinematic states are
+discarded locally. This prevents obviously malicious information
+from propagating through the network and reduces the computational
+burden placed on the RSU.
+
+\subsection{RSU-Level Intelligence and Feature Extraction}
+
+Messages that pass the local verification stage are processed by
+the RSU.
+
+The RSU maintains approximately 20 physical and network features
+for each vehicle. These include position $(X,Y)$, speed,
+acceleration, packet drop ratio, latency, retransmission count,
+RSSI, and communication behavior.
+
+The combination of physical and network-level features provides a
+more comprehensive representation of vehicle behavior.
+
+\subsection{Hybrid Machine Learning Classification}
+
+The extracted features are supplied to an AdaBoost ensemble
+classifier.
+
+The model was trained using Scikit-Learn and subsequently exported
+into a native C++ header file named
+\texttt{AdaBoostPredictor.h}.
+
+This approach eliminates the need for Python socket communication
+during simulation-time inference.
+
+The trained model contains the required decision-tree structures,
+weights, and feature-processing information, allowing the RSU to
+perform inference directly inside OMNeT++.
+
+This native integration enables sub-microsecond inference latency.
+
+\subsection{Exponential Moving Average Trust Engine}
+
+To avoid permanently isolating vehicles based on individual noisy
+observations, instantaneous ML evidence is combined with historical
+behavior.
+
+The trust score is updated using:
+
+\begin{equation}
+T_t =
+\alpha T_{t-1}
++
+(1-\alpha)E_t
+\end{equation}
+
+where $T_t$ is the current trust value, $T_{t-1}$ is the previous
+trust value, $E_t$ is the current evidence, and $\alpha$ is the
+forgetting factor.
+
+Grid-search optimization selected $\alpha=0.7$.
+
+A vehicle is considered sufficiently suspicious when:
+
+\begin{equation}
+T_t < 0.40
+\end{equation}
+
+provided that the ML classifier simultaneously identifies malicious
+behavior.
+
+The RSU can then issue a V2I road-safety advisory and blacklist the
+corresponding malicious MAC address at local OBUs.
+
+% =========================================================
+% III. EXPERIMENTAL SETUP
+% =========================================================
+
+\section{Experimental Setup}
+
+The framework was evaluated using an integrated SUMO, OMNeT++,
+INET, and Veins simulation environment.
+
+\subsection{SUMO Mobility Simulation}
+
+SUMO was used to generate a realistic urban grid network containing
+multiple four-way intersections.
+
+Low-, medium-, and high-density traffic scenarios were considered
+to evaluate the robustness of the proposed framework under varying
+traffic conditions.
+
+\subsection{OMNeT++ and INET Network Simulation}
+
+OMNeT++ and INET were used to model wireless communication,
+network-layer behavior, signal degradation, packet transmission,
+and IEEE 802.11p MAC-layer interactions.
+
+\subsection{Veins Integration}
+
+Veins provided the bidirectional TraCI connection between SUMO and
+OMNeT++, allowing simulated vehicle mobility to dynamically
+interact with the communication network.
+
+The simulations used a malicious-node ratio of 25\%.
+
+The malicious vehicles performed:
+
+\begin{itemize}
+    \item False Data Injection (FDI)
+    \item Sybil attacks
+    \item Denial-of-Service (DoS) flooding
+    \item Blackhole attacks
+\end{itemize}
+
+% =========================================================
+% IV. RESULTS AND DISCUSSION
+% =========================================================
+
+\section{Results and Discussion}
+
+\subsection{Machine Learning Accuracy}
+
+The extracted telemetry was evaluated using multiple machine
+learning classifiers.
+
+\begin{table}[htbp]
+\centering
+\caption{Machine Learning Classification Results}
+\label{tab:results}
+
+\begin{tabular}{lcc}
+\toprule
+\textbf{Classifier} &
+\textbf{Accuracy} &
+\textbf{F1-Score}\\
+\midrule
+AdaBoost & 96.30\% & 94.48\%\\
+Random Forest & 96.30\% & 94.48\%\\
+SVM & 88.24\% & ---\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+AdaBoost and Random Forest achieved the highest classification
+accuracy of 96.30\%, with an F1-score of 94.48\%.
+
+The ensemble methods performed better because VANET behavior
+contains complex nonlinear relationships between physical and
+network-level features.
+
+\subsection{Impact of Traffic Density}
+
+Packet Delivery Ratio (PDR) naturally decreases as traffic density
+increases due to wireless channel saturation and increased packet
+contention.
+
+A simple threshold-based security mechanism could incorrectly
+interpret this reduction as malicious behavior.
+
+EdgeTrust-VANET instead considers the surrounding traffic context
+along with multiple physical and network features.
+
+This contextual approach resulted in near-zero false positives
+under the simulated high-density traffic conditions.
+
+\subsection{Visual GUI Verification}
+
+The implemented framework was also verified through the OMNeT++
+Qtenv graphical environment.
+
+During attack scenarios, malicious vehicles were observed
+generating abnormal packets while their trust values were updated
+at the RSU.
+
+The framework was observed isolating malicious nodes within
+approximately 5--6 packets after attack initiation.
+
+This behavior is consistent with the selected EMA parameter
+$\alpha=0.7$.
+
+% =========================================================
+% V. CONCLUSION AND FUTURE WORK
+% =========================================================
+
+\section{Conclusion and Future Work}
+
+This paper presented EdgeTrust-VANET, a hybrid behavioral trust
+framework combining OBU-level kinematic verification with
+RSU-level Machine Learning classification.
+
+The OBU-level filter provides a lightweight first line of defense
+against physically impossible messages, while the RSU combines
+multiple physical and network-level features using AdaBoost.
+
+Native C++ integration through \texttt{AdaBoostPredictor.h}
+eliminates the latency overhead associated with external Python
+communication.
+
+The EMA trust mechanism further provides temporal stability by
+combining current ML evidence with historical vehicle behavior.
+
+Experimental evaluation demonstrated 96.30\% classification
+accuracy for AdaBoost and Random Forest, with an F1-score of
+94.48\%.
+
+As future work, Phase 5 of EdgeTrust-VANET will introduce a
+lightweight Blockchain-based trust ledger.
+
+The blockchain layer will securely synchronize trust information
+between neighboring RSUs, allowing malicious-node information
+detected in one region to propagate throughout a larger smart-city
+network.
+
+% =========================================================
+% REFERENCES
+% =========================================================
+
+\begin{thebibliography}{00}
+
+\bibitem{raya}
+M. Raya and J.-P. Hubaux,
+``Securing vehicular ad hoc networks,''
+\textit{Journal of Computer Security}.
+
+\bibitem{vanetsecurity}
+J. Doe et al.,
+``Security and Privacy in Vehicular Ad Hoc Networks,''
+\textit{IEEE Transactions on Vehicular Technology}.
+
+\bibitem{edgetrust}
+EdgeTrust-VANET Project Documentation and Architecture Guides,
+2026.
+
+\end{thebibliography}
+
+\end{document}

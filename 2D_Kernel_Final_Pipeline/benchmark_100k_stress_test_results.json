@@ -1,0 +1,142 @@
+{
+  "total_problems_evaluated": 99996,
+  "wall_clock_time_seconds": 116.98000379999576,
+  "overall_throughput_pairs_per_sec": 854.8127607429914,
+  "mean_latency_per_match_ms": 1.1698468318732325,
+  "n_processes": 12,
+  "configurations_breakdown": {
+    "Fragment Sparse  (M=10, N=14, L=6,  L/M=0.60)": {
+      "M": 10,
+      "N": 14,
+      "L": 6,
+      "core_ratio": 0.6,
+      "n_samples": 8333,
+      "mean_accuracy": 4.462178487139485,
+      "mean_objective": 10.175936731416096,
+      "mean_latency_ms": 8.878349213973133,
+      "throughput_pairs_per_sec": 1351.6026133680207
+    },
+    "Fragment Max     (M=10, N=14, L=10, L/M=1.00)": {
+      "M": 10,
+      "N": 14,
+      "L": 10,
+      "core_ratio": 1.0,
+      "n_samples": 8333,
+      "mean_accuracy": 8.312732509300371,
+      "mean_objective": 30.951151826438046,
+      "mean_latency_ms": 8.37301077639641,
+      "throughput_pairs_per_sec": 1433.1762278185652
+    },
+    "Drug-Like Sparse (M=16, N=22, L=8,  L/M=0.50)": {
+      "M": 16,
+      "N": 22,
+      "L": 8,
+      "core_ratio": 0.5,
+      "n_samples": 8333,
+      "mean_accuracy": 2.3850954038161527,
+      "mean_objective": 18.96244354069512,
+      "mean_latency_ms": 9.132761598537156,
+      "throughput_pairs_per_sec": 1313.9508647550929
+    },
+    "Drug-Like Mod.   (M=16, N=22, L=12, L/M=0.75)": {
+      "M": 16,
+      "N": 22,
+      "L": 12,
+      "core_ratio": 0.75,
+      "n_samples": 8333,
+      "mean_accuracy": 3.6211448457938307,
+      "mean_objective": 44.97937734007163,
+      "mean_latency_ms": 8.979541461672678,
+      "throughput_pairs_per_sec": 1336.3711333389938
+    },
+    "Drug-Like Max    (M=16, N=22, L=16, L/M=1.00)": {
+      "M": 16,
+      "N": 22,
+      "L": 16,
+      "core_ratio": 1.0,
+      "n_samples": 8333,
+      "mean_accuracy": 5.076953078123125,
+      "mean_objective": 81.74789495363994,
+      "mean_latency_ms": 9.074477499140714,
+      "throughput_pairs_per_sec": 1322.3901873288364
+    },
+    "Dense Subgraph   (M=24, N=32, L=12, L/M=0.50)": {
+      "M": 24,
+      "N": 32,
+      "L": 12,
+      "core_ratio": 0.5,
+      "n_samples": 8333,
+      "mean_accuracy": 1.5450618024720986,
+      "mean_objective": 45.04109236848722,
+      "mean_latency_ms": 10.353957146269815,
+      "throughput_pairs_per_sec": 1158.9771746663255
+    },
+    "Dense Moderate   (M=24, N=32, L=18, L/M=0.75)": {
+      "M": 24,
+      "N": 32,
+      "L": 18,
+      "core_ratio": 0.75,
+      "n_samples": 8333,
+      "mean_accuracy": 2.4474312305825565,
+      "mean_objective": 103.9479861482057,
+      "mean_latency_ms": 10.161061982490947,
+      "throughput_pairs_per_sec": 1180.978919396203
+    },
+    "Dense Max        (M=24, N=32, L=24, L/M=1.00)": {
+      "M": 24,
+      "N": 32,
+      "L": 24,
+      "core_ratio": 1.0,
+      "n_samples": 8333,
+      "mean_accuracy": 3.491639665586623,
+      "mean_objective": 187.20132466797696,
+      "mean_latency_ms": 10.117084507382208,
+      "throughput_pairs_per_sec": 1186.1124606840906
+    },
+    "Macrocycle Half  (M=36, N=45, L=18, L/M=0.50)": {
+      "M": 36,
+      "N": 45,
+      "L": 18,
+      "core_ratio": 0.5,
+      "n_samples": 8333,
+      "mean_accuracy": 1.1060442417696708,
+      "mean_objective": 104.09868918835123,
+      "mean_latency_ms": 12.183578519141072,
+      "throughput_pairs_per_sec": 984.9322989257499
+    },
+    "Macrocycle Mod.  (M=36, N=45, L=27, L/M=0.75)": {
+      "M": 36,
+      "N": 45,
+      "L": 27,
+      "core_ratio": 0.75,
+      "n_samples": 8333,
+      "mean_accuracy": 1.695623380490775,
+      "mean_objective": 237.86238528276482,
+      "mean_latency_ms": 12.583343753738065,
+      "throughput_pairs_per_sec": 953.641594384261
+    },
+    "Large Complex    (M=48, N=60, L=24, L/M=0.50)": {
+      "M": 48,
+      "N": 60,
+      "L": 24,
+      "core_ratio": 0.5,
+      "n_samples": 8333,
+      "mean_accuracy": 0.8360334413376534,
+      "mean_objective": 187.23916247116193,
+      "mean_latency_ms": 15.006826533062744,
+      "throughput_pairs_per_sec": 799.6360838556931
+    },
+    "Large Mod. Core  (M=48, N=60, L=36, L/M=0.75)": {
+      "M": 48,
+      "N": 60,
+      "L": 36,
+      "core_ratio": 0.75,
+      "n_samples": 8333,
+      "mean_accuracy": 1.2620504820192808,
+      "mean_objective": 426.31191788076796,
+      "mean_latency_ms": 15.08349948394513,
+      "throughput_pairs_per_sec": 795.5713468729716
+    }
+  },
+  "timestamp": "2026-10-15 15:38:12"
+}

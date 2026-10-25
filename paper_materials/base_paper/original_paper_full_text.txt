@@ -1,0 +1,708 @@
+
+
+==================== PAGE 1 ====================
+
+IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING SYSTEMS, VOL. 29, NO. 7, JULY 2018 3295
+An Algorithm for Finding the Most Similar Given Sized Subgraphs
+in Two Weighted Graphs
+Xu Yang, Hong Qiao, Senior Member, IEEE , and Zhi-Yong Liu, Senior Member, IEEE
+Abstract— We propose a weighted common subgraph (WCS) matching
+algorithm to ﬁnd the most similar subgraphs in two labeled weighted
+graphs. WCS matching, as a natural generalization of equal-sized graph
+matching and subgraph matching, has found wide applications in many
+computer vision and machine learning tasks. In this brief, WCS matching
+is ﬁrst formulated as a combinatorial optimization problem over the set
+of partial permutation matrices. Then, it is approximately solved by
+a recently proposed combinatorial optimization framework—graduated
+nonconvexity and concavity proce dure. Experimental comparisons on
+both synthetic graphs and real-world images validate its robustness
+against noise level, problem size, ou tlier number, and edge density.
+Index Terms — Adjacency matrix, graph algorithms, graph
+matching, weighted common subgraph (WCS) matching.
+I. I NTRODUCTION
+Graph matching aims to ﬁnd the optimal correspondence between
+vertices of two graphs. It is a fundamental problem in theoretical
+computer science, and also plays a key role in many computer vision
+and pattern recognition tasks [1], [2].
+Bipartite graph matching can be effectively and efﬁciently solved
+by the Hungarian algorithm [3] or linear programming methods [4].
+When further considering pairwise constraints, the matching problem
+becomes in general NP-hard. Approximation methods, which make
+certain relaxations to the original problem, are necessary for efﬁ-
+ciency reasons [1].
+In the last ten years, signiﬁcant progresses have been achieved on
+the approximation methods. For instance, the computational complex-
+ity has been decreased to as low as O(N
+3)—the complexity of matrix
+multiplication. On the other hand, the accuracy, taking the benchmark
+data set “House sequence”
+1 for example, has been increased from
+about 60% [5] to nearly 100% [6], [7], due to the new graph
+similarity measures as well as new optimization techniques. Typical
+algorithms in the literature include graduated assignment (GA) [8],
+spectral technique (SM) [9], path following [7], and probabilistic
+graph matching (PGM) [10].
+In this brief, we consider the matching problem involving outliers.
+Most existing methods treat it as a part-in-whole (PIW) problem [11],
+Manuscript received June 7, 2016; revised February 23, 2017 and
+May 29, 2017; accepted June 4, 2017. Date of publication July 4, 2017;
+date of current version June 21, 2018. This work was supported in part by
+the National Natural Scienc e Foundation of China under Grant 61503383,
+Grant 61633009, Grant U1613213, Grant 61375005, Grant 61303174, and
+Grant 61210009, in part by the National Key Research and Development
+Plan of China under Grant 2016YFC0300801, and in part by the Strategic
+Priority Research Program of the C hinese Academy of Sciences under
+Grant XDB02080003. (Corresponding author: Zhi-Yong Liu.)
+X. Yang is with the State Key Laboratory of Management and Control for
+Complex Systems, Institute of Automation, Chinese Academy of Sciences,
+Beijing 100190, China (e-mail: xu.yang@ia.ac.cn).
+H. Qiao and Z.-Y . Liu are with the State Key Laboratory of Management and
+Control for Complex Systems, Institute of Automation, Chinese Academy of
+Sciences, Beijing 100190, China; with the Center for Excellence in Brain
+Science and Intelligence Technology, Chinese Academy of Sciences, Shanghai
+200031, China; and also with the University of Chinese Academy of Sciences,
+Beijing 100049, China (e-mail: hong.qiao@ia.ac.cn; zhiyong.liu@ia.ac.cn).
+Color versions of one or more of the ﬁgures in this paper are available
+online at http://ieeexplore.ieee.org.
+Digital Object Identiﬁer 10.1109/TNNLS.2017.2712794
+1Available at http://vasc.ri.cmu.edu//idb/html/motion/house/index.html
+commonly known as subgraph matching , which recognizes the
+smaller graph as a part of the bigger one. Moreover, some recently
+proposed effective graph matching algorithms [7], [12] are only
+applicable to equal-sized graphs. However, in real applications, such
+as object recognition in computer vision, outliers may exist in both
+images because of image background, object occlusion, or geometric
+transformations. Thus, it is reasonable to formulate the matching
+problem as ﬁnding the most similar subgraphs within two graphs
+extracted from the images. Furthermore, to obtain a robust similarity
+measure, the number of matched vertices should sometimes be
+speciﬁed and kept smaller than the estimated number of inliers repre-
+senting the objects [13]. Then, the problem can be deﬁned as ﬁnding
+the most similar subgraphs of a given size in two labeled weighted
+graphs. Such a problem is named weighted common subgraph (WCS)
+matching, a generalization of the equal-sized graph matching and
+subgraph matching from the persp ective of outlier distribution.
+Another similar term in the literature is the maximum common
+subgraph (MCS) problem, or known as MCS isomorphism [14].
+Given two graphs, MCS aims to ﬁnd the largest subgraph in one graph
+isomorphic to an unknown subgraph in the other one. MCS has a long
+tradition in structural data processing, such as cheminformatics. MCS
+and WCS are different mainly in the following two aspects. First,
+MCS requires the two common subgraphs to be strictly isomorphic
+to each other, even on weighted graphs, while WCS tolerates some
+disparities between them. The latter one is more reasonable in most
+real tasks when involving noises. Second, MCS searches for the
+largest common subgraphs while WCS for the common subgraphs
+of a given size.
+In the literature, there also exist some algorithms [9], [10], which
+can be used for WCS matching, by a two-step schema, which ﬁrst
+matches all the vertices, and then ﬁnds a speciﬁed number of best
+assignments by ranking techniques. Such a two-step idea is, however,
+not consistent with the WCS matching problem. That is, even both
+the two steps are optimally solved, and the obtained subgraphs may
+not be the optimal pair.
+Different from the above-mentioned methods, in this brief, we pro-
+pose a novel WCS matching algorithm, which uniﬁes the two steps
+and targets directly at the speciﬁed number of best assignments.
+Speciﬁcally, we ﬁrst formulate WCS matching as a combinatorial
+problem over the partial permutation matrices, and then develop
+a graduated nonconvexity and concavity procedure (GNCCP)-
+based [15], [16] optimization algorithm. To this end, we also propose
+two relaxations of the objective function to make the calculation
+tractable.
+The WCS matching algorithm is proposed in Section II, and
+experimentally evaluated in Section III on both synthetic graphs and
+real-world images. Finally, concluding remarks and future extensions
+are discussed in Section IV.
+II. M
+ETHOD
+In this section, we ﬁrst formulate WCS matching as a combi-
+natorial optimization problem, and then approximately solve it by
+the GNCCP. Finally, we give two relaxations to make the algorithm
+implementable.
+2162-237X © 2017 I EEE. Personal u se is perm itted, but republication/redistribution requires IEEE permission.
+See http://www.ieee.org/publications_standards/publications/rights/index.html for more information.
+Authorized licensed use limited to: AMRITA VISHWA VIDYAPEETHAM AMRITA SCHOOL OF ENGINEERING. Downloaded on June 30,2026 at 05:07:53 UTC from IEEE Xplore.  Restrictions apply. 
+
+==================== PAGE 2 ====================
+
+3296 IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING SYSTEMS, VOL. 29, NO. 7, JULY 2018
+A. Formulation
+Ag r a p hG = (V, E) of size M is deﬁned by a ﬁnite vertex set
+V ={ 1, 2, ··· , M} and an edge set E ⊆ V×V . The labeled weighted
+graph is further deﬁned by assigning a real number vector lG
+i as a
+label to vertex i, and assigning a nonnegative real number wG
+ij as a
+weight to edge ij in G. Taking feature correspondence for example,
+by treating feature points as vertices, some local descriptor, e.g., the
+scale invariant feature transform (SIFT) descriptor, can be used as the
+vertex label, and the distance between two feature points as the edge
+weight. The weighted adjacency matrix A
+G ∈ RM×M is commonly
+used to record adjacency and weights of edges. Hereafter, by terms
+graph and adjacency matrix , we mean the labeled weighted graph
+and weighted adjacency matrix, respectively.
+Given two graphs G and H of size M and N, respectively, and an
+integer L ≤ M ≤ N, WCS matching is formulated as the following
+combinatorial programming problem :
+min
+X
+F(X)
+s.t. X ∈ P, P :=
+⎧
+⎨
+⎩X
+⏐⏐⏐
+⏐
+⏐
+⏐
+M∑
+i=1
+Xij ≤ 1,
+N∑
+j=1
+Xij ≤ 1,
+M∑
+i=1
+N∑
+j=1
+Xij = L, Xij ∈{ 0, 1}
+⎫
+⎬
+⎭ , L ≤ M ≤ N
+(1)
+where P is the set of partial permutation matrices shown in Fig. 1.
+As a generalization of the recent adjacency matrix-based objective
+functions [7], [15], which have the advantage of low computational
+complexity and storage complexity. In this brief, the objective func-
+tion F(X) is constructed by
+F(X) = α∥U ◦ A
+G − XAH XT ∥2
+F + (1 − α)tr(CT X). (2)
+For further derivation convenience, the higher order term is denoted
+by H0(X),t h a ti s
+H0(X) =∥U ◦ AG − XAH XT ∥2
+F. (3)
+The two adjacency matrices AG and AH are, respectively, associated
+with the graphs G and H. ∥·∥ F denotes the Frobenius matrix
+norm deﬁned as ∥A∥F = (∑
+i
+∑
+j A2
+ij )1/2 = (tr(AT A))1/2 with
+tr(·) denoting the matrix trace. The symbol ◦ denotes the Hadamard
+product (entrywise product) of two matrices deﬁned as (A ◦ B)ij =
+Aij Bij assuming conformability. The matrix U = X1N×N XT is
+to “pick out" the vertices with corresponding relations in G,w h e r e
+every entry in 1N×N is “1," as shown in Fig. 2. In the unary term
+tr(CT X), C is a cost matrix with Cij measuring the dissimilarity
+between labels lG
+i and l H
+j . The parameter α satisfying 0 ≤ α ≤ 1i s
+used to balance the two terms.
+When L = M ≤ N, WCS matching degenerates to the PIW
+problem [15], and when L = M = N, it further degenerates to
+the equal-sized matching problem [7], [12].
+By deﬁning the problem over P, we actually introduce the one-to-
+one constraints on the WCS matching, a commonly used assumption
+in graph matching [6]. Particularly, if Xij = 1, vertex i in G is
+assigned to j in H.I f ∑ M
+i Xij = 0, there are no corresponding
+vertices in G for vertex j in H. It is similar when ∑ N
+j Xij = 0,
+as shown in Fig. 1.
+The formulation equation (1) directly targets at the WCS
+matching problem, without resorting to the conventional two-step
+schema [9], [10]. However, it meanwhile becomes more difﬁcult to
+handle, as to be discussed later in Section II-C.
+Fig. 1. Matching L = 4 vertices between the graphs G and H with size
+M = 5a n d N = 6. The black box and white box in X mean 1 and 0,
+respectively.
+Fig. 2. Graphic description for the objective. Here, M = 5, N = 6, and
+L = 4. AsubG and AsubH denote the adjacency matrices for the subgraphs
+from G and H , respectively. (a) U = X1N×N XT .( b ) AsubG = U ◦ AG .
+(c) AsubH = XAH XT .( d ) H0(X) =∥AsubG − AsubH∥2
+F .
+B. Optimization
+The combinatorial optimization problem (1) is NP-hard with a
+factorial complexity, which calls for some approximations in real-
+istic applications. In the following, we propose an approximation
+algorithm based on the GNCCP [15], [16], a relaxation technique.
+The GNCCP has its root in the convex–concave relaxation proce-
+dures (CCRPs) [7], [12], [17]. Combining both convex and concave
+relaxations, CCRP achieved a superior performance on the equal-
+sized graph matching. The GNCCP realizes exactly a type of CCRP,
+but in a much simpler way without needing to construct the con-
+vex or concave relaxations explicitly, making it very easy to use in
+practice. This is particularly important for WCS matching, because
+both the convex and concave relaxations are difﬁcult to construct.
+To utilize the GNCCP to solve (1), ﬁrst, we need to get the convex
+hull D of P as follows.
+Theorem 1: The convex hull of the set of partial matrices P is D,
+where
+D :=
+⎧
+⎨
+⎩X
+⏐⏐
+⏐
+⏐
+⏐
+⏐
+M∑
+i=1
+Xij ≤ 1,
+N∑
+j=1
+Xij ≤ 1,
+M∑
+i=1
+N∑
+j=1
+Xij = L, Xij ≥ 0
+⎫
+⎬
+⎭ .
+Proof: See Appendix A in the Supplementary Material.
+Note that D can be regarded as a generalization of the set of doubly
+stochastic matrices [18], the convex hull of the set of permutation
+matrices. Then, the GNCCP takes the following form :
+J
+ζ (X) =
+{
+(1 − ζ) F(X) + ζ tr(XT X), if 1 ≥ ζ ≥ 0
+(1 + ζ) F(X) + ζ tr(XT X), if 0 >ζ ≥− 1
+X ∈ D. (4)
+Authorized licensed use limited to: AMRITA VISHWA VIDYAPEETHAM AMRITA SCHOOL OF ENGINEERING. Downloaded on June 30,2026 at 05:07:53 UTC from IEEE Xplore.  Restrictions apply. 
+
+==================== PAGE 3 ====================
+
+IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING SYSTEMS, VOL. 29, NO. 7, JULY 2018 3297
+In implementation, ζ decreases gradually from 1 to 0 (graduated
+nonconvexity) and ﬁnally to −1 (graduated concavity). During the
+process, GNCCP implicitly transfers from the convex relaxation to
+the concave relaxation. When reaching the concave relaxation whose
+minimum points locate exactly in P, the algorithm terminates. The
+readers are referred to [15] for more details of GNCCP.
+For a speciﬁc ζ , Jζ (P) is optimized by the Frank–Wolfe
+algorithm [19], which iteratively updates X by X ← X + λd until
+convergence. The initial X is the solution of Jζ (X) obtained at the
+previous ζ . And the optimal search direction d = Y − X is given by
+solving the following linear programming problem :
+Y = arg max tr (−∇ Jζ (X)T Y)
+s.t. Y ∈ D (5)
+which can be solved by, for example, the interior point method [20].
+The gradient ∇ Jζ (X) in (5) takes the following form :
+∇ Jζ (X) =
+{
+(1 − ζ)∇ F(X) + 2ζ X, if 1 ≥ ζ ≥ 0
+(1 + ζ)∇ F(X) + 2ζ X, if 0 >ζ ≥− 1
+X ∈ D (6)
+where
+∇ F(X) =∇ H0(X) + (1 − α)C. (7)
+The optimal step size λ is given by
+λ = arg min Jζ (X + λ(Y − X))
+s.t. 0 ≤ λ ≤ 1( 8 )
+which can be solved by an inexact line search, e.g., backtracking
+algorithm [20].
+Finally, the GNCCP-based WCS matching algorithm is summa-
+rized by Algorithm 1.
+Algorithm 1 : Weighted Common Subgraph Matching Algorithm
+Input: Two graphs G and H
+Initialization: X ← 1M×N L
+M×N ,ζ ← 1
+GNCCP:
+Repeat
+FW process
+ζ = ζ − dζ
+Until ζ< −1 ∨ X ∈ P
+Output: The matching result X
+C. Implementation Details
+In implementation, it is difﬁcult to directly calculate ∇ H0(X),
+which involves a Hadamard product. Instead, in the following,
+we propose two types of relaxations of H0(X) to make it cal-
+culable. Similar relaxation techniques were widely used in graph
+matching [7], [12].
+The ﬁrst relaxation H
+1(X) is given as follows :
+H1(X) =∥ U ◦ AG − XAH XT ∥2
+F = tr((AG ◦ AG)UT )
+−2tr
+(
+AG XAT
+H XT )
++ tr
+(
+XAH XT XAT
+H XT )
+(9)
+where we take advantage of
+U ◦ U = U (10a)
+U ◦ (XAH XT ) = XAH XT . (10b)
+See Appendix B in the Supplementary Material for the derivation
+details of (9). Its gradient is then ﬁgured out as follows :
+∇ H1(X) =
+(
+AT
+G ◦ AT
+G + AG ◦ AG
+)
+X1N×N − 2
+(
+AT
+G XAH
++ AG XAT
+H
+)
++2
+(
+XAH XT XAT
+H +XAT
+H XT XAH
+)
+. (11)
+The second relaxation H2(X) is derived as follows :
+H2(X) =∥ U ◦ AG −XAH XT∥2
+F =∥(XXT)AG(XXT)−XAH XT ∥2
+F
+= tr
+(
+XXT AT
+G XXT AGXXT )
+− 2tr
+(
+XXT AT
+G XAH XT )
++ tr
+(
+XAT
+H XT XAH XT)
+= T1(X)−2T2(X) + T3(X) (12)
+where we take advantage of
+U ◦ A = XXT AXXT (13a)
+XXT XXT = XXT (13b)
+XXT X = X (13c)
+XT XXT = XT . (13d)
+Then, the gradient is given as follows :
+∇ H2(X) =∇ T1(X) − 2∇T2(X) +∇ T3(X) (14)
+where
+∇T1(X) = 2
+(
+XXT AT
+G XXT AG X + AT
+G XXT AG XXT X
++ AG XXT XXT AT
+G X
+)
+∇T2(X) = XAT
+H XT AG X + AT
+G XAH XT X + AG XXT XAT
+H
++ XXT AT
+G XAH
+∇T3(X) = 2
+(
+XAT
+H XT XAH + XAH XT XAT
+H
+)
+.
+Consequently, by replacing H0(X) with H1(X) or H2(X),
+the GNCCP can be implemented to solve the WCS matching prob-
+lem. It is noted that both H1(X) and H2(X) are relaxations of
+H0(X), because H0(X) = H1(X) = H2(X), ∀X ∈ P.H o w e v e r ,
+the equivalence becomes in general unsatisﬁed when X ∈ D\ P.I ti s
+similar to previous works [7], [15] where the relaxation functions are
+not necessarily equivalent to the original objective function in the
+continuous domain.
+It is hard to evaluate the two relaxations theoretically by error
+bounds, because neither of them is convex relaxation. However,
+as revealed by the experimental comparisons in Section III, H
+1(X)
+outperforms H2(X) in most of the experiments. The advantage of
+H1(X) may be due to the fact that it has the same fourth order as
+H0(X), which is lower than the sixth order of H2(X).F u r t h e r m o r e ,
+H1(X) is computationally more efﬁcient than H2(X).
+Last but not least, when degenerating to the PIW problem, i.e.,
+L = M, the GNCCP can be directly implemented, with H0(X) and
+its gradient ∇ H0(X) given as follows [15] :
+H′
+0(X) =∥ AG − XAH XT ∥2
+F (15)
+∇ H′
+0(X) = 2X
+(
+AT
+H XT XAH + AH XT XAT
+H
+)
+− 2
+(
+AG XAT
+H + AT
+G XAH
+)
+. (16)
+D. Storage and Computational Complexity
+The proposed method formulates the graph matching problem
+based on the adjacency matrix. Compared with the afﬁnity matrix 2-
+based algorithms [6], [8]–[10], [21], one most important advantage
+of the adjacency matrix-based methods is storage saving. Without
+2The afﬁnity matrix can be seen as the adjacency matrix for the associate
+graph of G and H ,w h o s es i z ei sMN × MN .
+Authorized licensed use limited to: AMRITA VISHWA VIDYAPEETHAM AMRITA SCHOOL OF ENGINEERING. Downloaded on June 30,2026 at 05:07:53 UTC from IEEE Xplore.  Restrictions apply. 
+
+==================== PAGE 4 ====================
+
+3298 IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING SYSTEMS, VOL. 29, NO. 7, JULY 2018
+Fig. 3. Results on synthetic data with respect to noise level, problem size, outlier number, and edge density, summarized from 30 random runs for each
+ﬁxed conﬁguration. The WCS and PIW results are in the top and bottom rows, respectively. Matching accuracy comparison results with respect to (a) nois e
+level in WCS, (b) problem size in WCS, (c) outlier number in WCS, (d) edge density in WCS, (e) noise level in PIW, (f) problem size in PIW, (g) outlier
+number in PIW, and (h) edge density in PIW.
+considering the sparsity, the storage complexity of the afﬁnity matrix-
+based methods is O(M2 N2), while that of adjacency matrix-based
+methods, including the proposed method, is as low as O(N2).
+The computational complexity of the proposed method is mainly
+determined by the linear programming problem (5), which can be
+solved in polynomial time. When L = M ≤ N, (5) can be
+solved by the rectangular Hungarian algorithm [22] with an O(M
+2 N)
+computational complexity. It is smaller than the matrix multiplication
+complexity O(MN 2), so the overall complexity is O(MN 2).W h e n
+L < M ≤ N, the Hungarian algorithm or other efﬁcient linear
+assignment algorithms [4] are inapplicable. Linear programming
+algorithms involving an O(N6) computational complexity, such as
+the interior point method, are usually used to solve (5).
+To make the algorithm more efﬁcient, a fast method based on the
+rectangular Hungarian algorithm [22] is presented to approximately
+solve (5), which still enjoys the complexity O(MN 2). Speciﬁcally,
+it ﬁrst ﬁnds a solution Y1 for (5) with M “1”s by the rectangular
+Hungarian algorithm [22]. Then, it removes the M − L “1”s values
+of Y1 that correspond to the M − L smallest values of −∇ Jζ (X) to
+get the ﬁnal approximate solution Y. The cost for the computational
+efﬁciency is a slight loss of accuracy, as to be experimentally
+demonstrated in Section III.
+III. E XPERIMENTAL RESULTS
+We apply the proposed algorithm on synthetic graphs as well as
+real-world images, 3 to evaluate its performance against noise level,
+problem size, outlier number, and edge density. The experiments
+are conducted on both WCS matching and PIW problems. The
+methods included for comparison are SM [9], GA [8], PGM [10],
+and (extended) path following method (EPF) [7], [12]. The proposed
+algorithm with two relaxations is denoted by RLX1 and RLX2,
+respectively. When the fast method described in Section II-D is used
+3More experimental results are given in the supplementary materi-
+als (Sup_Mat_II_Add_Exp.pdf), incl uding an experiment on handwritten
+Chinese character recognition and typical results on Motorbike and Pisa
+images.
+to solve the linear programming (5), the two algorithms are then,
+respectively, denoted by RLX1F and RLX2F. When used on the PIW
+problem, the proposed algorithm becomes exactly the one proposed
+in [15], denoted by GNCCP_PGM.
+The algorithms are implemented by MATLAB R2011 on a personal
+computer with a 3 .07-GHz CPU (two core) and 2-GB RAM, using
+mex (dll) ﬁles lpsolve toolbox
+4 and the rectangular assignment
+toolbox5 for the linear programming problem (5).
+A. On Synthetic Data
+1) Experimental Settings: In this experiment, the accuracies of dif-
+ferent algorithms are ﬁrst compared on randomly generated synthetic
+graphs. First, two spatial point sets G ={ g
+i}M
+i=1, H ={ hi}N
+j=1 are
+randomly generated by uniform sampling, i.e., gi, h j ∼ U(0, 1)1×2.
+A partial permutation matrix Xgt ∈ RM×N with L “1"s is randomly
+generated as the ground truth correspondence. Then, part of points
+in G are updated by permutating H with Xgt as
+gi = h j + η, η ∼ N(0,σ 2), if Xgt
+ij = 1
+where η is the additive gaussian noise. Finally, the distances between
+points are utilized as the edge weights. And the adjacency, i.e., the
+graph structure, is built in a sparse manner by adjusting the edge
+density. The graph structure is disturbed by the noise η following the
+way in [7]. Speciﬁcally, (1/2)σ #Edge edges are randomly added
+to and removed from each sparse graph, where # Edge denotes the
+number of edges. The adjacency matrices A
+G , AH , and the afﬁnity
+matrix are then generated, where the afﬁnity matrix, required by SM,
+GA, and PGM, is built in the same way as in [10]. The parameter α
+is set as 1.
+For WCS matching, the following four scenarios are implemented.
+1) Noise Level: Set M = 30, N = M + 5, L = M − 5, set edge
+density as 0 .5, and increase σ from 0 to 0 .1b yas t e p0 .01.
+4Available at http://sourceforge.net/projects/lpsolve/ﬁles/lpsolve/
+5Available http://www.mathworks.com/matlabcentral/ﬁleexchange/6543
+Authorized licensed use limited to: AMRITA VISHWA VIDYAPEETHAM AMRITA SCHOOL OF ENGINEERING. Downloaded on June 30,2026 at 05:07:53 UTC from IEEE Xplore.  Restrictions apply. 
+
+==================== PAGE 5 ====================
+
+IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING SYSTEMS, VOL. 29, NO. 7, JULY 2018 3299
+Fig. 4. Running time comparison in WCS matching with respect to noise leve l, problem size, outlier number, and edge density, summarized from 50 random
+runs for each ﬁxed conﬁguration. Running time comparison results with resp ect to (a) noise level, (b) problem size, (c) outlier number, and (d) edge de nsity.
+Fig. 5. Results on real-world images with respect to problem size and outlier
+number, summarized from 200 random runs for each ﬁxed conﬁguration.
+The WCS and PIW results are in the top and bottom rows, respectively.
+Matching accuracy comparison results with respect to (a) problem size in
+WCS, (b) outlier number in WCS, (c) problem size in PIW, and (d) outlier
+number in PIW.
+2) Problem Size: Set σ = 0.05, N = M + 5, L = M − 5, set edge
+density as 0 .5, and increase M f r o m2 0t o4 0b yas t e p2 .
+3) Outlier Number: Set σ = 0.05, M = 30, N = M + 5, set edge
+density as 0 .5, and decrease L f r o m3 0t o2 0b yas t e p1 .
+4) Edge Density: Set σ = 0.05, M = 30, N = M+5, L = M−5,
+and increase the density from 0 .1t o1b yas t e p0 .1.
+For the PIW problem, the following four similar scenarios are
+implemented.
+1) Noise Level: Set N = 50, L = M = N − 5, set edge density
+as 0.5, and increasing σ from 0 to 0 .1b yas t e p0 .01.
+2) Problem Size: Set σ = 0.05, L = M = N −5, set edge density
+as 0.5, and increase N from 40 to 60 by a step 2.
+3) Outlier Number: Set σ = 0.05, N = 50, L = M, set edge
+density as 0 .5, and decrease L f r o m5 0t o4 0b yas t e p1 .
+4) Edge Density: Set σ = 0.05, N = 50, L = M = N − 5, and
+increase the density from 0 .1t o1b yas t e p0 .1.
+2) Results: The WCS matching performance is shown in Fig. 3,
+from which we can draw the following observations. First, generally
+the proposed algorithm RLX1 achieves better results than other
+algorithms, and the performance of RLX2 is comparable with PGM,
+a state-of-the-art algorithm in t he literature. Second, RLX1 outper-
+forms RLX2, probably because H
+1(X) provides a better relaxation
+for H0(X). Third, the fast algorithm for approximating (5) introduced
+in Section II-D shows good perfo rmance. For instance, RLX1F
+achieves a comparable performance to PGM. It is also reasonable
+to observe that RLX1 and RLX2 outperform slightly RLX1F and
+RLX2F, respectively, but the latter ones enjoy a much smaller
+computational complexity, as to be discussed in the following. Finally,
+it is also reasonable to witness that the accuracies of all the algorithms
+decrease as the noise level, problem size, or outlier number increase.
+Since the number of local minimum points is C
+L
+M CL
+N
+L!,al a r g e r
+M, N,o r L implies that the algorithm is easier to be trapped in a
+poor local minimum. Besides, the algorithms achieve their best results
+when the edge density is set about 0.5, at which the objective function
+seems to get a good balance between the appearance and structure
+cues. When the edge density is 0, the matching problem degenerates
+to a pure appearance matching without structural cues. As the edge
+density increases, incorporation of more structural information results
+in a better performance. However, high edge density may make the
+graphs less distinctive, and thus result in a decrease in performance.
+The computation time of different algorithms in WCS matching is
+compared in Fig. 4. It can be observed that generally the computation
+time with respect to the varying noise level and outlier number is
+relatively stable, but they are positively correlated with problem size
+and edge density. The computation time with respect to problem size
+is plotted in log scale in Fig. 4(b), and the slopes of the lines indicate
+the computational complexities of different algorithms, which are,
+respectively, 5.4 ± 0.5 for RLX1 and RLX2, 4 .3 ± 0.5 for SM, GA,
+and PGM, and 3 .5 ± 0.5 for RLX1F and RLX2F.
+The PIW results are also given in Fig. 3. All the algorithms achieve
+better performances on the PIW problem than on WCS matching,
+implying that WCS matching is a more difﬁcult problem. EPF trans-
+forms the subgraph matching problem into the equal-sized adjacency
+matrix matching by adding dummy nodes, which may, however,
+change the original problem [15]. By contrast, GNCCP_PGM directly
+optimizes the subgraph matching objective, and thus achieves better
+results.
+B. On Real-World Images
+We also apply the proposed method on a data set fetched from
+Pascal 2007 Challenge. The data set consists of ten pairs of Motorbike
+images and ten pairs of Pisa images. Each image pair is manually
+labeled with 60 ground-truth correspondence points. The graph
+structure is constructed by Delaunay triangulation. SIFT descriptor
+is utilized as the vertex label with α = 0.5. The comparisons with
+respect to different problem sizes and outlier numbers are carried
+out, with the same experimental settings as those on the previous
+synthetic graph matching. The smaller number of ground truth points
+are randomly selected from the original ones. For instance, when the
+problem size is 35 and the outlier number is 5, only 3 0 ground-truth
+Authorized licensed use limited to: AMRITA VISHWA VIDYAPEETHAM AMRITA SCHOOL OF ENGINEERING. Downloaded on June 30,2026 at 05:07:53 UTC from IEEE Xplore.  Restrictions apply. 
+
+==================== PAGE 6 ====================
+
+3300 IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING SYSTEMS, VOL. 29, NO. 7, JULY 2018
+correspondence points are randomly selected from the 60 ground truth
+ones. For each image pair, the outliers are randomly sampled for ten
+times. Thus for each ﬁxed conﬁguration, the matching are repeated
+randomly for 200 times.
+The real-image matching results are shown in Fig. 5, which reveals
+that the proposed algorithms achieve better or at least comparable
+performances with the state-of-the-art algorithms on both WCS
+and PIW.
+IV . C
+ONCLUSION AND FUTURE WORKS
+A new algorithm is proposed to match subgraphs with given size
+in two labeled weighted graphs. Different from the commonly used
+two-step strategy, the proposed algorithm could directly ﬁnd the
+most similar subgraphs in one optimization framework. In the current
+version, the common subgraph size must be prespeciﬁed, but in some
+tasks, it needs automatic determination. We would try to solve the
+problem in our future works.
+R
+EFERENCES
+[1] D. Conte, P. Foggia, C. Sansone, a nd M. Vento, “Thirty years of graph
+matching in pattern recognition,” Int. J. Pattern Recognit. Artif. Intell. ,
+vol. 18, no. 3, pp. 265–298, May 2004.
+[2] M. Houbraken, S. Demeyer, T. Michoel, P. Audenaert, D. Colle, and
+M. Pickavet, “The index-based subgraph matching algorithm with gen-
+eral symmetries (ISMAGS): Exploiting symmetry for faster subgraph
+enumeration,” PLoS ONE, vol. 9, no. 5, p. e97896, 2014.
+[3] H. W. Kuhn, “The Hungarian method for the assignment problem,”
+Naval Res. Logistics Quart. , vol. 2, nos. 1–2, pp. 83–97, Mar. 1955.
+[4] A. Schrijver, Combinatorial Optimizati on: Polyhedra and Efﬁciency .
+Berlin, Germany: Springer, 2003.
+[5] H. J. Qiu and E. R. Hancock, “Graph matching and clustering using spec-
+tral partitions,” Pattern Recognit., vol. 39, no. 1, pp. 22–34, Jan. 2006.
+[6] F. Zhou and F. De la Torre, “Factorized graph matching,” in Proc. IEEE
+Conf. Comput. Vis. Pattern Recognit. (CVPR) , Jun. 2012, pp. 127–134.
+[7] M. Zaslavskiy, F. Bach, and J. P. Vert, “A path following algorithm for
+the graph matching problem,” IEEE Trans. Pattern Anal. Mach. Intell. ,
+vol. 31, no. 12, pp. 2227–2242, Dec. 2009.
+[8] S. Gold and A. Rangarajan, “A gr aduated assignment algorithm for
+graph matching,” IEEE Trans. Pattern Anal. Mach. Intell., vol. 18, no. 4,
+pp. 377–388, Apr. 1996.
+[9] M. Leordeanu and M. Hebert, “A sp ectral technique for correspondence
+problems using pairwise constraints,” in Proc. Int. Conf. Comput. Vis. ,
+Beijing, China, Oct. 2005, pp. 1482–1489.
+[10] A. Egozi, Y . Keller, and H. Guterman, “A probabilistic approach to
+spectral graph matching,” IEEE Trans. Pattern Anal. Mach. Intell. ,
+vol. 35, no. 1, pp. 18–27, Jan. 2013.
+[11] S. Biasotti, S. Marini, M. Spa gnuolo, and B. Falcidieno, “Sub-part
+correspondence by structural descriptors of 3D shapes,” Comput. Aided
+Design, vol. 38, no. 9, pp. 1002–1019, Sep. 2006.
+[12] Z.-Y . Liu, H. Qiao, and L. Xu, “An extended path following algorithm
+for graph-matching problem,” IEEE Trans. Pattern Anal. Mach. Intell. ,
+vol. 34, no. 7, pp. 1451–1456, Jul. 2012.
+[13] J. Maciel and J. Costeira, “Robust point correspondence by concave
+minimization,” Image Vis. Comput. , vol. 20, nos. 9–10, pp. 683–690,
+Aug. 2002.
+[14] H.-C. Ehrlich and M. Rarey, “Maximum common subgraph isomorphism
+algorithms and their applications in molecular science: A review,”
+Wiley Interdiscipl. Rev., Comput. Mol. Sci. , vol. 1, no. 1, pp. 68–79,
+Jan./Feb. 2011.
+[15] Z.-Y . Liu and H. Qiao, “GNCCP—G raduated NonConvexityand concav-
+ity procedure,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 36, no. 6,
+pp. 1258–1267, Jun. 2014.
+[16] X. Yang, H. Qiao, and Z.-Y . Liu, “Partial correspondence based on
+subgraph matching,”Neurocomputing, vol. 122, pp. 193–197, Dec. 2013.
+[ 1 7 ] Z . - Y .L i u ,H .Q i a o ,X .Y a n g ,a n dS .C .H .H o i ,“ G r a p hm a t c h i n gb y
+simpliﬁed convex-concave relaxation procedure,” Int. J. Comput. Vis. ,
+vol. 109, no. 3, pp. 169–186, Sep. 2014.
+[18] J. M. Borwein and A. S. Lewis, Convex Analysis and Nonlinear
+Optimization, vol. 3. Berlin, Germany: Springer, 2006.
+[19] M. Frank and P. Wolfe, “An algorithm for quadratic programming,” Nav.
+Res. Logistics Q. , vol. 3, nos. 1–2, pp. 95–110, Mar./Jun. 1956.
+[20] S. Boyd and L. Vandenberghe, Convex Optimization, Cambridge, U.K.:
+Cambridge Univ. Press, 2004.
+[21] T. Cour, P. Srinivasan, and J. Shi, “Balanced graph matching,” in Proc.
+Adv. Neural Inf. Process. Syst. , Vancouver, BC, Canada, Dec. 2006,
+p. 6.
+[22] F. Bourgeois and J.-C. Lassalle, “An extension of the munkres algorithm
+for the assignment problem to rectangular matrices,” Commun. ACM ,
+vol. 14, no. 12, pp. 802–804, Dec. 1971.
+Authorized licensed use limited to: AMRITA VISHWA VIDYAPEETHAM AMRITA SCHOOL OF ENGINEERING. Downloaded on June 30,2026 at 05:07:53 UTC from IEEE Xplore.  Restrictions apply. 

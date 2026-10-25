@@ -20,7 +20,7 @@
 
 \begin{document}
 
-\title{Mathematical Foundations of the WCS-GNCCP\\Molecular Graph Kernel with Hierarchical\\2D--3D Alignment}
+\title{Mathematical Foundations of the WCS-GNCCP\\Molecular Graph Kernel with Hierarchical\\2D--3D Alignment (Phase 1)}
 
 \author{%
 \IEEEauthorblockN{Allampati Chenchu Sanhitha Reddy,
@@ -34,21 +34,21 @@ Guide: Dr.\ T Ramraj}}
 \maketitle
 
 \begin{abstract}
-We present the mathematical foundations of a hierarchical molecular
-similarity kernel that combines 2D topological matching with 3D
-geometric alignment.  The 2D stage solves a Weighted Common Subgraph
+We present the mathematical foundations of a hierarchical cross-domain
+similarity kernel that combines 2D topological matching with a proposed 3D
+geometric alignment. Phase 1 (completed) solves a Weighted Common Subgraph
 (WCS) problem via Graduated Non-Convexity and Concavity Procedure
 (GNCCP) with Frank-Wolfe optimization, producing both a similarity
-score and a bijective atom correspondence.  We derive a closed-form
+score and a bijective node correspondence. We derive a closed-form
 structural gradient (Theorem~\ref{thm:gradient}), prove a rank-one
-factorization that eliminates one cubic sub-operation per gradient
-evaluation (Lemma~\ref{lem:U-outer}), and establish scale invariance
+factorization that optimizes the internal gradient bottleneck
+(Lemma~\ref{lem:U-outer}), and establish scale invariance
 via Frobenius normalization (Proposition~\ref{prop:normalization}).
-The bijective map produced by Stage~1 reduces the 3D alignment
-(Stage~2) to a single $O(n)$ Kabsch rotation, yielding a hybrid kernel
+The bijective map produced by Phase 1 sets up the proposed Phase 2,
+which will reduce the 3D alignment
+to a single $O(n)$ Kabsch rotation, yielding a hybrid kernel
 with per-pair complexity dominated by the 2D stage at
-$O(T_\zeta T_{\mathrm{FW}} n^3)$ --- empirically competitive with
-Random Walk and Optimal Assignment kernels on drug-like molecules.
+$O(T_\zeta T_{\mathrm{FW}} n^3)$.
 \end{abstract}
 
 
@@ -64,7 +64,7 @@ $\mathbf{A}_H \!\in\! \mathbb{R}^{N \times N}$,
 where each entry reflects bond type (single, double, triple, aromatic)
 and topology (ring membership, conjugation).
 A cost matrix $\mathbf{C} \!\in\! \mathbb{R}^{M \times N}$ encodes pairwise
-atom-feature dissimilarity.
+atom-feature dissimilarity. To enforce sparsity and prohibit physically impossible matches, we apply heuristic atom pruning by assigning a sufficiently large penalty ($C_{ij} \to \infty$) for mismatched element types (e.g., pairing Carbon to Oxygen).
 
 \begin{definition}[Partial Permutation Polytope]
 \label{def:polytope}
@@ -659,14 +659,14 @@ in addition to similarity score).
 
 
 % ===================================================================
-\section{Stage 2: 3D Alignment via Kabsch Rotation}
+\section{Phase 2 (Proposed Extension): 3D Alignment via Kabsch Rotation}
 \label{sec:3d-alignment}
 % ===================================================================
 
-The bijective atom correspondence $\mathbf{X}^*$ from Stage~1
+The bijective atom correspondence $\mathbf{X}^*$ from Phase 1
 induces a set of $L$ matched atom pairs
 $\mathcal{M} = \{(i,j) : X^*_{ij} = 1\}$.
-We exploit this mapping to perform 3D alignment in $O(L)$ time.
+In the upcoming Phase 2, we will exploit this mapping to perform 3D alignment in $O(L)$ time.
 
 \begin{definition}[Matched Coordinate Sets]
 \label{def:matched-coords}
@@ -710,15 +710,15 @@ The total cost is dominated by forming $\mathbf{H}$, which
 requires $O(L)$ vector operations.
 \end{proof}
 
-\begin{corollary}[Stage 2 Complexity]
+\begin{corollary}[Phase 2 Complexity]
 \label{cor:stage2}
-Given the atom map $\mathcal{M}$ from Stage~1, the 3D
+Given the atom map $\mathcal{M}$ from Phase 1, the 3D
 alignment and RMSD computation cost $O(L) = O(n)$.
 \end{corollary}
 
 \begin{definition}[Hybrid Kernel]
 \label{def:hybrid}
-The two-stage similarity measure combines 2D topological
+The two-phase similarity measure combines 2D topological
 and 3D geometric information:
 \begin{equation}
 k_{\text{hybrid}}(G, H)
@@ -737,15 +737,15 @@ and $\beta \in [0,1]$ is cross-validated per target.
 \begin{remark}[Overall Pipeline Complexity]
 The total per-pair cost of the hierarchical pipeline is
 \begin{equation}
-\underbrace{O(T_\zeta T_{\mathrm{FW}} n^3)}_{\text{Stage 1: 2D kernel}}
-+ \underbrace{O(n)}_{\text{Stage 2: 3D alignment}}
+\underbrace{O(T_\zeta T_{\mathrm{FW}} n^3)}_{\text{Phase 1: 2D kernel}}
++ \underbrace{O(n)}_{\text{Phase 2: 3D alignment}}
 = O(T_\zeta T_{\mathrm{FW}} n^3),
 \label{eq:pipeline-complexity}
 \end{equation}
-completely dominated by Stage~1.
-The 2D stage serves as a search-space reduction gate:
+completely dominated by Phase 1.
+The 2D phase serves as a search-space reduction gate:
 only candidates with $k_{\text{2D}} > \tau$
-(a tunable threshold) proceed to Stage~2.
+(a tunable threshold) proceed to Phase 2.
 For a library of $P$ molecules with filtration rate~$\phi$,
 the total screening cost is
 \begin{equation}
@@ -835,7 +835,8 @@ by the cyclic property of trace.
       \STATE \textbf{break}
     \ENDIF
     \STATE $\lambda \leftarrow
-      \text{ArmijoLS}(\mathbf{X},\mathbf{Y},J_\zeta)$
+      \text{ExactLineSearch}(\mathbf{X}, \mathbf{Y}, \nabla)$
+      \hfill\COMMENT{Analytical step size}
     \STATE $\mathbf{X} \leftarrow
       \text{Sinkhorn}\!\bigl(
         \mathbf{X}\!+\!\lambda(\mathbf{Y}\!-\!\mathbf{X}),\,L

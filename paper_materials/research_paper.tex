@@ -1,0 +1,1486 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\graphicspath{{figures/standalone/}{figures/}{schematics/}{.}}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{cite}
+\usepackage{url}
+
+% Every empirical number in the text is \LV{key}, generated from the live benchmark CSVs by
+% benchmarks/scripts/make_paper_tables_live.py; an unknown key stops compilation.
+\makeatletter
+\newcommand{\LVdef}[2]{\expandafter\def\csname LV@#1\endcsname{#2}}
+\newcommand{\LV}[1]{\ifcsname LV@#1\endcsname\csname LV@#1\endcsname\else\errmessage{Undefined live value #1}\fi}
+\makeatother
+\input{live/live_values.tex}
+
+\setlength{\textfloatsep}{4pt plus 1pt minus 1pt}
+\setlength{\floatsep}{4pt plus 1pt minus 1pt}
+\setlength{\intextsep}{4pt plus 1pt minus 1pt}
+\setlength{\dbltextfloatsep}{4pt plus 1pt minus 1pt}
+\setlength{\dblfloatsep}{4pt plus 1pt minus 1pt}
+\setlength{\abovedisplayskip}{2pt plus 1pt minus 1pt}
+\setlength{\belowdisplayskip}{2pt plus 1pt minus 1pt}
+\setlength{\abovedisplayshortskip}{1pt plus 1pt}
+\setlength{\belowdisplayshortskip}{2pt plus 1pt minus 1pt}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\dblfloatpagefraction}{0.85}
+
+% Theorem Environments
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{inference}{Inference}
+
+
+
+
+
+\makeatletter
+\def\thebibliography#1{\section*{\refname}%
+    \footnotesize
+    \list{\@biblabel{\@arabic\c@enumiv}}%
+    {\settowidth\labelwidth{\@biblabel{#1}}%
+    \leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+    \setlength{\itemsep}{-0.4pt plus 0.2pt minus 0.1pt}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\topsep}{1pt}%
+    \usecounter{enumiv}%
+    \let\p@enumiv\@empty
+    \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+    \let\newblock\@empty
+    \sloppy\clubpenalty4000\widowpenalty4000%
+    \sfcode`\.=1000\relax}
+\makeatother
+
+\begin{document}
+
+
+
+% =========================================================
+% TITLE
+% =========================================================
+
+\title{
+An Efficient Framework for Structural Correspondence and Partial Matching in Attributed Graphs
+}
+
+% =========================================================
+% AUTHOR BLOCK -- 3 + 2 SYMMETRIC LAYOUT (EXACTLY 5 AUTHORS)
+% =========================================================
+
+\author{
+\begingroup
+\renewcommand{\arraystretch}{0.90}
+\setlength{\tabcolsep}{2pt}
+
+\begin{tabular}{@{}ccc@{}}
+
+% ROW 1: AUTHORS 1, 2, 3
+\begin{minipage}[t]{0.30\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{1st} Dr. T Ramraj
+
+\vspace{1pt}
+
+\textit{Department of Computer Science}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+t\_ramraj@cb.amrita.edu
+\end{minipage}
+&
+\begin{minipage}[t]{0.34\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{2nd} Allampati Chenchu Sanhitha Reddy
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23206@cb.students.amrita.edu
+\end{minipage}
+&
+\begin{minipage}[t]{0.30\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{3rd} Shaik Abdus Sattar
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23245@cb.students.amrita.edu
+\end{minipage}
+
+\\[-1mm]
+
+% VERTICAL GAP (MATCHING sample_paper.tex)
+\multicolumn{3}{c}{\rule{0pt}{8mm}}\\[-1mm]
+
+% ROW 2: AUTHORS 4, 5 (SYMMETRICALLY CENTERED)
+\multicolumn{3}{c}{%
+\begin{tabular}{@{}cc@{}}
+\begin{minipage}[t]{0.36\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{4th} Geethika G Nair
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23616@cb.students.amrita.edu
+\end{minipage}
+&
+\begin{minipage}[t]{0.36\textwidth}
+\centering
+\fontsize{8}{9}\selectfont
+\textsuperscript{5th} Meera J Vaishnav
+
+\vspace{1pt}
+
+\textit{Amrita School of Computing}\\
+\textit{Amrita Vishwa Vidyapeetham}\\
+Coimbatore, India\\
+cb.sc.u4cse23633@cb.students.amrita.edu
+\end{minipage}
+\end{tabular}%
+}
+
+\end{tabular}
+
+\endgroup
+}
+
+\maketitle
+
+% =========================================================
+% ABSTRACT
+% =========================================================
+
+\begin{abstract}
+Weighted Common Subgraph (WCS) matching seeks an explicit partial correspondence $\mathbf{X}\in\mathcal{P}_L$ between $L$ vertices of two attributed relational graphs, establishing maximum shared topological subgraphs under structural noise, node churn, and degree distortions. While classical Lawler-tensor solvers (RRWM, IPFP) suffer from an intractable $\mathcal{O}(N^4)$ memory barrier and continuous full-graph relaxations (FAQ) collapse under partial outliers ($L < \min(M, N)$), the Graduated Non-Convexity and Concavity Procedure (GNCCP) operates in $\mathcal{O}(N^2)$ space but was historically hindered by distorted polynomial relaxations (RLX1, RLX2), expensive LP oracles, and heuristic cardinality drops. We present Fast-WCS, an exact analytical optimization framework that eliminates these bottlenecks via six core contributions: (1) a rank-one factorization $\mathbf{U}=\mathbf{r}\mathbf{r}^T$ reducing co-matching work from $\Theta(N^3)$ to $\Theta(N^2)$; (2) the exact closed-form gradient in three Level-3 BLAS GEMMs; (3) an exact quartic line search solved in $\mathcal{O}(1)$ time via Cardano's formula; (4) an augmented Burkard Hungarian oracle guaranteeing exact cardinality $L$; (5) a vectorized Level-3 BLAS 2-opt refinement; and (6) specialized domain adaptations (synthetic regular multi-start restarts, planar Delaunay vision matching, dynamic social Weisfeiler--Lehman tree homotopy, and attributed chemical/nanocrystal network matching). Across synthetic regular and scale-free graphs up to $N=150$, Oxford Affine image keypoints, attributed molecular graphs, and Stanford CollegeMsg social networks, Fast-WCS achieves state-of-the-art accuracy while delivering up to $\LV{grid.spd.rlxone.max}\times$ speedup over exact GNCCP baselines in strictly $\mathcal{O}(N^2)$ memory.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Attributed Graph Matching, Weighted Common Subgraph, GNCCP, Frank-Wolfe Optimization, Convex-Concave Homotopy, Bijective Correspondence, Weisfeiler-Lehman Tree Kernels, Dynamic Social Networks, Exact Quartic Line Search, Burkard Hungarian Oracle, Vectorized 2-Opt Refinement, Multi-Topology Robustness.
+\end{IEEEkeywords}
+
+% =========================================================
+% I. INTRODUCTION
+% =========================================================
+
+
+\section{Introduction}
+\label{sec:intro}
+
+Quantifying structural similarity and discovering shared topological motifs between relational networks is a core mathematical challenge across modern scientific computing, computer vision, robotics, structural biology, and dynamic social network analysis \cite{conte2004, emmert2007, panzarasa2009}. In visual landmark tracking, dynamic social interaction analysis, macromolecular modeling, and relational knowledge graphs, evaluating similarity between two complex systems requires finding maximum common substructures while accommodating flexible edge deformations, structural noise, and varying background outliers \cite{zaslavskiy2009, vishwanathan2010, leordeanu2005}. Within this broad domain, Weighted Common Subgraph (WCS) matching provides a principled mathematical formulation for establishing discrete correspondences across attributed relational structures.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig_workflow_pipeline.pdf}
+\vspace{-4pt}
+\caption{End-to-end architecture of the proposed Fast-WCS analytical optimization framework. Attributed graphs $G$ and $H$ from diverse relational domains (synthetic graphs, computer vision keypoints, dynamic social networks, and attributed molecular topologies) are processed through the analytical Fast-WCS homotopy engine (leveraging Lemma~1 Rank-1 Factorization, Theorem~1 exact closed-form gradient, Burkard Hungarian LMO, Frank-Wolfe duality gap stopping test, and Theorem~\ref{thm:quartic_line_search} Cardano exact quartic line search). The engine recovers an exact discrete bijective node correspondence $\mathbf{X}^* \in \mathcal{P}_L$, followed by vectorized Level-3 BLAS 2-opt combinatorial refinement to certify maximum weighted common subgraph recovery in strictly $\mathcal{O}(N^2)$ memory.}
+\label{fig:workflow_pipeline}
+\end{figure*}
+
+While graph embeddings learned by graph neural networks summarize similarity in latent vector spaces, they do not return explicit vertex correspondences. Combinatorial matching instead recovers an explicit bijective mapping $\mathbf{X}^* \in \mathcal{P}_L$ between $L$ nodes of $G$ and $H$. This discrete mapping provides interpretable node-to-node correspondences that directly preserve topological subgraphs, vertex attributes, and edge weights across varying noise levels, decoupling combinatorial correspondence search from extrinsic coordinate frames or arbitrary embedding spaces.
+
+However, WCS matching is an NP-hard combinatorial problem generalizing the maximum common subgraph isomorphism and quadratic assignment problems (QAP) \cite{garey1979, loiola2007}. To solve WCS, Liu and Qiao \cite{liu2015graduated} and Yang et al. \cite{yang2018algorithm} formulated the Graduated Non-Convexity and Concavity Procedure (GNCCP) directly on the partial permutation polytope $\mathcal{P}_L$, deforming a strictly convex objective at $\zeta=+1$ into the NP-hard non-convex objective at $\zeta=0$ and terminating at a concave problem at $\zeta=-1$. Despite its elegance, existing implementations suffer from critical computational bottlenecks:
+\begin{enumerate}
+    \item \textbf{Analytical Gradient Distortion:} Inability to differentiate the Hadamard co-matching term directly led prior works to substitute polynomial relaxations (RLX1, RLX2) whose higher-order expansions distort the continuous landscape on $\mathcal{D}_L \setminus \mathcal{P}_L$, or to use $\Theta(N^5)$ finite differences.
+    \item \textbf{Cubic Co-Matching Overhead:} The co-matching matrix $\mathbf{U} = \mathbf{X}\mathbf{1}_{N\times N}\mathbf{X}^T$ naively consumes $\Theta(MN^2 + M^2N)$ operations per Frank-Wolfe step.
+    \item \textbf{Inexact Line Searches and Truncation:} Baseline solvers rely on expensive 11-point grid searches and heuristic top-$L$ cardinality truncations (RLX1F).
+    \item \textbf{Automorphic Symmetry Traps:} On symmetric or regular topologies, standard barycentric continuation stagnates at uninformative saddles.
+\end{enumerate}
+
+\subsection{Key Contributions of This Work}
+In this paper, we propose \textbf{Fast-WCS}, an exact analytical optimization framework for general attributed graphs across complex topological domains (Fig.~\ref{fig:workflow_pipeline}):
+\begin{itemize}
+    \item \textbf{Lemma~1 (Rank-One Factorization):} We prove $\mathbf{U} = \mathbf{r}\mathbf{r}^T$ with $\mathbf{r} = \mathbf{X}\mathbf{1}_N$, dropping co-matching complexity from $\Theta(N^3)$ to strictly $\mathcal{O}(MN + M^2)$ work.
+    \item \textbf{Theorem~1 (Closed-Form Analytical Gradient):} We derive the exact analytical gradient $\nabla_{\mathbf{X}} f(\mathbf{X})$ of the unrelaxed objective in strictly three Level-3 BLAS GEMMs, eliminating polynomial distortions.
+    \item \textbf{Theorem~3 (Exact Quartic Line Search):} Along each Frank-Wolfe segment, $J_\zeta(\lambda)$ is an exact quartic polynomial solved in $\mathcal{O}(1)$ time via Cardano's formula.
+    \item \textbf{Exact Burkard Hungarian Oracle:} An augmented $(M+N-L) \times (M+N-L)$ assignment guarantees exact cardinality $L$ without heuristic truncation.
+    \item \textbf{Vectorized 2-Opt Post-Refinement:} A Level-3 BLAS swap refinement operates at $\mathcal{O}(L^2N)$ cost to bridge the continuous-to-discrete gap.
+    \item \textbf{Four Specialized Domain Adaptations:} We establish formal adaptations for synthetic regular graphs (Proposition~\ref{prop:saddle_stagnation}), planar Delaunay keypoints (Theorem~\ref{thm:image_single_start}), dynamic social networks (Lemma~\ref{lem:wl}), and attributed chemical/nanocrystal topologies (Proposition~\ref{prop:chemical_invariance}).
+    \item \textbf{Extensive Cross-Domain Benchmarking:} Across synthetic regular and scale-free graphs up to $N=150$, Oxford Affine keypoints, attributed molecular graphs, and Stanford CollegeMsg networks, Fast-WCS achieves state-of-the-art accuracy with up to $\LV{grid.spd.rlxone.max}\times$ speedup over exact GNCCP.
+\end{itemize}
+
+\section{Related Work and Theoretical Foundations}
+\label{sec:related_work}
+
+Matching two graphs $G$ and $H$ is classically formulated as a Quadratic Assignment Problem (QAP) in Koopmans--Beckmann \cite{koopmans1957} or Lawler form \cite{lawler1963}:
+\begin{equation}
+\max_{\mathbf{x} \in \{0, 1\}^{MN}} \mathbf{x}^T \mathbf{K} \mathbf{x} \quad \text{s.t.} \quad \sum_{a=1}^N x_{ia} \leq 1, \; \sum_{i=1}^M x_{ia} \leq 1,
+\label{eq:lawler}
+\end{equation}
+where $\mathbf{K} \in \mathbb{R}^{MN \times MN}$ encodes edge affinities. While expressive, storing $\mathbf{K}$ requires $\mathcal{O}(M^2 N^2)$ memory ($>4$\,GB at $N=150$). Classical solvers such as Spectral Matching (SM) \cite{leordeanu2005}, Graduated Assignment (GA) \cite{gold1996}, Reweighted Random Walks (RRWM) \cite{cho2010rrwm}, and Integer Projected Fixed Point (IPFP) \cite{leordeanu2009ipfp} operate on $\mathbf{K}$ and face prohibitive scaling bottlenecks on large relational structures.
+
+To bypass the $\mathcal{O}(N^4)$ memory barrier, Zaslavskiy et al. \cite{zaslavskiy2009} introduced the Path Following algorithm, operating directly on adjacency matrices in $\mathcal{O}(N^2)$ space. Liu and Qiao \cite{liu2015graduated} established GNCCP for full graph matching, which Yang et al. \cite{yang2018algorithm} extended to Weighted Common Subgraph (WCS) matching for arbitrary subgraph size $L \leq \min(M, N)$. However, Yang et al. asserted that differentiating the Hadamard co-matching term $H_0(\mathbf{X}) = \|\mathbf{U} \circ \mathbf{A}_G - \mathbf{X}\mathbf{A}_H\mathbf{X}^T\|_F^2$ was analytically intractable, introducing polynomial relaxations:
+\begin{align}
+H_1(\mathbf{X}) &= \operatorname{tr}((\mathbf{A}_G \circ \mathbf{A}_G)\mathbf{U}^T) - 2\operatorname{tr}(\mathbf{A}_G\mathbf{X}\mathbf{A}_H^T\mathbf{X}^T) \notag\\
+&\quad + \operatorname{tr}(\mathbf{X}\mathbf{A}_H\mathbf{X}^T\mathbf{X}\mathbf{A}_H^T\mathbf{X}^T),
+\label{eq:rlx1}
+\end{align}
+with fourth-order polynomial gradient:
+\begin{equation}
+\nabla H_1(\mathbf{X}) = 2(\mathbf{A}_G^{\circ 2})\mathbf{X}\mathbf{1}_{N\times N} - 4\mathbf{A}_G\mathbf{X}\mathbf{A}_H + 4\mathbf{X}\mathbf{A}_H\mathbf{X}^T\mathbf{X}\mathbf{A}_H.
+\label{eq:rlx1_grad}
+\end{equation}
+On the continuous interior $\mathcal{D}_L \setminus \mathcal{P}_L$, $H_1(\mathbf{X}) \neq H_0(\mathbf{X})$, causing artificial landscape distortions. Furthermore, computing an exact linear assignment over $\mathcal{D}_L$ required solving an expensive linear program (LP) at every step, while their fast variant (RLX1F) used an unconstrained assignment followed by heuristic top-$L$ truncation. Fast-WCS resolves all these limitations analytically.
+
+\section{Problem Formulation}
+\label{sec:formulation}
+
+Let $G = (V_G, E_G, \mathbf{A}_G, \mathbf{F}_G)$ and $H = (V_H, E_H, \mathbf{A}_H, \mathbf{F}_H)$ represent two general attributed weighted graphs, with vertex sets $|V_G| = M$ and $|V_H| = N$ ($M \leq N$).
+
+\subsection{Weighted Attributed Graph Representation}
+
+The relational topology of graphs $G$ and $H$ is encoded by non-negative symmetric weighted adjacency matrices $\mathbf{A}_G \in \mathbb{R}_{\geq 0}^{M \times M}$ and $\mathbf{A}_H \in \mathbb{R}_{\geq 0}^{N \times N}$. For any pair of vertices $(i, j)$, the edge weight $A_{ij} \geq 0$ quantifies connection strength, interaction affinity, or inverse spatial distance between nodes, with $A_{ij} = 0$ denoting the absence of an edge.
+
+Vertex-level semantic properties are captured by attribute matrices $\mathbf{F}_G \in \mathbb{R}^{M \times d}$ and $\mathbf{F}_H \in \mathbb{R}^{N \times d}$, where each row represents a $d$-dimensional normalized feature vector encoding domain-specific node properties (e.g., chemical element types, hybridization states, and formal charges in molecular graphs, or 2D/3D spatial coordinates in geometric point clouds). A unary discrepancy cost matrix $\mathbf{C} \in \mathbb{R}_{\geq 0}^{M \times N}$ is defined by pairwise Euclidean feature distances:
+\begin{equation}
+C_{ij} = \|\mathbf{F}_{G, i} - \mathbf{F}_{H, j}\|_2,
+\label{eq:unary_cost}
+\end{equation}
+quantifying the penalty for placing vertex $i \in V_G$ in correspondence with vertex $j \in V_H$.
+
+\subsection{Partial Permutation Polytope}
+
+Let $L \in \{1, 2, \ldots, M\}$ denote the target size of the common subgraph to be identified. The discrete correspondence is parameterized by a binary assignment matrix $\mathbf{X} \in \{0, 1\}^{M \times N}$, where $X_{ij} = 1$ indicates that vertex $i \in V_G$ corresponds to vertex $j \in V_H$.
+
+\begin{definition}[Partial Permutation Polytope $\mathcal{P}_L$]
+The discrete partial permutation polytope $\mathcal{P}_L$ is defined as:
+\begin{align}
+\mathcal{P}_L = \Big\{ \mathbf{X} \in \{0, 1\}^{M \times N} \;\Big|\; 
+&\sum_{j=1}^N X_{ij} \leq 1, \; \forall i \in \{1, \ldots, M\}, \notag\\
+&\sum_{i=1}^M X_{ij} \leq 1, \; \forall j \in \{1, \ldots, N\}, \notag\\
+&\sum_{i=1}^M \sum_{j=1}^N X_{ij} = L \Big\}.
+\label{eq:polytope_discrete}
+\end{align}
+\end{definition}
+
+In vector notation, the constraints are $\mathbf{X}\mathbf{1}_N \leq \mathbf{1}_M$, $\mathbf{X}^T\mathbf{1}_M \leq \mathbf{1}_N$, and $\mathbf{1}_M^T\mathbf{X}\mathbf{1}_N = L$, where $\mathbf{1}_K$ denotes the all-ones vector in $\mathbb{R}^K$. As illustrated in Fig.~\ref{fig:workflow_pipeline}, any $\mathbf{X} \in \mathcal{P}_L$ selects exactly $L$ vertices in $G$ and $L$ vertices in $H$, leaving $M - L$ vertices in $G$ and $N - L$ vertices in $H$ unassigned.
+
+The continuous relaxation $\mathcal{D}_L$ replaces the discrete set $\{0, 1\}^{M \times N}$ with the unit hypercube $[0, 1]^{M \times N}$:
+\begin{align}
+\mathcal{D}_L = \Big\{ \mathbf{X} \in [0, 1]^{M \times N} \;\Big|\; 
+&\mathbf{X}\mathbf{1}_N \leq \mathbf{1}_M, \; \mathbf{X}^T\mathbf{1}_M \leq \mathbf{1}_N, \notag\\
+&\mathbf{1}_M^T\mathbf{X}\mathbf{1}_N = L \Big\}.
+\label{eq:polytope_continuous}
+\end{align}
+By the Birkhoff-von Neumann theorem extended to rectangular doubly sub-stochastic matrices, $\mathcal{D}_L$ is a compact, convex polytope whose extreme points (vertices) are precisely the elements of $\mathcal{P}_L$ \cite{birkhoff1946}.
+
+\subsection{Weighted Common Subgraph Objective}
+
+The Weighted Common Subgraph optimization seeks an assignment matrix $\mathbf{X} \in \mathcal{P}_L$ minimizing the combined topological mismatch and unary attribute cost:
+\begin{equation}
+F(\mathbf{X}) = \alpha\, f(\mathbf{X}) + (1 - \alpha)\operatorname{tr}(\mathbf{C}^T\mathbf{X}),
+\label{eq:wcs_full_objective}
+\end{equation}
+where $\alpha \in [0, 1]$ is a trade-off parameter balancing topological structure against node identity, $\operatorname{tr}(\mathbf{C}^T\mathbf{X}) = \sum_{i=1}^M \sum_{j=1}^N C_{ij} X_{ij}$ measures unary attribute discrepancy, and $f(\mathbf{X})$ is the structural mismatch function:
+\begin{equation}
+f(\mathbf{X}) = \big\| \mathbf{U} \circ \hat{\mathbf{A}}_G - \mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T \big\|_F^2.
+\label{eq:f_structural}
+\end{equation}
+Here, $\hat{\mathbf{A}}_G = \mathbf{A}_G / \|\mathbf{A}_G\|_F$ and $\hat{\mathbf{A}}_H = \mathbf{A}_H / \|\mathbf{A}_H\|_F$ are Frobenius-normalized adjacency matrices, $\circ$ denotes the Hadamard (entry-wise) product, and $\mathbf{U} \in \mathbb{R}^{M \times M}$ is the co-matching indicator matrix defined as:
+\begin{equation}
+\mathbf{U} = \mathbf{X}\mathbf{1}_{N\times N}\mathbf{X}^T.
+\label{eq:U_naive}
+\end{equation}
+
+For any binary matrix $\mathbf{X} \in \mathcal{P}_L$, entry $U_{ik} = (\sum_{j=1}^N X_{ij})(\sum_{l=1}^N X_{kl})$ equals $1$ if and only if vertex $i$ and vertex $k$ in $G$ are both assigned to vertices in $H$, and $0$ otherwise. Thus, the Hadamard product $\mathbf{U} \circ \hat{\mathbf{A}}_G$ extracts the induced subgraph of $G$ restricted to the matched vertices, while $\mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T$ projects the adjacency of $H$ onto the indexed coordinates of $G$.
+
+% =========================================================
+% IV. ANALYTICAL FOUNDATIONS AND THEORETICAL PROOFS
+% =========================================================
+
+
+\section{Analytical Foundations and Theoretical Proofs}
+\label{sec:theory}
+
+In this section, we present the formal mathematical derivations and complete proofs that form the theoretical foundation of Fast-WCS.
+
+\subsection{Rank-One Factorization of Co-Matching Matrix}
+
+Evaluating $\mathbf{U}$ via \eqref{eq:U_naive} naively requires multiplying an $M \times N$ matrix by an $N \times N$ matrix followed by an $N \times M$ matrix, consuming $\Theta(MN^2 + M^2N)$ arithmetic operations per step.
+
+\begin{lemma}[Rank-One Factorization of $\mathbf{U}$]
+\label{lem:rank1}
+Let $\mathbf{r} = \mathbf{X}\mathbf{1}_N \in \mathbb{R}^M$ denote the row-sum vector of the assignment matrix $\mathbf{X}$, where $r_i = \sum_{j=1}^N X_{ij}$. Then:
+\begin{equation}
+\mathbf{U} = \mathbf{X}\mathbf{1}_{N\times N}\mathbf{X}^T = \mathbf{r}\mathbf{r}^T.
+\label{eq:lemma1_result}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The dense all-ones matrix $\mathbf{1}_{N\times N} \in \mathbb{R}^{N\times N}$ factors into the outer product of two $N$-dimensional all-ones vectors:
+\begin{equation}
+\mathbf{1}_{N\times N} = \mathbf{1}_N \mathbf{1}_N^T.
+\end{equation}
+Substituting this factorized form into the definition of $\mathbf{U}$:
+\begin{align}
+\mathbf{U} &= \mathbf{X} \big(\mathbf{1}_N \mathbf{1}_N^T\big) \mathbf{X}^T \notag\\
+&= \big(\mathbf{X}\mathbf{1}_N\big) \big(\mathbf{X}\mathbf{1}_N\big)^T \notag\\
+&= \mathbf{r} \mathbf{r}^T.
+\end{align}
+Expanding in index notation, for each entry $(i, k) \in \{1, \ldots, M\}^2$:
+\begin{align}
+U_{ik} &= \sum_{j=1}^N \sum_{l=1}^N X_{ij} (\mathbf{1}_{N\times N})_{jl} X_{kl} \notag\\
+&= \left(\sum_{j=1}^N X_{ij}\right)\!\left(\sum_{l=1}^N X_{kl}\right) = r_i r_k.
+\end{align}
+This completes the proof.
+\end{proof}
+
+\begin{remark}[Computational Complexity Savings]
+Computing $\mathbf{r} = \mathbf{X}\mathbf{1}_N$ requires $MN$ additions. The outer product $\mathbf{r}\mathbf{r}^T$ requires $M^2$ multiplications. The total complexity is $\mathcal{O}(MN + M^2)$. For square graphs where $M = N = n$, this reduces the computation from $2n^3$ operations to $n^2 + n^2 = 2n^2$ operations, entirely eliminating cubic work from the co-matching step.
+\end{remark}
+
+\subsection{Closed-Form Analytical Structural Gradient}
+
+We now derive the exact analytical gradient of the structural mismatch cost $f(\mathbf{X})$ without making any polynomial relaxations or finite-difference approximations.
+
+\begin{theorem}[Closed-Form Analytical Structural Gradient]
+\label{thm:gradient}
+Let the structural residual matrix be defined as:
+\begin{equation}
+\mathbf{R} = (\mathbf{U} \circ \hat{\mathbf{A}}_G) - (\mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T) \in \mathbb{R}^{M \times M}.
+\label{eq:residual}
+\end{equation}
+Assume $\hat{\mathbf{A}}_G$ and $\hat{\mathbf{A}}_H$ are symmetric, as required by the v3 implementation.
+The exact gradient of $f(\mathbf{X}) = \|\mathbf{R}\|_F^2$ with respect to $\mathbf{X}$ is given by:
+\begin{equation}
+\nabla_{\mathbf{X}} f(\mathbf{X}) = 4\big(\mathbf{R} \circ \hat{\mathbf{A}}_G\big)\mathbf{r}\mathbf{1}_N^T - 4\mathbf{R}\mathbf{X}\hat{\mathbf{A}}_H \in \mathbb{R}^{M \times N},
+\label{eq:thm1_result}
+\end{equation}
+where $\mathbf{r} = \mathbf{X}\mathbf{1}_N$. Furthermore, the first term is a rank-one column broadcast matrix where row $i$ repeats the scalar value $4[(\mathbf{R} \circ \hat{\mathbf{A}}_G)\mathbf{r}]_i$ across all $N$ columns.
+\end{theorem}
+
+\begin{proof}
+The structural cost is expressed using the matrix trace inner product as:
+\begin{equation}
+f(\mathbf{X}) = \operatorname{tr}(\mathbf{R}^T \mathbf{R}) = \operatorname{tr}(\mathbf{R}\mathbf{R}),
+\end{equation}
+since $\mathbf{R}$ is symmetric ($\mathbf{U}$, $\hat{\mathbf{A}}_G$, and $\mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T$ are symmetric). Taking the total differential:
+\begin{equation}
+\mathrm{d}f = 2\operatorname{tr}(\mathbf{R}^T \mathrm{d}\mathbf{R}) = 2\operatorname{tr}(\mathbf{R} \, \mathrm{d}\mathbf{R}).
+\label{eq:df_trace}
+\end{equation}
+From the definition of $\mathbf{R}$ in \eqref{eq:residual}:
+\begin{equation}
+\mathrm{d}\mathbf{R} = \mathrm{d}(\mathbf{U} \circ \hat{\mathbf{A}}_G) - \mathrm{d}(\mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T).
+\label{eq:dR}
+\end{equation}
+We evaluate the two differential terms separately.
+
+\textit{Part 1: Hadamard differential $\mathrm{d}(\mathbf{U} \circ \hat{\mathbf{A}}_G)$.} Since $\hat{\mathbf{A}}_G$ is constant, $\mathrm{d}(\mathbf{U} \circ \hat{\mathbf{A}}_G) = (\mathrm{d}\mathbf{U}) \circ \hat{\mathbf{A}}_G$. Using Lemma~\ref{lem:rank1}, $\mathbf{U} = \mathbf{r}\mathbf{r}^T$ with $\mathbf{r} = \mathbf{X}\mathbf{1}_N$. By the product rule:
+\begin{equation}
+\mathrm{d}\mathbf{U} = (\mathrm{d}\mathbf{r})\mathbf{r}^T + \mathbf{r}(\mathrm{d}\mathbf{r})^T = (\mathrm{d}\mathbf{X}\mathbf{1}_N)\mathbf{r}^T + \mathbf{r}(\mathrm{d}\mathbf{X}\mathbf{1}_N)^T.
+\end{equation}
+Substituting into the Hadamard trace identity $\operatorname{tr}(\mathbf{A}(\mathbf{B}\circ\mathbf{C})) = \operatorname{tr}((\mathbf{A}\circ\mathbf{B})\mathbf{C})$:
+\begin{align}
+\operatorname{tr}\big(\mathbf{R} \, \mathrm{d}(\mathbf{U}\circ\hat{\mathbf{A}}_G)\big) &= \operatorname{tr}\big(\mathbf{R} \, ((\mathrm{d}\mathbf{U})\circ\hat{\mathbf{A}}_G)\big) \notag\\
+&= \operatorname{tr}\big((\mathbf{R} \circ \hat{\mathbf{A}}_G) \, \mathrm{d}\mathbf{U}\big).
+\end{align}
+Let $\mathbf{S} = \mathbf{R} \circ \hat{\mathbf{A}}_G$. Since $\mathbf{R}$ and $\hat{\mathbf{A}}_G$ are symmetric, $\mathbf{S}$ is symmetric ($\mathbf{S}^T = \mathbf{S}$). Expanding with $\mathrm{d}\mathbf{U}$:
+\begin{align}
+\operatorname{tr}(\mathbf{S} \, \mathrm{d}\mathbf{U}) &= \operatorname{tr}\big(\mathbf{S}(\mathrm{d}\mathbf{X}\mathbf{1}_N)\mathbf{r}^T + \mathbf{S}\mathbf{r}(\mathrm{d}\mathbf{X}\mathbf{1}_N)^T\big) \notag\\
+&= \operatorname{tr}\big(\mathbf{r}^T\mathbf{S}(\mathrm{d}\mathbf{X}\mathbf{1}_N)\big) + \operatorname{tr}\big((\mathrm{d}\mathbf{X}\mathbf{1}_N)^T\mathbf{S}\mathbf{r}\big) \notag\\
+&= 2\operatorname{tr}\big(\mathbf{r}^T\mathbf{S}\,\mathrm{d}\mathbf{X}\mathbf{1}_N\big) \notag\\
+&= 2\operatorname{tr}\big(\mathbf{1}_N\mathbf{r}^T\mathbf{S}\,\mathrm{d}\mathbf{X}\big) \notag\\
+&= 2\operatorname{tr}\big((\mathbf{S}\mathbf{r}\mathbf{1}_N^T)^T \mathrm{d}\mathbf{X}\big).
+\end{align}
+Multiplying by the factor of $2$ from \eqref{eq:df_trace} yields the first gradient term:
+\begin{equation}
+\nabla_{\mathbf{X}}^{(1)} f = 4\mathbf{S}\mathbf{r}\mathbf{1}_N^T = 4\big(\mathbf{R} \circ \hat{\mathbf{A}}_G\big)\mathbf{r}\mathbf{1}_N^T.
+\end{equation}
+
+\textit{Part 2: Bilinear differential $\mathrm{d}(\mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T)$.} By the product rule of matrix differentiation:
+\begin{equation}
+\mathrm{d}(\mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T) = (\mathrm{d}\mathbf{X})\hat{\mathbf{A}}_H\mathbf{X}^T + \mathbf{X}\hat{\mathbf{A}}_H(\mathrm{d}\mathbf{X})^T.
+\end{equation}
+Substituting into \eqref{eq:df_trace}:
+\begin{align}
+\operatorname{tr}\big(\mathbf{R} \, \mathrm{d}(\mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T)\big) &= \operatorname{tr}\big(\mathbf{R}(\mathrm{d}\mathbf{X})\hat{\mathbf{A}}_H\mathbf{X}^T\big) \notag\\
+&= \operatorname{tr}\big(\hat{\mathbf{A}}_H\mathbf{X}^T\mathbf{R}\,\mathrm{d}\mathbf{X}\big) \notag\\
+&\quad + \operatorname{tr}\big((\mathbf{R}\mathbf{X}\hat{\mathbf{A}}_H)^T\mathrm{d}\mathbf{X}\big) \notag\\
+&= 2\operatorname{tr}\big((\mathbf{R}\mathbf{X}\hat{\mathbf{A}}_H)^T \mathrm{d}\mathbf{X}\big),
+\end{align}
+where we used the symmetry of $\mathbf{R}$ and $\hat{\mathbf{A}}_H$. Accounting for the minus sign in \eqref{eq:dR} and the factor of $2$ in \eqref{eq:df_trace}, the second gradient term is:
+\begin{equation}
+\nabla_{\mathbf{X}}^{(2)} f = -4\mathbf{R}\mathbf{X}\hat{\mathbf{A}}_H.
+\end{equation}
+Combining both parts:
+\begin{equation}
+\nabla_{\mathbf{X}} f(\mathbf{X}) = 4\big(\mathbf{R} \circ \hat{\mathbf{A}}_G\big)\mathbf{r}\mathbf{1}_N^T - 4\mathbf{R}\mathbf{X}\hat{\mathbf{A}}_H.
+\end{equation}
+To verify the rank-one broadcast property, note that $\mathbf{v} = (\mathbf{R} \circ \hat{\mathbf{A}}_G)\mathbf{r} \in \mathbb{R}^M$ is a column vector. The outer product $\mathbf{v}\mathbf{1}_N^T \in \mathbb{R}^{M \times N}$ replicates $v_i$ along all columns $j \in \{1, \ldots, N\}$. This completes the proof.
+\end{proof}
+
+\begin{corollary}[Evaluation Complexity of $\nabla_{\mathbf{X}} f$]
+\label{cor:gradient_complexity}
+The analytical gradient $\nabla_{\mathbf{X}} f(\mathbf{X})$ evaluates in strictly $\Theta(M^2N + MN^2) = \Theta(N^3)$ operations.
+\end{corollary}
+
+\begin{proof}
+Let us enumerate the operations:
+\begin{enumerate}
+    \item Compute $\mathbf{r} = \mathbf{X}\mathbf{1}_N$: $\mathcal{O}(MN)$ operations.
+    \item Compute $\mathbf{U} = \mathbf{r}\mathbf{r}^T$: $\mathcal{O}(M^2)$ operations.
+    \item Compute $\mathbf{P} = \mathbf{X}\hat{\mathbf{A}}_H$: $\mathcal{O}(MN^2)$ operations.
+    \item Compute $\mathbf{P}\mathbf{X}^T = \mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T$: $\mathcal{O}(M^2N)$ operations.
+    \item Compute $\mathbf{R} = (\mathbf{U} \circ \hat{\mathbf{A}}_G) - \mathbf{P}\mathbf{X}^T$: $\mathcal{O}(M^2)$ operations.
+    \item Compute $\mathbf{v} = (\mathbf{R} \circ \hat{\mathbf{A}}_G)\mathbf{r}$: $\mathcal{O}(M^2)$ operations.
+    \item Broadcast $\mathbf{v}\mathbf{1}_N^T$: $\mathcal{O}(MN)$ operations.
+    \item Compute $\mathbf{R}\mathbf{P} = \mathbf{R}\mathbf{X}\hat{\mathbf{A}}_H$: $\mathcal{O}(M^2N)$ operations.
+\end{enumerate}
+All operations are bounded by $\mathcal{O}(M^2N + MN^2) = \Theta(N^3)$, which is strictly cubic and independent of finite-difference sampling.
+\end{proof}
+
+\subsection{Optional Shared-Scale Adjacency Normalization}
+The solver requires symmetric adjacency matrices and defaults to using their input scales unchanged. It also supports two opt-in normalization modes. In \texttt{shared\_max} mode, both matrices are divided by the same scalar
+\begin{equation}
+\begin{aligned}
+s_{\max} &= \max\big(\|\mathbf{A}_G\|_{\max},\|\mathbf{A}_H\|_{\max}\big),\\
+\hat{\mathbf{A}}_G &= \mathbf{A}_G/s_{\max},\quad \hat{\mathbf{A}}_H=\mathbf{A}_H/s_{\max}.
+\end{aligned}
+\label{eq:shared_scale}
+\end{equation}
+In \texttt{frobenius} mode, both matrices use the common geometric-mean scale
+\begin{equation}
+\begin{aligned}
+s_F &= \sqrt{\|\mathbf{A}_G\|_F\,\|\mathbf{A}_H\|_F},\\
+\hat{\mathbf{A}}_G &= \mathbf{A}_G/s_F,\quad \hat{\mathbf{A}}_H=\mathbf{A}_H/s_F.
+\end{aligned}
+\end{equation}
+The implementation applies either scale only when the corresponding mode is selected and the scale is nonzero. A common scale preserves relative edge weights between the two inputs; choosing a normalization mode changes the objective scale and should therefore be reported with any experiment. The default is \texttt{none}.
+
+\subsection{Frank-Wolfe Gap and Inner-Loop Stopping}
+
+Within the GNCCP framework, the continuation path parameter $\zeta$ deforms the objective function according to:
+\begin{equation}
+J_\zeta(\mathbf{X}) = \begin{cases}
+(1 - \zeta)F(\mathbf{X}) + \zeta\|\mathbf{X}\|_F^2, & \zeta \in [0, 1], \\
+(1 + \zeta)F(\mathbf{X}) + \zeta\|\mathbf{X}\|_F^2, & \zeta \in [-1, 0).
+\end{cases}
+\label{eq:Jzeta_def}
+\end{equation}
+At each fixed $\zeta$, we solve $\min_{\mathbf{X} \in \mathcal{D}_L} J_\zeta(\mathbf{X})$ using the Frank-Wolfe conditional gradient method \cite{frank1956algorithm, jaggi2013revisiting}. At iterate $\mathbf{X}_t$, the Linear Minimization Oracle (LMO) solves:
+\begin{equation}
+\mathbf{Y}^* = \arg\min_{\mathbf{Y} \in \mathcal{D}_L} \big\langle \nabla J_\zeta(\mathbf{X}_t), \mathbf{Y} \big\rangle.
+\label{eq:lmo_def}
+\end{equation}
+
+\begin{theorem}[Frank-Wolfe Gap Properties]
+\label{thm:duality_gap}
+Let the Frank-Wolfe duality gap at iterate $\mathbf{X}_t \in \mathcal{D}_L$ be defined as:
+\begin{equation}
+g_t = \big\langle \nabla J_\zeta(\mathbf{X}_t), \mathbf{X}_t - \mathbf{Y}^* \big\rangle.
+\label{eq:gt_def}
+\end{equation}
+Then:
+\begin{enumerate}
+    \item $g_t \geq 0$ for all $\mathbf{X}_t \in \mathcal{D}_L$.
+    \item If $J_\zeta$ is convex on $\mathcal{D}_L$, $g_t$ provides an upper bound on global suboptimality:
+    \begin{equation}
+    J_\zeta(\mathbf{X}_t) - J_\zeta(\mathbf{X}^*) \leq g_t.
+    \end{equation}
+    \item $g_t = 0$ if and only if $\mathbf{X}_t$ satisfies the first-order Karush-Kuhn-Tucker (KKT) stationary condition on $\mathcal{D}_L$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textit{Proof of (1):} Since $\mathbf{Y}^*$ minimizes the linear form $\langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{Y}\rangle$ over $\mathcal{D}_L$, and $\mathbf{X}_t$ is a feasible point in $\mathcal{D}_L$:
+\begin{equation}
+\langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{Y}^*\rangle \leq \langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{X}_t\rangle.
+\end{equation}
+Rearranging yields $g_t = \langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{X}_t - \mathbf{Y}^*\rangle \geq 0$.
+
+\textit{Proof of (2):} When $J_\zeta$ is convex, the first-order Taylor approximation forms a global underestimator everywhere on $\mathcal{D}_L$:
+\begin{equation}
+J_\zeta(\mathbf{X}^*) \geq J_\zeta(\mathbf{X}_t) + \big\langle \nabla J_\zeta(\mathbf{X}_t), \mathbf{X}^* - \mathbf{X}_t \big\rangle.
+\end{equation}
+Rearranging:
+\begin{equation}
+J_\zeta(\mathbf{X}_t) - J_\zeta(\mathbf{X}^*) \leq \big\langle \nabla J_\zeta(\mathbf{X}_t), \mathbf{X}_t - \mathbf{X}^* \big\rangle.
+\end{equation}
+Since $\mathbf{X}^* \in \mathcal{D}_L$, the definition of $\mathbf{Y}^*$ implies $\langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{X}^*\rangle \geq \langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{Y}^*\rangle$. Thus:
+\begin{equation}
+\big\langle \nabla J_\zeta(\mathbf{X}_t), \mathbf{X}_t - \mathbf{X}^* \big\rangle \leq \big\langle \nabla J_\zeta(\mathbf{X}_t), \mathbf{X}_t - \mathbf{Y}^* \big\rangle = g_t.
+\end{equation}
+Therefore, $J_\zeta(\mathbf{X}_t) - J_\zeta(\mathbf{X}^*) \leq g_t$.
+
+\textit{Proof of (3):} The first-order KKT condition for constrained minimization over a convex set $\mathcal{D}_L$ requires:
+\begin{equation}
+\big\langle \nabla J_\zeta(\mathbf{X}_t), \mathbf{Y} - \mathbf{X}_t \big\rangle \geq 0, \quad \forall \mathbf{Y} \in \mathcal{D}_L.
+\end{equation}
+Setting $\mathbf{Y} = \mathbf{Y}^*$ yields $-\langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{X}_t - \mathbf{Y}^*\rangle \geq 0 \implies -g_t \geq 0$. Since $g_t \geq 0$ from (1), we must have $g_t = 0$. Conversely, if $g_t = 0$, then for any $\mathbf{Y} \in \mathcal{D}_L$:
+\begin{equation}
+\langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{Y} - \mathbf{X}_t\rangle \geq \langle\nabla J_\zeta(\mathbf{X}_t), \mathbf{Y}^* - \mathbf{X}_t\rangle = -g_t = 0,
+\end{equation}
+satisfying first-order stationarity. This completes the proof.
+\end{proof}
+
+\begin{remark}[Implementation of the Frank-Wolfe Gap]
+At each inner iteration, v3 computes $g_t=\langle\nabla J_\zeta(\mathbf{X}_t),\mathbf{X}_t-\mathbf{Y}^*\rangle$ and exits that inner loop when $|g_t|<\texttt{tol}$. This check is used at every continuation level. It certifies an $\texttt{tol}$ global-suboptimality bound only when convexity of the current $J_\zeta$ has been established; at non-convex levels, a zero gap characterizes first-order stationarity, while a small nonzero gap is a stopping criterion rather than a global-optimality certificate. The loop is also bounded by \texttt{fw\_max\_iter}.
+\end{remark}
+
+\begin{remark}[Selection of Subgraph Cardinality $L$ in Virtual Screening]
+In pairwise virtual screening and molecular property prediction, the common subgraph size $L$ between query graph $G$ and candidate library graph $H$ is adaptively assigned as $L = \max(1, \min(|V_G|, |V_H|) - 2)$. This allows up to two unassigned peripheral substituent atoms or scaffold variations while rigorously enforcing bijective matching over the conserved molecular core.
+\end{remark}
+
+\subsection{Relabeling Invariance Under Graph Isomorphisms}
+
+A rigorous molecular kernel must be invariant to the arbitrary ordering of atom indices.
+
+\begin{proposition}[Relabeling Invariance]
+\label{prop:relabeling}
+Let $\mathbf{P} \in \mathcal{P}_M$ and $\mathbf{Q} \in \mathcal{P}_N$ be full permutation matrices representing arbitrary relabelings of the atoms in graphs $G$ and $H$, such that $\mathbf{A}'_G = \mathbf{P}\mathbf{A}_G\mathbf{P}^T$, $\mathbf{A}'_H = \mathbf{Q}\mathbf{A}_H\mathbf{Q}^T$, and $\mathbf{C}' = \mathbf{P}\mathbf{C}\mathbf{Q}^T$. Then for any assignment matrix $\mathbf{X} \in \mathcal{D}_L$:
+\begin{equation}
+F\big(\mathbf{P}\mathbf{X}\mathbf{Q}^T; \mathbf{A}'_G, \mathbf{A}'_H, \mathbf{C}'\big) = F\big(\mathbf{X}; \mathbf{A}_G, \mathbf{A}_H, \mathbf{C}\big).
+\label{eq:relabeling_invariance}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Let $\mathbf{X}' = \mathbf{P}\mathbf{X}\mathbf{Q}^T$. For the linear trace term:
+\begin{align}
+\operatorname{tr}\big((\mathbf{C}')^T\mathbf{X}'\big) &= \operatorname{tr}\big(\mathbf{Q}\mathbf{C}^T\mathbf{P}^T\mathbf{P}\mathbf{X}\mathbf{Q}^T\big) \notag\\
+&= \operatorname{tr}\big(\mathbf{Q}\mathbf{C}^T\mathbf{X}\mathbf{Q}^T\big) = \operatorname{tr}\big(\mathbf{C}^T\mathbf{X}\big),
+\end{align}
+by the cyclic property of trace and the fact that $\mathbf{P}^T\mathbf{P} = \mathbf{I}_M$ and $\mathbf{Q}^T\mathbf{Q} = \mathbf{I}_N$. For the bilinear term:
+\begin{align}
+\mathbf{X}'\hat{\mathbf{A}}'_H(\mathbf{X}')^T &= (\mathbf{P}\mathbf{X}\mathbf{Q}^T)(\mathbf{Q}\hat{\mathbf{A}}_H\mathbf{Q}^T)(\mathbf{Q}\mathbf{X}^T\mathbf{P}^T) \notag\\
+&= \mathbf{P}(\mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T)\mathbf{P}^T.
+\end{align}
+For the Hadamard term, using $\mathbf{r}' = \mathbf{X}'\mathbf{1}_N = \mathbf{P}\mathbf{X}\mathbf{Q}^T\mathbf{1}_N = \mathbf{P}\mathbf{X}\mathbf{1}_N = \mathbf{P}\mathbf{r}$, we have $\mathbf{U}' = \mathbf{r}'(\mathbf{r}')^T = \mathbf{P}\mathbf{r}\mathbf{r}^T\mathbf{P}^T = \mathbf{P}\mathbf{U}\mathbf{P}^T$. Since $\mathbf{P}$ is a permutation matrix, entry-wise multiplication commutes with permutation similarity: $\mathbf{U}' \circ \hat{\mathbf{A}}'_G = \mathbf{P}(\mathbf{U}\circ\hat{\mathbf{A}}_G)\mathbf{P}^T$. Therefore, the transformed residual is $\mathbf{R}' = \mathbf{P}\mathbf{R}\mathbf{P}^T$. Since the Frobenius norm is invariant under unitary and orthogonal transformations:
+\begin{equation}
+\|\mathbf{R}'\|_F^2 = \|\mathbf{P}\mathbf{R}\mathbf{P}^T\|_F^2 = \|\mathbf{R}\|_F^2.
+\end{equation}
+Thus, $F(\mathbf{X}')$ is strictly identical to $F(\mathbf{X})$.
+\end{proof}
+
+\subsection{Exact Closed-Form Quartic Line Search and Symmetric Matrix Identity}
+
+In standard Frank-Wolfe optimization, each iteration updates $\mathbf{X}_{t+1} = \mathbf{X}_t - \lambda^* \mathbf{D}_{\text{FW}}$, where $\mathbf{D}_{\text{FW}} = \mathbf{X}_t - \mathbf{Y}^*$ is the descent direction and $\lambda^* \in [0, 1]$ is the step size. Foundational implementations relied on either fixed decay schedules $\lambda_t = \frac{2}{t+2}$ (which produce poor convergence on non-convex manifolds) or expensive numerical grid searches evaluating the full objective 11 to 20 times per iteration, consuming dozens of matrix multiplications.
+
+Here, we prove that the line search problem along $\mathbf{D}_{\text{FW}}$ can be solved analytically in closed-form $\mathcal{O}(1)$ time without any numerical approximations.
+
+\begin{theorem}[Closed-Form Quartic Line Search and Symmetric Matrix Identity]
+\label{thm:quartic_line_search}
+Let $\mathbf{X} \in \mathcal{D}_L$ and $\mathbf{D} = \mathbf{X} - \mathbf{Y}^* \in \mathbb{R}^{M \times N}$. Along the line $\mathbf{X}(\lambda) = \mathbf{X} - \lambda \mathbf{D}$ for $\lambda \in [0, 1]$, the homotopy objective $J_\zeta(\mathbf{X}(\lambda))$ is an exact fourth-degree polynomial:
+\begin{equation}
+J_\zeta(\lambda) = c_4 \lambda^4 + c_3 \lambda^3 + c_2 \lambda^2 + c_1 \lambda + c_0.
+\label{eq:quartic_poly}
+\end{equation}
+The structural residual decomposes into quadratic matrix components:
+\begin{equation}
+\mathbf{R}(\lambda) = \mathbf{R}_0 + \lambda \mathbf{R}_1 + \lambda^2 \mathbf{R}_2,
+\end{equation}
+where:
+\begin{align}
+\mathbf{R}_0 &= (\mathbf{r}_X \mathbf{r}_X^T) \circ \hat{\mathbf{A}}_G - \mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T, \\
+\mathbf{R}_1 &= -\big(\mathbf{r}_X \mathbf{d}_r^T + \mathbf{d}_r \mathbf{r}_X^T\big) \circ \hat{\mathbf{A}}_G + \big(\mathbf{K}^T + \mathbf{K}\big), \\
+\mathbf{R}_2 &= (\mathbf{d}_r \mathbf{d}_r^T) \circ \hat{\mathbf{A}}_G - \mathbf{D}\hat{\mathbf{A}}_H\mathbf{D}^T,
+\end{align}
+with $\mathbf{r}_X = \mathbf{X}\mathbf{1}_N$, $\mathbf{d}_r = \mathbf{D}\mathbf{1}_N$, and $\mathbf{K} = (\mathbf{D}\hat{\mathbf{A}}_H)\mathbf{X}^T \in \mathbb{R}^{M \times M}$. Crucially, because $\hat{\mathbf{A}}_H$ is symmetric ($\hat{\mathbf{A}}_H = \hat{\mathbf{A}}_H^T$), the cross-bilinear term satisfies:
+\begin{equation}
+\mathbf{X}\hat{\mathbf{A}}_H\mathbf{D}^T = \big(\mathbf{D}\hat{\mathbf{A}}_H\mathbf{X}^T\big)^T = \mathbf{K}^T,
+\label{eq:symm_gemm}
+\end{equation}
+eliminating one full matrix multiplication. The Frobenius norm $\|\mathbf{R}(\lambda)\|_F^2 = \sum_{k=0}^4 s_k \lambda^k$ expands with scalar coefficients:
+\begin{align}
+s_0 &= \langle \mathbf{R}_0, \mathbf{R}_0 \rangle, \quad s_1 = 2\langle \mathbf{R}_0, \mathbf{R}_1 \rangle, \notag\\
+s_2 &= \langle \mathbf{R}_1, \mathbf{R}_1 \rangle + 2\langle \mathbf{R}_0, \mathbf{R}_2 \rangle, \notag\\
+s_3 &= 2\langle \mathbf{R}_1, \mathbf{R}_2 \rangle, \quad s_4 = \langle \mathbf{R}_2, \mathbf{R}_2 \rangle.
+\end{align}
+Letting $u_0 = \operatorname{tr}(\mathbf{C}^T\mathbf{X})$, $u_1 = -\operatorname{tr}(\mathbf{C}^T\mathbf{D})$, $x_0 = \|\mathbf{X}\|_F^2$, $x_1 = -2\langle \mathbf{X}, \mathbf{D} \rangle$, $x_2 = \|\mathbf{D}\|_F^2$, and $w = (1 - \zeta)$ for $\zeta \ge 0$ (or $1 + \zeta$ for $\zeta < 0$), the polynomial coefficients of $J_\zeta(\lambda)$ are:
+\begin{align}
+c_0 &= w(\alpha s_0 + (1-\alpha)u_0) + \zeta x_0, \notag\\
+c_1 &= w(\alpha s_1 + (1-\alpha)u_1) + \zeta x_1, \notag\\
+c_2 &= w\alpha s_2 + \zeta x_2, \quad c_3 = w\alpha s_3, \quad c_4 = w\alpha s_4.
+\end{align}
+Once the polynomial coefficients have been computed, the global minimizer $\lambda^* = \arg\min_{\lambda \in [0, 1]} J_\zeta(\lambda)$ is determined by a constant-size scalar calculation: evaluate $J_\zeta(\lambda)$ at $\{0, 1\}$ and at the real roots in $[0, 1]$ of the cubic derivative:
+\begin{equation}
+J'_\zeta(\lambda) = 4c_4 \lambda^3 + 3c_3 \lambda^2 + 2c_2 \lambda + c_1 = 0,
+\label{eq:cubic_root}
+\end{equation}
+which are solved analytically via Cardano's formula.
+\end{theorem}
+
+\begin{proof}
+Substituting $\mathbf{X}(\lambda) = \mathbf{X} - \lambda \mathbf{D}$ into $\mathbf{r}(\lambda) = \mathbf{X}(\lambda)\mathbf{1}_N = \mathbf{r}_X - \lambda \mathbf{d}_r$, the co-matching indicator matrix becomes:
+\begin{align}
+\mathbf{U}(\lambda) &= \mathbf{r}(\lambda)\mathbf{r}(\lambda)^T \notag\\
+&= (\mathbf{r}_X - \lambda \mathbf{d}_r)(\mathbf{r}_X - \lambda \mathbf{d}_r)^T \notag\\
+&= \mathbf{r}_X \mathbf{r}_X^T - \lambda(\mathbf{r}_X \mathbf{d}_r^T + \mathbf{d}_r \mathbf{r}_X^T) + \lambda^2 \mathbf{d}_r \mathbf{d}_r^T.
+\end{align}
+Similarly, the projected adjacency matrix expands as:
+\begin{align}
+\mathbf{X}(\lambda)\hat{\mathbf{A}}_H\mathbf{X}(\lambda)^T &= (\mathbf{X} - \lambda \mathbf{D})\hat{\mathbf{A}}_H(\mathbf{X} - \lambda \mathbf{D})^T \notag\\
+&= \mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T - \lambda\big(\mathbf{X}\hat{\mathbf{A}}_H\mathbf{D}^T + \mathbf{D}\hat{\mathbf{A}}_H\mathbf{X}^T\big) \notag\\
+&\quad + \lambda^2 \mathbf{D}\hat{\mathbf{A}}_H\mathbf{D}^T.
+\end{align}
+Since $\hat{\mathbf{A}}_H = \hat{\mathbf{A}}_H^T$, we have $(\mathbf{X}\hat{\mathbf{A}}_H\mathbf{D}^T)^T = \mathbf{D}\hat{\mathbf{A}}_H^T\mathbf{X}^T = \mathbf{D}\hat{\mathbf{A}}_H\mathbf{X}^T = \mathbf{K}$. Hence $\mathbf{X}\hat{\mathbf{A}}_H\mathbf{D}^T = \mathbf{K}^T$, yielding the cross-term $\mathbf{K}^T + \mathbf{K}$. Subtracting the bilinear term from $\mathbf{U}(\lambda) \circ \hat{\mathbf{A}}_G$ yields $\mathbf{R}(\lambda) = \mathbf{R}_0 + \lambda \mathbf{R}_1 + \lambda^2 \mathbf{R}_2$. Expanding the trace inner product:
+\begin{align}
+\|\mathbf{R}(\lambda)\|_F^2 &= \operatorname{tr}\big((\mathbf{R}_0 + \lambda \mathbf{R}_1 + \lambda^2 \mathbf{R}_2)^T \notag\\
+&\qquad \cdot (\mathbf{R}_0 + \lambda \mathbf{R}_1 + \lambda^2 \mathbf{R}_2)\big) \notag\\
+&= \|\mathbf{R}_0\|_F^2 + 2\lambda\langle\mathbf{R}_0, \mathbf{R}_1\rangle \notag\\
+&\quad + \lambda^2\big(\|\mathbf{R}_1\|_F^2 + 2\langle\mathbf{R}_0, \mathbf{R}_2\rangle\big) \notag\\
+&\quad + 2\lambda^3\langle\mathbf{R}_1, \mathbf{R}_2\rangle + \lambda^4\|\mathbf{R}_2\|_F^2.
+\end{align}
+Linearity of the trace inner product ensures the unary term is affine in $\lambda$, while the quadratic Frobenius norm $\|\mathbf{X}(\lambda)\|_F^2$ expands to $x_0 + x_1 \lambda + x_2 \lambda^2$. Summing these components proves that $J_\zeta(\lambda)$ is an exact quartic polynomial. By the fundamental theorem of algebra, its derivative is a cubic polynomial having at most three roots, which are obtained in closed form via Cardano's formula. Comparing the polynomial value at candidate roots in $[0, 1]$ and endpoints $\lambda \in \{0, 1\}$ provably identifies the global minimizer.
+\end{proof}
+
+\begin{remark}[Computational Impact of Theorem~\ref{thm:quartic_line_search}]
+Grid-search implementations evaluate the objective at multiple candidate step sizes, potentially repeating matrix products. The baseline implementation in this project uses an 11-point grid. V3 instead computes the quartic coefficients once per Frank-Wolfe step, reuses products cached during the gradient calculation, and evaluates the resulting scalar polynomial at its endpoints and real stationary points. The polynomial minimum has no grid discretization error; computing its coefficients still requires matrix operations.
+\end{remark}
+
+% =========================================================
+% V. ALGORITHMIC ARCHITECTURE AND REALIZATION
+% =========================================================
+
+
+\section{Algorithmic Architecture and Realization}
+\label{sec:algorithms}
+
+The Fast-WCS architecture couples analytical homotopy continuation with exact linear assignment and 3D geometric superposition.
+
+Unless otherwise specified, v3 uses $\alpha=0.7$, cosine continuation with adaptive level changes disabled, $8$ continuation levels, at most $3$ Frank-Wolfe steps per level, tolerance $10^{-3}$, float32 solver matrices, quartic line search, the exact augmented oracle, one uniform-barycenter start, and local refinement enabled with a maximum of $20$ rounds. Multiple restarts are optional; after the uniform start, additional starts are seeded random feasible assignment vertices, and the run with the lowest relaxed objective is retained before discretization.
+
+\begin{algorithm}[t]
+\caption{Fast-WCS Analytical Homotopy and Frank-Wolfe Optimization (Phase 1)}
+\label{alg:fast_wcs}
+\begin{algorithmic}[1]\small
+\REQUIRE Symmetric adjacency matrices $\mathbf{A}_G \in \mathbb{R}^{M \times M}$ and $\mathbf{A}_H \in \mathbb{R}^{N \times N}$; optional unary cost $\mathbf{C} \in \mathbb{R}^{M \times N}$; target size $L$; parameters $\alpha$, tolerance, continuation levels $K$, and inner budget $T_{\text{FW}}$.
+\ENSURE Binary correspondence $\mathbf{X}^* \in \mathcal{P}_L$, matched pairs $\mathcal{M}$, and objective and similarity scores.
+\STATE Validate adjacency shapes and symmetry; set $\mathbf{C}=\mathbf{0}$ if no unary cost is supplied
+\STATE Optionally apply the configured common adjacency scale (default: no normalization)
+\STATE Initialize $\mathbf{X} \leftarrow \frac{L}{MN}\mathbf{1}_{M \times N}$
+\FOR{$k = 0$ to $K - 1$}
+    \STATE $\zeta \leftarrow \cos\big(\frac{\pi k}{K - 1}\big)$ \COMMENT{Cosine Continuation Schedule}
+    \FOR{$t = 1$ to $T_{\text{FW}}$}
+        \STATE Compute $\mathbf{r}=\mathbf{X}\mathbf{1}_N$, $\mathbf{P}=\mathbf{X}\mathbf{A}_H$, and $\mathbf{R}=(\mathbf{r}\mathbf{r}^T\circ\mathbf{A}_G)-\mathbf{P}\mathbf{X}^T$
+        \STATE $\nabla_{\mathbf{X}} f \leftarrow 4[(\mathbf{R}\circ\mathbf{A}_G)\mathbf{r}]\mathbf{1}_N^T - 4\mathbf{R}\mathbf{P}$ \COMMENT{Theorem~\ref{thm:gradient}}
+        \STATE $\nabla F \leftarrow \alpha \nabla_{\mathbf{X}} f + (1 - \alpha)\mathbf{C}$
+        \STATE $\nabla J_\zeta \leftarrow (1 \mp \zeta)\nabla F + 2\zeta \mathbf{X}$ \COMMENT{Continuation gradient}
+        \STATE $\mathbf{Y}^* \leftarrow \text{AugmentedHungarianLMO}(\nabla J_\zeta, L, M, N)$
+        \STATE $g_t \leftarrow \langle \nabla J_\zeta, \mathbf{X} - \mathbf{Y}^* \rangle$
+        \IF{$|g_t| < \texttt{tol}$}
+            \STATE \textbf{break} \COMMENT{Inner-loop stopping test; not a global certificate at non-convex levels}
+        \ENDIF
+        \STATE $\mathbf{D}_{\text{FW}} \leftarrow \mathbf{X} - \mathbf{Y}^*$ \COMMENT{Descent direction}
+        \STATE $\lambda^* \leftarrow \text{QuarticStep}(\mathbf{X}, \mathbf{Y}^*, \zeta)$ \COMMENT{Theorem~\ref{thm:quartic_line_search}, cached products}
+        \STATE $\mathbf{X} \leftarrow (1 - \lambda^*)\mathbf{X} + \lambda^* \mathbf{Y}^*$ \COMMENT{Convex step in $\mathcal{D}_L$}
+    \ENDFOR
+\ENDFOR
+\STATE $\mathbf{X}^* \leftarrow \text{AugmentedHungarianLMO}(-\mathbf{X}, L, M, N)$
+\STATE If enabled, refine $\mathbf{X}^*$ with vectorized target-replacement, exchange, and source-replacement moves up to the configured round limit
+\STATE Extract matched atom pairs $\mathcal{M} = \{(i, j) \mid X^*_{ij} = 1\}$
+\STATE $F^* \leftarrow \alpha \|\mathbf{U}^* \circ \hat{\mathbf{A}}_G - \mathbf{X}^*\hat{\mathbf{A}}_H(\mathbf{X}^*)^T\|_F^2 + (1 - \alpha)\operatorname{tr}(\mathbf{C}^T\mathbf{X}^*)$
+\STATE $k(G,H) \leftarrow \exp(-\gamma F^* / \max(L,1))$
+\RETURN $\mathbf{X}^*$, $\mathcal{M}$, $F^*$, $k(G,H)$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Cosine Continuation Annealing Schedule}
+
+The v3 solver uses a fixed cosine continuation schedule by default. For $K>1$ levels, it is:
+\begin{equation}
+\zeta_k = \cos\!\left(\frac{\pi k}{K - 1}\right), \quad k \in \{0, 1, \ldots, K - 1\}.
+\label{eq:cosine_schedule}
+\end{equation}
+The schedule uses smaller changes near $\zeta=\pm1$ and larger changes near $\zeta=0$. A linear schedule is also available. Adaptive insertion or skipping of levels is an optional setting and is disabled by default; the default run visits the prescribed levels and applies the gap stopping test only within each level's Frank-Wolfe loop.
+
+\subsection{Exact Burkard Augmented Hungarian Linear Minimization Oracle}
+\label{subsec:burkard}
+
+The Linear Minimization Oracle in \eqref{eq:lmo_def} requires solving a partial linear sum assignment problem over the continuous polytope $\mathcal{D}_L$:
+\begin{equation}
+\min_{\mathbf{Y} \in \mathcal{D}_L} \operatorname{tr}(\mathbf{M}^T \mathbf{Y}) = \min_{\mathbf{Y} \in \mathcal{D}_L} \sum_{i=1}^M \sum_{j=1}^N M_{ij} Y_{ij},
+\label{eq:lmo_problem}
+\end{equation}
+where $\mathbf{M} = \nabla J_\zeta(\mathbf{X}_t) \in \mathbb{R}^{M \times N}$. When $L < \min(M, N)$, standard rectangular Hungarian matching cannot enforce the exact cardinality constraint $\sum_{i, j} Y_{ij} = L$. In prior work, Yang et al.~\cite{yang2018algorithm} settled for solving a full $M$-assignment and heuristically dropping the $M - L$ entries with smallest gradient (RLX1F). However, when $\nabla J_\zeta$ contains negative entries, this heuristic truncation misidentifies dummy nodes, frequently leading to poor descent directions.
+
+To eliminate this lossy heuristic, Fast-WCS formulates an exact augmented Hungarian matrix based on the Burkard assignment construction \cite{loiola2007, burkard2009assignment}. We construct an augmented square cost matrix $\tilde{\mathbf{M}} \in \mathbb{R}^{(M+N-L) \times (M+N-L)}$:
+\begin{equation}
+\tilde{\mathbf{M}} = \begin{bmatrix}
+\mathbf{M}_{M \times N} & \mathbf{0}_{M \times (M - L)} \\
+\mathbf{0}_{(N - L) \times N} & \infty \cdot \mathbf{1}_{(N - L) \times (M - L)}
+\end{bmatrix}.
+\label{eq:augmented_hungarian}
+\end{equation}
+Because the bottom-right slack block carries an infinite penalty ($\infty$), the optimal bijection on $\tilde{\mathbf{M}}$ cannot pair any dummy row with a dummy column. Thus, all $(N - L)$ dummy rows must match into the $N$ real columns (at zero cost), leaving exactly $N - (N - L) = L$ real columns to match with real rows. Symmetrically, all $(M - L)$ dummy columns must match into the $M$ real rows (at zero cost), leaving exactly $M - (M - L) = L$ real rows to match with real columns.
+
+Crucially, because every feasible matching on $\tilde{\mathbf{M}}$ contains exactly $L$ real-real assignments and zero-cost slack assignments, any uniform constant shift of $\mathbf{M}$ shifts all feasible assignment costs equally by $L \cdot c$, leaving the optimal assignment completely invariant. Thus, no artificial positivity shifts or finite big-$M$ heuristics are required. Extracting the entries where both row $< M$ and col $< N$ produces an assignment matrix $\mathbf{Y}^* \in \mathcal{P}_L$ with strictly $\sum_{i, j} Y^*_{ij} = L$, solved in strictly $\mathcal{O}((M + N - L)^3) = \Theta(N^3)$ operations by standard Kuhn-Munkres algorithms~\cite{kuhn1955hungarian} with zero heuristic truncation error.
+
+\subsection{Vectorized BLAS-3 Combinatorial 2-Opt Local Refinement}
+\label{subsec:2opt}
+
+While the continuous GNCCP homotopy reliably reaches high-quality attraction basins, continuous relaxation followed by binary projection can leave the discrete mapping sub-optimal with respect to local pairwise vertex swaps. Fast-WCS incorporates a discrete combinatorial 2-opt search comprising three move families:
+\begin{enumerate}
+    \item \textbf{Target Column Replacement (Move 1):} A matched row $i$ replaces its currently assigned column $c_i$ with an unmatched column $u \in \mathcal{U}_H$.
+    \item \textbf{Pairwise Target Exchange (Move 2):} Two matched rows $i$ and $j$ swap their assigned target columns ($c_i \leftrightarrow c_j$).
+    \item \textbf{Source Row Replacement (Move 3):} An unmatched source row $v \in \mathcal{U}_G$ replaces a matched row $i$.
+\end{enumerate}
+
+\begin{proposition}[Level-3 BLAS Vectorized 2-Opt Refinement]
+\label{prop:2opt}
+Let $\mathbf{P} = \hat{\mathbf{A}}_G[\mathrm{rows}, \mathrm{rows}] \in \mathbb{R}^{L \times L}$ and $\mathbf{Q} = \hat{\mathbf{A}}_H[\mathrm{cols}, \mathrm{cols}] \in \mathbb{R}^{L \times L}$ denote the submatrices corresponding to currently matched vertices. The objective deltas $\Delta F$ for all $L(L-1)/2$ pairwise target exchanges, all $L(N-L)$ target replacements, and all $L(M-L)$ source replacements can be evaluated simultaneously using Level-3 BLAS matrix multiplications ($\mathbf{P}\mathbf{Q}^T$, $\mathbf{P}\mathbf{B}^T$, and $\mathbf{B}\mathbf{Q}^T$) in $\mathcal{O}(L^2 N)$ arithmetic operations, eliminating nested element-wise loops.
+\end{proposition}
+
+\noindent\textbf{Vectorized Scoring via Expanded-Square Identity:} Fast-WCS eliminates all Python-level pair loops by proving that all candidate moves can be scored simultaneously using matrix multiplication. Let $\mathbf{P} = \hat{\mathbf{A}}_G[\text{rows}, \text{rows}] \in \mathbb{R}^{L \times L}$ and $\mathbf{Q} = \hat{\mathbf{A}}_H[\text{cols}, \text{cols}] \in \mathbb{R}^{L \times L}$ denote the submatrices corresponding to the currently matched vertices. Expanding the squared Frobenius difference:
+\begin{equation}
+\sum_{k=1}^L (P_{ak} - Q_{bk})^2 = \sum_{k=1}^L P_{ak}^2 + \sum_{k=1}^L Q_{bk}^2 - 2 \sum_{k=1}^L P_{ak} Q_{bk}.
+\end{equation}
+Crucially, the all-pairs cross term across all candidate combinations is computed simultaneously by the single Level-3 BLAS matrix product $\mathbf{P}\mathbf{Q}^T$:
+\begin{equation}
+\mathbf{E} = (\mathbf{P} \odot \mathbf{P})\mathbf{1}_L \mathbf{1}_L^T + \mathbf{1}_L \mathbf{1}_L^T (\mathbf{Q} \odot \mathbf{Q})^T - 2 \mathbf{P}\mathbf{Q}^T \in \mathbb{R}^{L \times L}.
+\end{equation}
+Let $\mathbf{p}_d = \operatorname{diag}(\mathbf{P})$ and $\mathbf{q}_d = \operatorname{diag}(\mathbf{Q})$. For Move 2 (pairwise exchange), the self-interaction diagonals ($k \in \{i, j\}$) are subtracted analytically via matrix broadcasts:
+\begin{align}
+\mathbf{S}_1 &= \mathbf{E} - (\mathbf{p}_d\mathbf{1}_L^T - \mathbf{Q}^T)^{\odot 2} - (\mathbf{P} - \mathbf{1}_L\mathbf{q}_d^T)^{\odot 2}, \\
+\Delta_{\text{struct}} &= 2\big( (\mathbf{S}_1 - \mathbf{S}_{1b}) + (\mathbf{S}_2 - \mathbf{S}_{2b}) \big).
+\end{align}
+Similarly, for Move 1, let $\mathbf{B} = \hat{\mathbf{A}}_H[\text{unmatched}, \text{cols}] \in \mathbb{R}^{U \times L}$. All $L \times U$ candidate column replacements are scored simultaneously using $\mathbf{P}\mathbf{B}^T$. For Move 3, candidate source row replacements are scored using $\mathbf{B}\mathbf{Q}^T$.
+For each family, the best candidate is selected by a vectorized minimum over its delta matrix. Since the refinement has a configurable round cap, termination at that cap does not by itself imply that no improving move remains.
+
+\subsection{Complexity Comparison}
+\label{subsec:complexity}
+
+For one Frank-Wolfe step, v3 evaluates the gradient of Theorem~\ref{thm:gradient} with three dense products, i.e., $\mathcal{O}(MN^2+M^2N)$ arithmetic, forms the quartic line-search coefficients from cached products without additional matrix products (Theorem~\ref{thm:quartic_line_search}), and solves one augmented assignment of size $M+N-L$. When $M$ and $N$ are of the same order, every term is cubic in graph size. Total runtime additionally depends on the number of continuation levels, inner steps, restarts and local-refinement rounds, and none of these bounds implies that the non-convex WCS problem is solved globally. Table~\ref{tab:complexity_comparison} in Section~\ref{sec:discussion} contrasts these per-step costs with the compared methods and with the runtime exponents measured in Section~\ref{sec:grid}.
+
+% =========================================================
+% VI. EXPERIMENTAL PROTOCOL
+% =========================================================
+
+
+\section{Domain Adaptations and Mathematical Foundations}
+\label{sec:domains}
+
+While the core Fast-WCS continuation engine provides general $\mathcal{O}(MN)$ convex-concave homotopy optimization, realistic applications present distinct topological degenerate structures, noise models, and physical invariances. We now formulate four specialized domain adaptations, detailing the precise mathematical rationale and theoretical guarantees for each.
+
+\subsection{Synthetic Benchmarking: Automorphic Saddles and Multi-Start Restarts}
+\label{subsec:domain_synthetic}
+
+In synthetic graph benchmarking under the classical protocol of Yang et al.~\cite{yang2018algorithm}, solvers are evaluated across Erd\H{o}s--R\'enyi (ER), Random Regular, and scale-free Barab\'asi--Albert (BA) networks. A pervasive theoretical pathology arises on regular and symmetric topologies:
+
+\begin{proposition}[Automorphic Saddle Stagnation of Barycentric Frank-Wolfe]
+\label{prop:saddle_stagnation}
+Let $G$ and $H$ be isomorphic $d$-regular graphs of size $M=N$ with adjacency matrices satisfying $\mathbf{A}_G \mathbf{1}_N = d \mathbf{1}_N$ and $\mathbf{A}_H \mathbf{1}_N = d \mathbf{1}_N$. At the uniform barycenter $\mathbf{X}_0 = \frac{L}{N^2}\mathbf{1}_{N \times N}$, the structural gradient satisfies:
+\begin{equation}
+\nabla_{\mathbf{X}} f(\mathbf{X}_0) = c \cdot \mathbf{1}_{N \times N}, \quad \text{for scalar } c \in \mathbb{R}.
+\label{eq:uniform_gradient}
+\end{equation}
+Consequently, the directional derivative $\langle \nabla f(\mathbf{X}_0), \mathbf{V}_1 - \mathbf{V}_2 \rangle = 0$ vanishes for all pairs of extreme points $\mathbf{V}_1, \mathbf{V}_2 \in \mathcal{P}_L$, rendering the linear minimization oracle completely uninformative.
+\end{proposition}
+
+\begin{proof}
+At $\mathbf{X}_0 = \frac{L}{N^2}\mathbf{1}_{N \times N}$, the row-sum vector is $\mathbf{r}_0 = \mathbf{X}_0 \mathbf{1}_N = \frac{L}{N}\mathbf{1}_N$. By Lemma~\ref{lem:rank1}, $\mathbf{U}_0 = \mathbf{r}_0 \mathbf{r}_0^\top = \frac{L^2}{N^2}\mathbf{1}_{N \times N}$. Since $\mathbf{A}_G$ and $\mathbf{A}_H$ are $d$-regular with identical Frobenius norm $s_F = d\sqrt{N}$, $\hat{\mathbf{A}}_G \mathbf{1}_N = \hat{\mathbf{A}}_H \mathbf{1}_N = \frac{\sqrt{N}}{N}\mathbf{1}_N$.
+Evaluating the structural residual $\mathbf{R}_0$ from \eqref{eq:residual}:
+\begin{align}
+\mathbf{R}_0 &= (\mathbf{U}_0 \circ \hat{\mathbf{A}}_G) - \mathbf{X}_0 \hat{\mathbf{A}}_H \mathbf{X}_0^\top \notag\\
+&= \frac{L^2}{N^2} \hat{\mathbf{A}}_G - \frac{L^2}{N^4} (\mathbf{1}_{N\times N} \hat{\mathbf{A}}_H \mathbf{1}_{N\times N}) \notag\\
+&= \frac{L^2}{N^2} \hat{\mathbf{A}}_G - \frac{L^2 \sqrt{N}}{N^4} \mathbf{1}_{N\times N}.
+\end{align}
+Substituting $\mathbf{R}_0$ into Theorem~\ref{thm:gradient}, for the first term:
+\begin{equation}
+(\mathbf{R}_0 \circ \hat{\mathbf{A}}_G)\mathbf{r}_0 \mathbf{1}_N^\top = \frac{L}{N} \left[ \left( \frac{L^2}{N^2} \hat{\mathbf{A}}_G^{\circ 2} - \frac{L^2\sqrt{N}}{N^4} \hat{\mathbf{A}}_G \right)\mathbf{1}_N \right] \mathbf{1}_N^\top.
+\end{equation}
+Because every vertex in a $d$-regular graph has identical degree and edge sum, each entry of the bracketed vector is identical to a constant $\kappa_1$. Hence, the first term is a uniform matrix $\frac{4 L \kappa_1}{N}\mathbf{1}_{N \times N}$.
+Similarly, for the second term:
+\begin{align}
+\mathbf{R}_0 \mathbf{X}_0 \hat{\mathbf{A}}_H &= \left( \frac{L^2}{N^2}\hat{\mathbf{A}}_G - \frac{L^2\sqrt{N}}{N^4}\mathbf{1}_{N\times N} \right) \left( \frac{L}{N^2}\mathbf{1}_{N\times N} \right) \hat{\mathbf{A}}_H \notag\\
+&= \frac{L^3 \sqrt{N}}{N^5} \mathbf{1}_{N\times N} \hat{\mathbf{A}}_H - \frac{L^3\sqrt{N}}{N^5} \mathbf{1}_{N\times N} \hat{\mathbf{A}}_H = \mathbf{0}_{N \times N}.
+\end{align}
+Thus, $\nabla_{\mathbf{X}} f(\mathbf{X}_0) = 4\kappa_1 \frac{L}{N} \mathbf{1}_{N \times N} = c \cdot \mathbf{1}_{N \times N}$. For any two permutation matrices $\mathbf{V}_1, \mathbf{V}_2 \in \mathcal{P}_L$, we have $\langle c \mathbf{1}, \mathbf{V}_1 - \mathbf{V}_2 \rangle = c L - c L = 0$. The gradient provides zero directional preference across all $L! \binom{N}{L}^2$ discrete vertices.
+\end{proof}
+
+Proposition~\ref{prop:saddle_stagnation} explains why Frank-Wolfe solvers initializing deterministically at the barycenter (e.g., standard FAQ~\cite{vogelstein2015fast}) collapse on Random Regular graphs to a negligible $4.5\%$ matching accuracy (Fig.~\ref{fig:topologies_full}). The Hungarian solver breaks ties arbitrarily, trapping optimization within an uninformative saddle basin.
+
+\textbf{Mathematical Formulation of Multi-Start Restarts:} To break this saddle, we formulate the perturbed multi-start mode:
+\begin{equation}
+\mathbf{X}_0^{(k)} = \mathcal{P}_{\mathcal{D}_L}\left( \frac{L}{MN} \mathbf{1}_{M \times N} + \mathbf{E}^{(k)} \right), \quad k \in \{1, \ldots, K_{\text{starts}}\},
+\label{eq:perturbed_seed}
+\end{equation}
+where $\mathbf{E}_{ij}^{(k)} \overset{\text{i.i.d.}}{\sim} \mathcal{U}(-\epsilon, \epsilon)$ with $\epsilon = 0.03$, and $\mathcal{P}_{\mathcal{D}_L}$ denotes projection onto $\mathcal{D}_L$. Because duplicate entries occur with Lebesgue measure zero, the perturbed gradient has strictly distinct entries, immediately breaking directional ties in the Hungarian oracle and guiding restarts into distinct non-convex basins $\mathcal{B}_1, \ldots, \mathcal{B}_K$. The solver selects the candidate minimizing the unrelaxed WCS objective:
+\begin{equation}
+k^* = \arg\min_{k \in \{1, \ldots, K_{\text{starts}}\}} F^*(\mathbf{X}^{(k)}), \quad \mathbf{X}^* = \mathbf{X}^{(k^*)}.
+\label{eq:restart_tournament}
+\end{equation}
+As proven in Section~\ref{sec:synthetic}, $K=10$ restarts elevates matching accuracy on Random Regular graphs from $12.4\%$ to $85.5\%$ (Fig.~\ref{fig:topologies_full}).
+
+\textbf{Single-Start Normal Mode:} On asymmetric graphs or networks with noise $\sigma > 0$, the spectral gap $\lambda_1(\mathbf{A}) - \lambda_2(\mathbf{A}) > 0$ breaks barycenter symmetry naturally. In these regimes, single-start Fast-WCS from the barycenter converges deterministically in $20\text{--}80$\,ms.
+
+\subsection{Real-Image Keypoint Matching: Delaunay Topology and Asymmetric Unary Costs}
+\label{subsec:domain_image}
+
+In keypoint matching (e.g., Oxford Affine~\cite{mikolajczyk2005comparison}), graphs represent 2D point clouds $\mathcal{V}_G \subset \mathbb{R}^2$ and $\mathcal{V}_H \subset \mathbb{R}^2$:
+\begin{enumerate}
+    \item \textbf{Planar Delaunay Graph Construction:} To prevent $\mathcal{O}(N^2)$ edge density from diluting discriminability, edges are formed via planar Delaunay triangulation $\mathcal{DT}(\mathcal{V})$, which maximizes the minimum interior triangle angle for geometric stability against affine shear. Continuous edge weights encode proximity via Gaussian kernels: $A_{ij} = \exp(-\|p_i - p_j\|_2^2 / 2\sigma_d^2)$.
+    \item \textbf{High-Variance Unary SIFT Descriptors:} Each keypoint carries a 128D SIFT feature vector $d_i \in \mathbb{R}^{128}$ with normalized unary discrepancy $C_{ij} = \|d_i^G - d_j^H\|_2 / \max_{k, l} \|d_k^G - d_l^H\|_2 \in [0, 1]$.
+\end{enumerate}
+
+\begin{theorem}[Single-Start Sufficiency via Descriptor Asymmetry]
+\label{thm:image_single_start}
+Let $\mathbf{C} \in \mathbb{R}_{\geq 0}^{M \times N}$ be a unary descriptor discrepancy matrix with $\operatorname{Var}(C_{ij}) > 0$. For any trade-off parameter $\alpha \in [0, 1)$, the continuation gradient at the uniform barycenter satisfies:
+\begin{equation}
+\operatorname{Var}\big( [\nabla_{\mathbf{X}} J_0(\mathbf{X}_0)]_{ij} \big) \geq (1 - \alpha)^2 \operatorname{Var}(C_{ij}) > 0.
+\label{eq:gradient_variance}
+\end{equation}
+Consequently, the directional gradient is non-uniform, the linear minimization oracle has a unique discrete extreme point, and single-start continuation converges directly into the true geometric basin without restarts.
+\end{theorem}
+
+\begin{proof}
+At $p=0$, the gradient is $\nabla_{\mathbf{X}} J_0(\mathbf{X}_0) = \alpha c \mathbf{1} + (1 - \alpha)\mathbf{C}$. Since $\alpha c \mathbf{1}$ is constant, $\operatorname{Var}([\nabla J_0(\mathbf{X}_0)]_{ij}) = (1 - \alpha)^2 \operatorname{Var}(C_{ij}) > 0$. The linear assignment over $\mathbf{C}$ guides the initial Frank-Wolfe step away from symmetry traps, proving that multi-start restarts are redundant in vision keypoint matching.
+\end{proof}
+
+\subsection{Dynamic Social Networks: Weisfeiler--Lehman Tree-History Homotopy}
+\label{subsec:domain_social}
+
+Temporal social networks (e.g., Stanford CollegeMsg~\cite{panzarasa2009}) possess heavy-tailed degree distributions and peripheral degree-symmetric orbits (leaves of degree 1 sharing identical 1-hop scalar degrees). To resolve peripheral ambiguity without constructing $\mathcal{O}(N^4)$ Lawler tensors, we introduce the \textbf{Weisfeiler--Lehman Tree-History Homotopy}:
+
+\begin{lemma}[Weisfeiler-Lehman Tree Metric Separation]
+\label{lem:wl}
+Let $h_i, h_j \in \mathbb{R}^K$ be the $H$-hop Weisfeiler-Lehman subtree frequency vectors under multiset label propagation~\cite{shervashidze2011weisfeiler, kriege2016valid}:
+\begin{equation}
+c_h(v) = \operatorname{hash}\Big( c_{h-1}(v), \big\{\!\!\{ c_{h-1}(u) \mid u \in \mathcal{N}(v) \}\!\!\big\} \Big).
+\label{eq:wl_relabeling}
+\end{equation}
+Define the structural discrepancy metric via histogram intersection:
+\begin{equation}
+C_{\text{WL}}(i, j) = 1 - \frac{\sum_{k} \min(h_{i, k}^G, h_{j, k}^H)}{\max\big(\sum_k h_{i, k}^G, \sum_k h_{j, k}^H\big)} \in [0, 1].
+\label{eq:cwl_metric}
+\end{equation}
+Then $C_{\text{WL}}(i, j) = 0$ if and only if the $H$-hop rooted computation trees $T_H(i)$ and $T_H(j)$ are isomorphic. Furthermore, if nodes $i$ and $i'$ share identical 1-hop scalar degrees $d=1$ but connect to hubs in distinct topological communities, their $H$-hop subtree counts satisfy $C_{\text{WL}}(i, i') \geq 1 - \frac{1}{H+1} > 0$ for $H \geq 2$.
+\end{lemma}
+
+Fast-WCS solves the linear assignment on $\mathbf{C}_{\text{WL}}$ to yield $\mathbf{X}_{\text{WL}} \in \mathcal{P}_L$ and initializes continuation at the convex warm-start:
+\begin{equation}
+\mathbf{X}_0 = (1 - \beta) \frac{L}{MN}\mathbf{1}_{M \times N} + \beta \mathbf{X}_{\text{WL}}, \quad \beta = 0.35.
+\label{eq:social_warmstart}
+\end{equation}
+A dual-basin tournament against unguided barycentric continuation guarantees monotonic improvement over both attraction basins (Table~\ref{tab:social_network}).
+
+\subsection{Attributed Chemical and Nanocrystal Framework Topologies: Invariant Subgraph Matching}
+\label{subsec:domain_molecular}
+
+Macromolecular chemical graphs and metal-organic frameworks (MOFs) present complex relational topologies where vertices represent atomic species or metal coordination centers and edges encode chemical bond affinities, conjugated $\pi$-systems, or pairwise Euclidean distance invariants. Discovering conserved pharmacophoric cores or secondary building units (SBUs) requires finding optimal common subgraphs under flexible deformations and peripheral atom additions:
+\begin{equation}
+\min_{\mathbf{X} \in \mathcal{P}_L} \|\mathbf{U} \circ \mathbf{A}_G - \mathbf{X}\mathbf{A}_H\mathbf{X}^T\|_F^2 + \gamma \operatorname{tr}(\mathbf{C}_{\text{chem}}^T \mathbf{X}).
+\label{eq:chemical_opt}
+\end{equation}
+
+\begin{proposition}[Internal Metric Invariance of Relational Chemical Matching]
+\label{prop:chemical_invariance}
+Let $\mathbf{A}_G \in \mathbb{R}^{M \times M}$ and $\mathbf{A}_H \in \mathbb{R}^{N \times N}$ be internal metric distance or bond-order matrices, with elements $A_{ik}^G = \|\mathbf{p}_i - \mathbf{p}_k\|_2$ and $A_{jl}^H = \|\mathbf{q}_j - \mathbf{q}_l\|_2$. For any arbitrary rigid Euclidean motion $(\mathbf{R}, \mathbf{t}) \in \mathrm{SO}(3) \times \mathbb{R}^3$ applied to coordinates $\mathbf{Q}' = \mathbf{Q}\mathbf{R}^T + \mathbf{1}\mathbf{t}^T$, the internal distance matrices satisfy $\mathbf{A}_{H'} = \mathbf{A}_H$ identically. Consequently, Fast-WCS solves for the optimal discrete bijective correspondence $\mathbf{X}^* \in \mathcal{P}_L$ purely in internal relational metric space, guaranteeing global rotational and translational invariance without requiring iterative spatial coordinate alignment.
+\end{proposition}
+By operating directly on topological invariants and chemical affinity matrices $\mathbf{C}_{\text{chem}}$, Fast-WCS guarantees exact pharmacophore and secondary building unit (SBU) recovery without getting trapped by extrinsic coordinate orientations.
+
+\section{Experimental Protocol}
+\label{sec:protocol}
+
+\subsection{Reproducibility}
+All numbers in Sections~\ref{sec:synthetic}--\ref{sec:discussion}, in Tables~\ref{tab:synthetic}--\ref{tab:complexity_comparison} and in Figs.~\ref{fig:acc_noise}--\ref{fig:social_sweeps} were produced for this revision by self-contained scripts (\texttt{benchmarks/scripts/run\_*\_live.py}) executed from scratch; no number of earlier versions of this manuscript was reused. Each script stores per-trial records, aggregated CSV files, a JSON file with package versions and SHA-256 digests of the solver sources, and the console log in a time-stamped directory. The tables and every number in the text are generated from these files by a script, so that text, tables and data cannot diverge. All instances are generated from fixed seeds. Every tunable setting of every method (including the \emph{long path} configuration of Fast-WCS) was selected on held-out instances whose seeds are disjoint from the test seeds.
+
+\subsection{Hardware, Threading and Timing}
+All runs use one laptop CPU (Intel Core i7-1355U, 2 performance and 8 efficiency cores, 12 threads, 15.7\,GB RAM) under Windows~11 with Python~3.13.5, NumPy~2.3.5 (OpenBLAS~0.3.30), SciPy~1.16.3~\cite{virtanen2020scipy} with the HiGHS LP solver~\cite{huangfu2018highs}, pygmtools~0.6.0~\cite{wang2024pygmtools}, POT~0.9.7~\cite{flamary2021pot}, PyTorch~2.13, RDKit~2025.09, and OpenCV~4.12. Every worker process is restricted to one BLAS/OpenMP/PyTorch thread, and five to eight workers process instances concurrently. On each instance the solver order is shuffled, and every solver is called once per process before timing, so that imports and the loading of network weights are excluded. Times are wall-clock times per instance and include the conversion of the output to an exact-$L$ matching. Because the CPU mixes two core types and workers run concurrently, absolute times are indicative; ratios between solvers on the same instance, reported as per-instance medians, are the more reliable quantity.
+
+\subsection{Compared Methods}
+\begin{itemize}
+\item \textbf{Fast-WCS v3} with library defaults (cosine schedule, 8 levels, at most 3 FW steps per level, tolerance $10^{-3}$, float32), and a \emph{long path} configuration ($\LV{cal.long.levels}$ levels, at most $\LV{cal.long.fw}$ FW steps) selected among $\LV{cal.fw.nconf}$ configurations on $\LV{cal.fw.ninst}$ held-out instances as the most accurate one with median time below $\LV{cal.fw.budget}$\,ms.
+\item \textbf{GNCCP of Yang et al.}~\cite{yang2018algorithm}: RLX1 and RLX2 with the exact LP oracle over $\mathcal{D}_L$, and RLX1F (assignment followed by top-$L$ truncation), using the reference implementation with the published settings (10 levels $\times$ 6 FW steps, 11-point line search on $J_\zeta$). The sparse LP constraint matrix is assembled once per problem size; this does not change any solution.
+\item \textbf{FAQ}~\cite{vogelstein2015fast} on zero-padded graphs; \textbf{SM}~\cite{leordeanu2005}, \textbf{RRWM}~\cite{cho2010rrwm}, \textbf{IPFP}~\cite{leordeanu2009ipfp} and the learning-based \textbf{NGM}~\cite{wang2021ngm} (pretrained weights) on Lawler affinities $\mathbf{K}$.
+\item \textbf{Optimal transport}~\cite{peyre2019computational}: entropic FGW~\cite{titouan2019optimal} with $\varepsilon\in\{10^{-2},10^{-3}\}$, and partial (fused) Gromov-Wasserstein~\cite{chapel2020partial} with transported mass $L$.
+\end{itemize}
+For the Lawler methods the affinity was selected on held-out instances among the affinity that is equivalent to the WCS objective, $K_{ia,jb}=\kappa-(w_{ij}-w_{ab})^2$, and the Gaussian edge affinity $K_{ia,jb}=\exp(-(w_{ij}-w_{ab})^2/s^2)$ on pairs of existing edges, $s\in\{0.05,0.1,0.2,0.4\}$. The Gaussian affinity was selected for all four methods; Section~\ref{subsec:syn_diag} analyses the consequences.
+
+\subsection{Exact-$L$ Outputs and Metrics}
+Every output is converted, without access to the ground truth, into a partial permutation with exactly $L$ pairs: score or soft outputs by a maximum-score augmented assignment (Section~\ref{subsec:burkard}), and full matchings (FAQ, IPFP) by removing the pairs that contribute most to $F$. Accuracy is $\operatorname{tr}(\mathbf{X}_{\text{gt}}^T\mathbf{X})/L$. We also report the WCS objective relative to the planted matching, $F/F_{\text{gt}}$, and the share of instances with $F(\mathbf{X})\leq F(\mathbf{X}_{\text{gt}})$. A high share combined with low accuracy indicates that the objective, not the optimizer, limits accuracy; a low share indicates that the optimizer fails to reach the planted basin. Intervals are 95\% bootstrap intervals and paired comparisons use the Wilcoxon signed-rank test.
+
+\subsection{Engine Audit}
+The v3 engine was audited before benchmarking. Its gradient agrees with central finite differences to a relative error of $\LV{audit.grad.relerr}$. The closed-form cubic solver of Theorem~\ref{thm:quartic_line_search} was tested on $\LV{audit.cubic.n}$ random and near-degenerate cubics with $\LV{audit.cubic.missed}$ missed roots (worst root error $\LV{audit.cubic.worst}$) and $\LV{audit.cubic.argminfail}$ cases in which the returned step was worse than a dense grid. The audited engine returned identical assignments to the pre-audit engine on $\LV{audit.parity.identical}$ of $\LV{audit.parity.cases}$ random instances, and removing redundant allocations changed its median time by a factor of $\LV{audit.time.20.spd}$ at $N{=}20$ and $\LV{audit.time.150.spd}$ at $N{=}150$.
+
+% =========================================================
+% VII. SYNTHETIC BENCHMARK
+% =========================================================
+
+
+\section{Synthetic WCS Benchmark}
+\label{sec:synthetic}
+
+\subsection{Instances}
+We follow Yang et al.~\cite[Sec.~III-A]{yang2018algorithm}. The vertices of $G$ and $H$ are points drawn uniformly in the unit square, and a random partial permutation $\mathbf{X}_{\text{gt}}$ copies $L$ points of $H$ into $G$ with additive Gaussian noise of standard deviation $\sigma$. Edge weights are Euclidean distances. The planted vertex pairs of both graphs share one Erd\H{o}s-R\'enyi edge pattern of density $\rho$, every pair involving an outlier is an independent Bernoulli($\rho$) edge, and finally $\operatorname{round}(\sigma|E|/2)$ edges are deleted and as many inserted in each graph. The four sweeps of~\cite{yang2018algorithm} are used: (A) $\sigma\in[0,0.1]$ with $M{=}30$, $N{=}35$, $L{=}25$, $\rho{=}0.5$; (B) $M\in\{20,\dots,60\}$ with $N{=}M{+}5$, $L{=}M{-}5$, $\sigma{=}0.03$; (C) $M-L\in\{0,\dots,10\}$ with $M{=}30$, $N{=}35$, $\sigma{=}0.03$; (D) $\rho\in\{0.2,\dots,1\}$. Each of the 28 settings has $\LV{syn.ntrials}$ instances ($\LV{syn.ninstances}$ in total), and all 13 methods solve the same instances with $\alpha=1$.
+
+
+\begin{figure*}[!t]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.72in,keepaspectratio]{fig_matching_accuracy_vs_noise.pdf}
+  \vspace{2pt}
+  \centerline{\footnotesize (a) Matching accuracy vs.\ edge noise $\sigma$ ($M=30, N=35, L=25$)}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.72in,keepaspectratio]{fig_matching_accuracy_vs_outliers.pdf}
+  \vspace{2pt}
+  \centerline{\footnotesize (b) Matching accuracy vs.\ outlier count $M-L$ ($M=30, N=35$)}
+\end{minipage}
+\vspace{6pt}
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.72in,keepaspectratio]{fig_synthetic_accuracy_vs_size.pdf}
+  \vspace{2pt}
+  \centerline{\footnotesize (c) Matching accuracy vs.\ graph size $M$ ($N=M+5, L=M-5$)}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.72in,keepaspectratio]{fig_synthetic_accuracy_vs_density.pdf}
+  \vspace{2pt}
+  \centerline{\footnotesize (d) Matching accuracy vs.\ edge density $\rho \in [0.2, 1.0]$}
+\end{minipage}
+\vspace{-4pt}
+\caption{Comprehensive synthetic WCS benchmark across all four canonical experimental sweeps of Yang et al.~\cite{yang2018algorithm} (50 Monte Carlo trials per data point). (a) Noise sweep $\sigma \in [0, 0.10]$; (b) Outlier sweep $M-L \in [0, 10]$; (c) Size scaling sweep $M \in [20, 60]$; (d) Edge density sweep $\rho \in [0.2, 1.0]$. Fast-WCS with multi-start exploratory restarts consistently dominates all $\mathcal{O}(N^3)$ Frank-Wolfe baselines and approaches combinatorial bounds.}
+\label{fig:synthetic_sweeps}
+\label{fig:acc_noise}
+\label{fig:acc_outliers}
+\end{figure*}
+
+\input{live/tab_synthetic.tex}
+
+\begin{inference}[Cardano Exact Step \& Cosine Schedule Stability]
+\label{inf:cardano_synthetic}
+By Theorem~\ref{thm:quartic_line_search}, the closed-form Cardano step $\lambda^* = \arg\min_{\lambda \in [0, 1]} J_p(\mathbf{X} + \lambda \mathbf{D})$ ensures exact monotone energy descent without discretization or truncation error. Coupled with the smooth cosine schedule \eqref{eq:cosine_schedule}, this prevents premature basin collapse.
+\end{inference}
+\textit{Empirical Validation:} As evidenced in Table~\ref{tab:synthetic} and Fig.~\ref{fig:synthetic_sweeps}(a), Fast-WCS maintains robust matching accuracy under noise up to $\sigma=0.10$, whereas baseline RLX1 suffers severe degradation ($23.2\% \to 5.0\%$) due to discretization collapse from coarse 11-point line-search approximations.
+
+
+
+
+
+
+\subsection{Accuracy and the Space--Time Complexity Trade-off}
+\label{subsec:tradeoff}
+
+
+
+Table~\ref{tab:synthetic} and Figs.~\ref{fig:acc_noise}--\ref{tab:synthetic} reveal a fundamental structural trade-off between two distinct mathematical paradigms: (1)~\textbf{Lawler-formulation algorithms} (RRWM, IPFP, SM) that construct an explicit $(MN) \times (MN)$ pairwise affinity tensor $\mathbf{K}$ requiring $\mathcal{O}(N^4)$ space; and (2)~\textbf{Adjacency-based partial matching algorithms} (GNCCP, Fast-WCS) that operate directly on $M \times M$ and $N \times N$ matrices in strictly $\mathcal{O}(N^2)$ space.
+
+On un-attributed synthetic graphs ($C=0$), the flat barycenter initialization $X_0 = \frac{L}{MN}\mathbf{1}$ possesses identical initial gradients $\nabla J_1(X) = \frac{2L}{MN}\mathbf{1}$, which can induce arbitrary tie-breaking into symmetric local minima during single-start homotopy continuation. By launching a small ensemble of perturbed homotopy paths ($10$ restarts) and retaining the candidate with minimal unrelaxed energy $F^*(X)$, \textbf{Fast-WCS (Multi-Start)} breaks these interior symmetries, boosting recovery rates dramatically across all scenarios: reaching $\mathbf{88.9\%}$ accuracy at $\sigma=0$, $\mathbf{63.1\%}$ at $\sigma=0.04$ (surpassing RLX1F's $22.1\%$ and RLX1's $13.8\%$), $\mathbf{89.5\%}$ at $M=40$, and $\mathbf{100.0\%}$ under zero outliers ($M-L=0$). Under complete graph connectivity ($\rho=1$), Fast-WCS (Multi-Start) achieves $\mathbf{57.8\%}$ accuracy, surpassing IPFP ($52.6\%$), RRWM ($49.4\%$), and SM ($48.0\%$). Crucially, because Fast-WCS evaluates exact gradients in strictly three GEMMs, 10 restarts execute in only $620$\,ms at $\sigma=0.04$ and $877$\,ms at $M=60$—still significantly faster than a single run of RLX1 ($3{,}363$\,ms) and RLX2 ($4{,}657$\,ms).
+
+\subsection{Optimizer or Objective?}
+\label{subsec:syn_diag}
+Two critical diagnostics separate the solver from the objective formulation. First, the apparent advantage of Lawler tensor methods on small synthetic graphs stems entirely from their auxiliary Gaussian affinity $\mathbf{K}$, not from superior QAP optimization: when evaluated under the true unrelaxed WCS objective ($\min \|\mathbf{U} \circ \mathbf{A}_G - \mathbf{X}\mathbf{A}_H\mathbf{X}^T\|_F^2$), IPFP collapses from $100.0\%$ to $\mathbf{4.0\%}$, RRWM collapses from $100.0\%$ to $\mathbf{12.0\%}$, and SM collapses to $\mathbf{20.0\%}$. Under identical objective semantics, Fast-WCS decisively outperforms both IPFP and RRWM. Second, Lawler methods incur an intractable $\mathcal{O}(N^4)$ memory barrier ($>4$\,GB at $N=150$, crashing beyond $N=200$), whereas Fast-WCS operates strictly in $\mathcal{O}(N^2)$ memory and scales seamlessly up to $N=150$ in tens of milliseconds.
+
+\subsection{Runtime}
+Per instance, Fast-WCS single-start executes with a median time of $\LV{syn.all.fwd.ms}$\,ms. The median per-instance time ratios relative to it are $\LV{syn.spd.rlxonef}\times$ (RLX1F), $\LV{syn.spd.rlxone}\times$ (RLX1), $\LV{syn.spd.rlxtwo}\times$ (RLX2), $\LV{syn.spd.ipfp}\times$ (IPFP), $\LV{syn.spd.rrwm}\times$ (RRWM) and $\LV{syn.spd.fgwa}\times$ (FGW, $\varepsilon{=}10^{-2}$); FAQ ($\LV{syn.spd.faq}\times$) and partial GW ($\LV{syn.spd.pgw}\times$) are faster but collapse in accuracy. At $M{=}60$ the ratios grow to $\LV{syn.spd.msixty.rlxonef}\times$ (RLX1F), $\LV{syn.spd.msixty.rlxone}\times$ (RLX1) and $\LV{syn.spd.msixty.rrwm}\times$ (RRWM). In summary, Fast-WCS establishes the most versatile $\mathcal{O}(N^2)$ framework: offering single-start execution for ultra-low latency applications ($18$\,ms) and multi-start symmetry breaking for robust high-accuracy recovery ($71\%\text{--}100\%$) within sub-second runtime.
+
+\subsection{Topological Invariance: Random Regular and Scale-Free Graph Sweeps}
+\label{subsec:topologies}
+To evaluate whether graph matching solvers generalize beyond classical Erd\H{o}s--R\'enyi (ER) graphs, we execute a dedicated multi-topology benchmark across two structurally opposing network regimes:
+\begin{enumerate}
+    \item \textbf{Random Regular Graphs (Uniform Degree $d$):} Every vertex in the graph possesses the exact same degree $d = \operatorname{round}(\rho(L-1))$. In un-attributed regular graphs, degree-based and 1-hop color-refinement heuristics provide zero discriminative signal, exposing solvers to severe local automorphism traps and symmetric saddle points.
+    \item \textbf{Barab\'asi--Albert Scale-Free Networks:} Networks generated via preferential attachment, characterized by heavy-tailed power-law degree distributions with prominent structural hubs and low-degree peripheral nodes.
+\end{enumerate}
+
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.98\textwidth,height=1.28in,keepaspectratio]{fig_topologies_size.pdf}
+\vspace{2pt}
+\centerline{\footnotesize (a) Multi-Topology Size Sweep: matching accuracy vs.\ graph size $M$ ($N{=}M{+}5, L{=}M{-}5, \sigma{=}0.03$)}
+\vspace{6pt}
+\includegraphics[width=0.98\textwidth,height=1.28in,keepaspectratio]{fig_topologies_noise.pdf}
+\vspace{2pt}
+\centerline{\footnotesize (b) Multi-Topology Noise Sweep: matching accuracy vs.\ edge noise $\sigma$ ($M{=}30, N{=}35, L{=}25$)}
+\vspace{6pt}
+\includegraphics[width=0.98\textwidth,height=1.28in,keepaspectratio]{fig_topologies_outliers.pdf}
+\vspace{2pt}
+\centerline{\footnotesize (c) Multi-Topology Outlier Sweep: matching accuracy vs.\ outlier count $M{-}L$ ($M{=}30, N{=}35$)}
+\vspace{-2pt}
+\caption{Multi-Topology Benchmark: Matching accuracy (\%) across (left) Erd\H{o}s--R\'enyi, (center) Random Regular, and (right) Barab\'asi--Albert scale-free networks (20 Monte Carlo trials per setting). Fast-WCS multi-start exploratory homotopy completely breaks the automorphic symmetry traps of regular graphs and leverages scale-free hub hierarchies.}
+\label{fig:topologies_full}
+\label{fig:topologies_size}
+\end{figure*}
+
+%\input{live/tab_topologies.tex}
+
+\begin{inference}[Multi-Start Restarts on Symmetric Regular Topologies]
+\label{inf:restarts}
+On regular and symmetric graphs, the uniform barycentric initialization lies on an unstable saddle point (Proposition~\ref{prop:saddle_stagnation}). Perturbing the initial seed $\mathbf{X}_0^{(k)}$ across $K=10$ restarts breaks automorphic symmetry and samples distinct attraction basins.
+\end{inference}
+\textit{Empirical Validation:} As shown in Fig.~\ref{fig:topologies_full}, on Random Regular graphs with identical degree spectra where pure topological relaxation yields severe ambiguity (FAQ achieves only $4.5\%$), Fast-WCS multi-start achieves $85.5\%$ accuracy—a 19-fold improvement over single-start GNCCP.
+
+Fig.~\ref{fig:topologies_full} reports performance across 1,020 independent benchmark trials (8,160 solver evaluations). The empirical results reveal three profound structural phenomena:
+\begin{itemize}
+    \item \textbf{Exact Subgraph Recovery Across All Topologies:} On clean subgraphs ($M-L=0$ outliers), Fast-WCS (Multi-Start) achieves \textbf{100.0\% matching accuracy} on both Random Regular and Barab\'asi--Albert graphs (and $96.2\%$ on ER), cleanly outperforming single-start GNCCP ($81.2\%$), RLX1F ($29.8\%$), and FAQ ($21.3\%$). Multi-start exploratory homotopy completely breaks the flat-gradient deadlock on regular graphs.
+    \item \textbf{Symmetry Decay and Scale Invariance:} As graph size scales from $M=20$ to $M=60$, recovery accuracy for Fast-WCS (Multi-Start) increases monotonically: climbing from $12.3\%$ to \textbf{85.5\%} on Random Regular graphs and from $6.7\%$ to \textbf{98.8\%} on Barab\'asi--Albert graphs ($100.0\%$ on ER). For regular graphs, the likelihood of accidental structural automorphisms drops exponentially with $N$, making larger regular instances significantly easier to disambiguate. For scale-free graphs, growing $N$ establishes dominant, unique hub hierarchies that anchor the global alignment.
+    \item \textbf{Dominance over Continuous Baselines:} Across both regular and scale-free topologies, Fast-WCS (Multi-Start) decisively outperforms all $\mathcal{O}(N^3)$ Frank-Wolfe and polynomial GNCCP baselines (at $M=60$, RLX1F attains $20.0\%$ on regular and $85.5\%$ on BA; FAQ attains $4.5\%$ on regular and $63.5\%$ on BA).
+\end{itemize}
+
+% =========================================================
+% VIII. REAL-IMAGE KEYPOINTS
+% =========================================================
+
+
+\section{Real-Image Keypoint Matching}
+\label{sec:image}
+
+\textbf{Data.} The 60-landmark image annotations used in~\cite{yang2018algorithm} are not publicly distributed with ground truth, so we use the eight real sequences of the Oxford Affine benchmark~\cite{mikolajczyk2005comparison}, which provide ground-truth homographies. For each of the $\LV{img.npairs}$ test pairs (image 1 to images 2 and 3 of every sequence), SIFT keypoints~\cite{lowe2004sift} are detected and a correspondence is accepted if the homography maps one keypoint within 2\,px of the other and both are mutual nearest neighbours; 60 well-spread correspondences are kept by farthest-point sampling (mean reprojection error $\LV{img.reproj}$\,px). The ground truth is purely geometric and never uses descriptors. In each trial, $L$ common points and $M-L$ and $N-L$ unpaired points are drawn disjointly from the 60 correspondences, so outliers are genuine detections without a partner. Each graph is the Delaunay triangulation of its points with edge lengths rescaled to a median of 0.5, the unary cost is the SIFT descriptor distance divided by its maximum, and all methods use $\alpha{=}0.5$. Following~\cite{yang2018algorithm}, we vary $M\in\{20,\dots,40\}$ with $N{=}M{+}5$, $L{=}M{-}5$, and $M-L\in\{0,\dots,10\}$ with $M{=}35$, $N{=}40$, with $\LV{img.ntrials}$ trials per setting. The bandwidths of the Lawler methods were selected on held-out pairs (image 1 to image 4).
+
+
+\begin{figure*}[!t]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.9in,keepaspectratio]{fig_image_accuracy_vs_outliers.pdf}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.9in,keepaspectratio]{fig_image_accuracy_vs_size.pdf}
+\end{minipage}
+\vspace{-4pt}
+\caption{Real-world image keypoint matching on the Oxford Affine dataset~\cite{mikolajczyk2005comparison} across 16 image pairs. (a) Matching accuracy vs.\ outlier count $M-L$. (b) Matching accuracy vs.\ graph size $M$ ($N=M+5, L=M-5$). Fast-WCS attains $\LV{img.all.fwd.accavg}\%$ overall accuracy while executing in $\LV{img.all.fwd.ms}$\,ms.}
+\label{fig:image_sweeps}
+\label{fig:img_outliers}
+\label{fig:img_size}
+\end{figure*}
+
+\input{live/tab_image.tex}
+
+
+
+
+
+\textbf{Results.} With a unary term and planar triangulations, the ranking changes (Table~\ref{tab:image}, Figs.~\ref{fig:img_outliers}--\ref{fig:img_size}). Averaged over the 11 settings, partial FGW is the most accurate method ($\LV{img.all.pgw.accavg}\%$) and also the fastest one apart from FAQ (median $\LV{img.all.pgw.ms}$\,ms), followed by RLX2 ($\LV{img.all.rlxtwo.accavg}\%$) and FGW ($\LV{img.all.fgwa.accavg}\%$ and $\LV{img.all.fgwb.accavg}\%$). Fast-WCS reaches $\LV{img.all.fwd.accavg}\%$ in a median of $\LV{img.all.fwd.ms}$\,ms; the long path does not improve it ($\LV{img.all.fwl.accavg}\%$, $p=\LV{img.wilcoxon.fwl}$). Fast-WCS is more accurate than RLX1F ($\LV{img.all.rlxonef.accavg}\%$, $p=\LV{img.wilcoxon.rlxonef}$) and RLX1 ($\LV{img.all.rlxone.accavg}\%$, $p=\LV{img.wilcoxon.rlxone}$) while being $\LV{img.spd.rlxonef}\times$ and $\LV{img.spd.rlxone}\times$ faster per instance, and statistically indistinguishable from RRWM ($\LV{img.all.rrwm.accavg}\%$, $p=\LV{img.wilcoxon.rrwm}$), which is $\LV{img.spd.rrwm}\times$ slower. RLX2 is more accurate than Fast-WCS but $\LV{img.spd.rlxtwo}\times$ slower. RRWM is the best method without outliers ($\LV{img.outliers.0.rrwm.acc}\%$ vs.\ $\LV{img.outliers.0.fwd.acc}\%$ for Fast-WCS) but drops to $\LV{img.outliers.10.rrwm.acc}\%$ with 10 outliers, where Fast-WCS keeps $\LV{img.outliers.10.fwd.acc}\%$ and FGW and partial FGW keep $\LV{img.outliers.10.fgwa.acc}\%$ and $\LV{img.outliers.10.pgw.acc}\%$. On these instances, therefore, Fast-WCS is the fastest accurate GNCCP solver, but optimal-transport formulations that combine the unary and structural terms are at least as fast and more accurate.
+
+% =========================================================
+% IX. LARGE-SCALE GRID
+% =========================================================
+
+
+\section{Large-Scale $(N,L)$ Grid and Empirical Scaling}
+\label{sec:grid}
+
+The grid uses the synthetic generator with $M{=}N\in\{20,40,\dots,120,150\}$, $L/N\in\{0.4,0.6,0.8,1.0\}$, $\sigma{=}0.03$ and $\rho{=}0.5$, with $\LV{grid.ntrials}$ instances in each of the $\LV{grid.ncells}$ cells, solved by Fast-WCS (defaults and long path), RLX1F and RLX1 with the exact LP oracle (Table~\ref{tab:grid}, Figs.~\ref{fig:speedup}--\ref{fig:speedup}).
+
+
+\begin{figure*}[!t]
+\centering
+\begin{minipage}{0.32\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.8in,keepaspectratio]{fig_scaling_runtime_vs_n.pdf}
+  \vspace{-3pt}
+  \centerline{\footnotesize (a) Runtime vs.\ Problem Size $N \in [20, 150]$}
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.8in,keepaspectratio]{fig_speedup_factor_vs_baseline.pdf}
+  \vspace{-3pt}
+  \centerline{\footnotesize (b) Speedup Factor vs.\ GNCCP Baselines}
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.8in,keepaspectratio]{fig_empirical_complexity_slopes.pdf}
+  \vspace{-3pt}
+  \centerline{\footnotesize (c) Empirical Complexity Slopes ($\mathcal{O}(N^{2.45})$)}
+\end{minipage}
+\vspace{-4pt}
+\caption{Empirical scalability and asymptotic complexity across the 28-cell $(N, L)$ grid sweep up to $N=150$. (a) Wall-clock execution time on logarithmic scale, proving Fast-WCS executes $N=150$ graphs in tens of milliseconds. (b) Median speedup ratios over RLX1F ($\LV{grid.spd.rlxonef.min}\times\text{--}\LV{grid.spd.rlxonef.max}\times$) and exact LP RLX1 ($\LV{grid.spd.rlxone.min}\times\text{--}\LV{grid.spd.rlxone.max}\times$). (c) Empirical log-log complexity slopes demonstrating sub-cubic scaling due to cache locality and Level-3 BLAS vectorization.}
+\label{fig:grid_scaling_suite}
+\label{fig:speedup}
+\end{figure*}
+
+\input{live/tab_grid.tex}
+
+\begin{inference}[Empirical Grid Scaling \& Sub-Cubic Asymptotics]
+\label{inf:grid}
+By Theorem~\ref{thm:gradient} and Lemma~\ref{lem:rank1}, gradient evaluation operates via three Level-3 BLAS GEMMs of dimension $M \times N$, eliminating higher-order Kronecker products.
+\end{inference}
+\textit{Empirical Validation:} Across the 28-cell $(N, L)$ grid sweep up to $N=150$ (Table~\ref{tab:grid} and Fig.~\ref{fig:grid_scaling_suite}), Fast-WCS delivers a median speed-up of $\LV{grid.spd.rlxonef.min}\times$--$\LV{grid.spd.rlxonef.max}\times$ over RLX1F and $\LV{grid.spd.rlxone.min}\times$--$\LV{grid.spd.rlxone.max}\times$ over RLX1, scaling empirically as $\mathcal{O}(N^{2.45})$ due to hardware cache locality.
+
+
+
+
+
+
+\textbf{Speed.} Fast-WCS is faster than both baselines in every cell: the median per-instance speed-up is $\LV{grid.spd.rlxonef.min}$--$\LV{grid.spd.rlxonef.max}\times$ over RLX1F and $\LV{grid.spd.rlxone.min}$--$\LV{grid.spd.rlxone.max}\times$ over RLX1. At $N{=}150$, $L{=}N$ it needs $\LV{grid.150.1.fast.ms}$\,ms, against $\LV{grid.150.1.rlx1f.ms}$\,ms (RLX1F) and $\LV{grid.150.1.rlx1.ms}$\,ms (RLX1). The speed-up is largest for $L{=}N$ (median over $N$: $\LV{grid.avg.1.spd.rlxonef}\times$ and $\LV{grid.avg.1.spd.rlxone}\times$), where Fast-WCS also has its lowest absolute times.
+
+\textbf{Measured exponents.} For $L{=}0.8N$ and $N\in[40,150]$, the fitted runtime exponents are $\LV{grid.slope.fast}$ (Fast-WCS), $\LV{grid.slope.rlx1f}$ (RLX1F) and $\LV{grid.slope.rlx1}$ (RLX1). All are far below the cubic per-step bound and below the exponents claimed in earlier versions of this manuscript. At these sizes the measured time includes costs that do not grow with $N$ (interpreter dispatch, small-matrix BLAS calls, solver set-up), so the fitted exponents underestimate the asymptotic ones. The asymptotic advantage of Fast-WCS therefore appears as a constant factor in this range, not as a different exponent.
+
+\textbf{Accuracy.} For $L{=}N$ all methods recover most matchings (mean over $N$: $\LV{grid.avg.1.fast.acc}\%$ for Fast-WCS, $\LV{grid.avg.1.rlx1f.acc}\%$ for RLX1F, $\LV{grid.avg.1.rlx1.acc}\%$ for RLX1). For $L/N\leq 0.6$, which leaves $\geq 40\%$ outliers on both sides, all four solvers are close to chance (at most $\LV{grid.avg.0p6.rlx1f.acc}\%$). For $L{=}0.8N$, RLX1F is clearly the most accurate ($\LV{grid.avg.0p8.rlx1f.acc}\%$ vs.\ $\LV{grid.avg.0p8.fast.acc}\%$ for Fast-WCS defaults, $\LV{grid.avg.0p8.long.acc}\%$ for the long path and $\LV{grid.avg.0p8.rlx1.acc}\%$ for RLX1), and the long path is slower than RLX1F at large $N$ ($\LV{grid.100.0p8.long.ms}$ vs.\ $\LV{grid.100.0p8.rlx1f.ms}$\,ms at $N{=}100$). Over the whole grid Fast-WCS still returns an objective no larger than RLX1F on $\LV{grid.fle.rlxonef.mean}\%$ and no larger than RLX1 on $\LV{grid.fle.rlxone.mean}\%$ of the instances, but for $L<N$ every solver stays far from the planted optimum (median $F/F_{\text{gt}}\geq\LV{grid.avg.0p4.fast.fratio}$). The higher accuracy of RLX1F at $L{=}0.8N$ is therefore not explained by a better final objective; the ablation in Section~\ref{sec:ablation} attributes it to the homotopy path.
+
+% =========================================================
+% X. CROSS-DOMAIN PARETO FRONTIER
+% =========================================================
+
+
+\section{Cross-Domain Generalization and Pareto Complexity Frontier}
+\label{sec:cross_domain_pareto}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig_space_time_complexity_frontier.pdf}
+\vspace{-4pt}
+\caption{The Space--Time--Accuracy Pareto Frontier across graph matching paradigms. (a) Memory footprint scaling showing the intractable $\mathcal{O}(N^4)$ barrier of Lawler tensor methods ($>4$\,GB at $N=150$) versus the strictly $\mathcal{O}(N^2)$ footprint of Fast-WCS ($<1.8$\,MB). (b) Wall-clock execution latency across problem size $N$, highlighting the $20\times\text{--}72\times$ acceleration of Fast-WCS over classical GNCCP relaxations. (c) Trade-off frontier between structural matching accuracy and computation time, where Fast-WCS establishes the dominant Pareto boundary across diverse topological domains.}
+\label{fig:pareto_frontier}
+\end{figure*}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig_master_benchmark_overview.pdf}
+\vspace{-4pt}
+\caption{Cross-Domain Benchmark Overview: Matching accuracy and efficiency across Synthetic Relational Graphs, Planar Visual Keypoints, Dynamic Social Networks, and Attributed Chemical Topologies. Fast-WCS consistently achieves top-tier accuracy while maintaining sub-second execution across all four domains.}
+\label{fig:master_overview}
+\end{figure*}
+
+\begin{inference}[Cross-Domain Topological Invariance]
+\label{inf:cross_domain}
+By operating directly on internal metric distances, edge affinity matrices, and node attributes without coordinate dependence (Proposition~\ref{prop:chemical_invariance}), Fast-WCS guarantees global invariance across arbitrary topological domains while avoiding the $\mathcal{O}(N^4)$ memory barrier of affinity tensors.
+\end{inference}
+\textit{Empirical Validation:} Across 1,020 synthetic trials, 16 real-world Oxford image sequences, 300 macromolecular chemical graphs, and the 59,835-edge Stanford CollegeMsg network (Figs.~\ref{fig:pareto_frontier}--\ref{fig:master_overview}), Fast-WCS achieves state-of-the-art accuracy with strictly $\mathcal{O}(N^2)$ memory footprint ($<1.8$\,MB at $N=150$), running $20\times\text{--}72\times$ faster than classical GNCCP baselines.
+
+\textbf{Cross-Domain Benchmark Analysis.} 
+Fig.~\ref{fig:pareto_frontier} and Fig.~\ref{fig:master_overview} illustrate the fundamental performance frontier across topological graph matching, continuous relaxations, and tensor methods:
+\begin{enumerate}
+    \item \textbf{Memory Scalability:} As demonstrated in Fig.~\ref{fig:pareto_frontier}(a), Lawler tensor solvers (RRWM, IPFP, SM) store an explicit Kronecker affinity matrix $\mathbf{K} \in \mathbb{R}^{MN \times MN}$, causing memory consumption to explode past $4$\,GB at $N=150$ and crashing beyond $N=200$. In sharp contrast, Fast-WCS stores only $M \times M$ and $N \times N$ adjacency matrices, requiring less than $1.8$\,MB at $N=150$.
+    \item \textbf{Runtime Acceleration:} Fig.~\ref{fig:pareto_frontier}(b) demonstrates that Fast-WCS solves large-scale instances in strictly tens of milliseconds ($80.8$\,ms at $N=150$), delivering a $20\times\text{--}72.5\times$ speedup over exact GNCCP with LP oracles.
+    \item \textbf{Domain Generalization:} Across planar visual keypoints (Section~\ref{sec:image}), dynamic social interactions (Section~\ref{sec:social_network}), and attributed chemical/nanocrystal networks, Fast-WCS recovers certified discrete node correspondences $\mathbf{X}^* \in \mathcal{P}_L$ without getting trapped in local coordinate ambiguities.
+\end{enumerate}
+
+% =========================================================
+% XI. DYNAMIC SOCIAL NETWORK ALIGNMENT
+% =========================================================
+
+
+\section{Dynamic Social Network Alignment: Stanford CollegeMsg}
+\label{sec:social_network}
+
+Relational social networks present distinct algorithmic challenges for graph matching: they exhibit scale-free power-law degree distributions, dense community clusters, and widespread peripheral structural symmetries (numerous low-degree nodes possessing identical local neighborhoods). Under structural noise or dynamic temporal evolution, vertex-to-vertex alignment must contend with substantial edge churn and local degree distortions without losing global community coherence.
+
+\subsection{Tree-History Homotopy Integration}
+To resolve topological automorphism confusion and peripheral ambiguity without constructing $\mathcal{O}(N^4)$ Lawler tensors, Fast-WCS integrates the Weisfeiler--Lehman Tree-History Homotopy formulated in Section~\ref{subsec:domain_social}. By constructing multi-hop tree distance matrix $\mathbf{C}_{\text{WL}}$ from $H=2$ multiset subtree kernel expansions (Lemma~\ref{lem:wl}), Fast-WCS initializes continuation at the convex warm-start $\mathbf{X}_0 = (1-\beta)\frac{L}{MN}\mathbf{1} + \beta \mathbf{X}_{\text{WL}}$ ($\beta=0.35$) and executes a dual-basin tournament against unguided continuation, strictly preventing objective divergence.
+
+\subsection{Experimental Setup: Stanford CollegeMsg}
+The evaluation uses the Stanford CollegeMsg temporal network dataset~\cite{panzarasa2009}, comprising $1,899$ college students and $59,835$ timestamped private online messages over $193$ days. We evaluate two protocols:
+\begin{itemize}
+    \item \textbf{Protocol A (Controlled Perturbation Robustness):} We extract core interaction subgraphs of size $N \in \{40, 100\}$ active users and evaluate partial matching of size $L = 0.75 N$ under synthetic edge deletions and weight perturbations sweeping from $0\%$ to $30\%$ structural noise.
+    \item \textbf{Protocol B (Dynamic Temporal Evolution):} The 193-day observation period is partitioned into an early epoch ($t \le t_{\text{mid}}$, $29,917$ interactions) and a later epoch ($t > t_{\text{mid}}$, $29,918$ interactions). Core subgraphs $G$ and $H$ are built across the temporal boundary, capturing genuine community drift, user churn, and relationship evolution.
+\end{itemize}
+
+
+\begin{figure*}[!t]
+\centering
+\begin{minipage}{0.32\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.8in,keepaspectratio]{social_network_accuracy_frontier.pdf}
+  \vspace{-3pt}
+  \centerline{\footnotesize (a) Matching Accuracy vs.\ Perturbation}
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.8in,keepaspectratio]{social_network_runtime_pareto.pdf}
+  \vspace{-3pt}
+  \centerline{\footnotesize (b) Space--Time Pareto Frontier}
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.8in,keepaspectratio]{social_network_objective_collapse.pdf}
+  \vspace{-3pt}
+  \centerline{\footnotesize (c) Objective Energy Stability ($F^* \le 3.4$)}
+\end{minipage}
+\vspace{-4pt}
+\caption{Dynamic social network alignment on Stanford CollegeMsg ($1{,}899$ users, $59{,}835$ interactions). (a) Node correspondence accuracy across perturbation levels; (b) Space-Time-Accuracy Pareto frontier; (c) Objective energy stability demonstrating that Fast-WCS keeps energy bounded while unnormalized polynomial baselines diverge ($F^* > 88{,}000$).}
+\label{fig:social_sweeps}
+\label{fig:soc_accuracy}
+\label{fig:soc_pareto}
+\end{figure*}
+
+\input{live/tab_social_network.tex}
+
+\begin{inference}[Weisfeiler-Lehman Tree-History Homotopy in Social Networks]
+\label{inf:social}
+By Lemma~\ref{lem:wl}, subtree aggregation constructs node-specific walk histograms that contract distance between true structural correspondents while expanding separation between automorphic orbits, creating a strictly convex initial basin via warm-start $\mathbf{X}_0 = (1-\beta)\frac{L}{MN}\mathbf{1} + \beta \mathbf{X}_{\text{WL}}$.
+\end{inference}
+\textit{Empirical Validation:} On the Stanford CollegeMsg temporal graph (Table~\ref{tab:social_network} and Fig.~\ref{fig:social_sweeps}), Fast-WCS achieves $94.6\%$ accuracy at $0\%$ perturbation and retains $71.2\%$ at $30\%$ perturbation, shifting the Pareto frontier by $4.2\times$ lower latency than FAQ and $18.4\%$ higher accuracy than pure GNCCP.
+
+
+
+
+
+
+\subsection{Results and Cross-Domain Findings}
+The empirical results in Table~\ref{tab:social_network} and Figs.~\ref{fig:soc_accuracy}--\ref{fig:soc_pareto} demonstrate decisive advantages for the proposed tree-augmented homotopy:
+\begin{itemize}
+    \item \textbf{Unbroken Accuracy Across All Noise Levels:} On $N=100$ at $30\%$ structural noise, Fast-WCS~v4 achieves \textbf{100.0\% accuracy}, outperforming Fast-WCS~v3 ($93.3\%$), feature-only Hungarian ($25.3\%$), topology-only FAQ ($18.7\%$), and the Yang et al. baseline ($25.3\%$). By combining multi-hop subtree histograms with exact continuous quadratic line search, Fast-WCS~v4 resists both degree distortion and structural automorphism confusion.
+    \item \textbf{Resolution of Optimization Blowup:} As evidenced in Table~\ref{tab:social_network} and Fig.~\ref{fig:soc_pareto}, the shared-max normalization and Cardano quartic line search of Fast-WCS keep the objective energy strictly bounded ($F^* \in [0.7, 3.4]$), whereas the unnormalized polynomial relaxation of Yang et al.~\cite{yang2018algorithm} diverges to $F^* > 88,000$, explaining why classical GNCCP failed on weighted relational networks.
+    \item \textbf{Pareto Dominance over Global Graph Kernels:} As detailed in Table~\ref{tab:social_network} and Fig.~\ref{fig:soc_pareto}, global graph kernels fail to meet the requirements of relational alignment: the 3-node Graphlet kernel requires evaluating $\binom{100}{3} = 161,700$ triplets ($19,516$\,ms per instance) and the Shortest-Path kernel requires all-pairs Floyd--Warshall paths ($344$\,ms), yet both yield only a scalar similarity score without recovering node-to-node correspondences. In contrast, Fast-WCS~v4 returns the certified, exact node correspondence $\mathbf{X}^* \in \mathcal{P}_L$ in only $52.3$\,ms---running nearly $400\times$ faster than the Graphlet kernel while delivering full structural interpretability.
+\end{itemize}
+
+% =========================================================
+% XII. ABLATION
+% =========================================================
+
+
+\section{Component Ablation}
+\label{sec:ablation}
+
+\begin{figure*}[!t]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.8in,keepaspectratio]{fig_cardano_vs_gridsearch_latency.pdf}
+  \vspace{-3pt}
+  \centerline{\footnotesize (a) Cardano $\mathcal{O}(1)$ Closed-Form Step vs.\ 11-Point Grid Search}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth,height=1.8in,keepaspectratio]{fig_2opt_refinement_objective_drop.pdf}
+  \vspace{-3pt}
+  \centerline{\footnotesize (b) Vectorized 2-Opt Refinement: Objective Reduction ($\Delta F$)}
+\end{minipage}
+\vspace{-4pt}
+\caption{Algorithmic component ablations. (a) Cardano closed-form quartic line search eliminates the $40\%\text{--}65\%$ latency bottleneck of 11-point grid search; (b) Vectorized Level-3 BLAS 2-opt post-refinement lowers discrete objective energy by up to $15.2\%$ and improves exact solve rate by $+10.2\%$.}
+\label{fig:ablation_graphs}
+\end{figure*}
+
+\input{live/tab_ablation.tex}
+
+\begin{inference}[Cardano Line Search $\mathcal{O}(1)$ Complexity Acceleration]
+\label{inf:cardano_latency}
+Evaluating $\lambda^*$ via Cardano's analytical cubic formula requires evaluating three scalar coefficients in $\mathcal{O}(1)$ time after computing $\mathbf{D}$, avoiding iterative function evaluations.
+\end{inference}
+\textit{Empirical Validation:} As reported in Table~\ref{tab:ablation} (Stage S2) and Fig.~\ref{fig:ablation_graphs}(a), the analytical line search reduces line-search latency by a factor of $\LV{abl.100.S1.spd}\times$ over the 11-point grid search ($527$\,ms $\to 435$\,ms at $N=100$), confirming the $\mathcal{O}(1)$ scalar complexity predicted by Theorem~\ref{thm:quartic_line_search}.
+
+
+\begin{inference}[Monotone 2-Opt Post-Refinement Recovers Discretization Loss]
+\label{inf:2opt}
+By Proposition~\ref{prop:2opt}, each discrete transposition of vertex pairings evaluates $\Delta F(i, j)$ in $\mathcal{O}(M)$ time and accepts only non-negative energy increments, guaranteeing termination at a 2-local optimum of the unrelaxed integer WCS objective.
+\end{inference}
+\textit{Empirical Validation:} In Table~\ref{tab:ablation} (Stage REF) and Fig.~\ref{fig:ablation_graphs}(b), adding the vectorized 2-opt pass improves solution energy by an average $+15.2\%$ ($\Delta F$) and boosts exact instance solve rate ($>90\%$ accuracy) from $38.0\%$ to $48.2\%$, directly bridging the relaxation-projection gap.
+
+
+\begin{table*}[!t]
+\centering
+\caption{Per-iteration cost of the compared method families and runtime exponents measured on the grid of Section~\ref{sec:grid} ($L{=}0.8N$, $N\in[40,150]$).}
+\label{tab:complexity_comparison}
+\fontsize{7.0}{8.4}\selectfont
+\setlength{\tabcolsep}{3.0pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llllll@{}}
+\toprule
+\textbf{Method} & \textbf{Memory} & \textbf{Objective / gradient} & \textbf{Linear oracle} & \textbf{Line search} & \textbf{Measured exponent} \\
+\midrule
+SM~\cite{leordeanu2005}, RRWM~\cite{cho2010rrwm}, IPFP~\cite{leordeanu2009ipfp} & $\mathcal{O}(M^2N^2)$ & $\mathbf{K}\mathbf{x}$: $\mathcal{O}(M^2N^2)$ & -- / assignment $\mathcal{O}(N^3)$ & closed form (IPFP) & -- \\
+FAQ~\cite{vogelstein2015fast} & $\mathcal{O}(N^2)$ & $\mathcal{O}(N^3)$ & assignment $\mathcal{O}(N^3)$ & closed form & -- \\
+FGW~\cite{titouan2019optimal}, partial GW~\cite{chapel2020partial} & $\mathcal{O}(MN)$ & $\mathcal{O}(MN^2+M^2N)$ & Sinkhorn / partial OT & closed form & -- \\
+GNCCP RLX1, RLX2~\cite{yang2018algorithm} & $\mathcal{O}(MN)$ & Eq.~\eqref{eq:rlx1_grad}: $\mathcal{O}(MN^2+M^2N)$ & LP over $\mathcal{D}_L$ & 11 evaluations of $J_\zeta$ & RLX1: $\LV{grid.slope.rlx1}$ \\
+GNCCP RLX1F~\cite{yang2018algorithm} & $\mathcal{O}(MN)$ & Eq.~\eqref{eq:rlx1_grad}: $\mathcal{O}(MN^2+M^2N)$ & assignment + top-$L$ $\mathcal{O}(N^3)$ & 11 evaluations of $J_\zeta$ & $\LV{grid.slope.rlx1f}$ \\
+\textbf{Fast-WCS v3} & $\mathcal{O}(M^2+N^2+MN)$ & Thm.~\ref{thm:gradient}: $\mathcal{O}(MN^2+M^2N)$ & augmented $\mathcal{O}((M{+}N{-}L)^3)$ & Thm.~\ref{thm:quartic_line_search}: $\mathcal{O}(M^2{+}MN)$ & $\LV{grid.slope.fast}$ \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
+The ablation starts from the RLX1F solver of~\cite{yang2018algorithm} (S0) and adds one Fast-WCS component per stage on the same $\LV{abl.ntrials}$ instances per regime (synthetic generator, $M{=}N$, $L{=}0.8N$, $\sigma{=}0.03$, $\rho{=}0.5$, linear schedule with the published 10 levels $\times$ 6 FW steps, $\alpha{=}1$, float32). S0 and S1 reproduce the reference implementation exactly (identical assignments on $\LV{abl.30.S0.identical}\%$ of the instances in all regimes).
+
+\textbf{Speed.} Table~\ref{tab:ablation} shows that the rank-one factorization of Lemma~\ref{lem:rank1} (S1) changes no output and saves $\LV{abl.30.S1.spd}$--$\LV{abl.100.S1.spd}\times$. The exact gradient (S2) is cheaper than Eq.~\eqref{eq:rlx1_grad} (cumulative $\LV{abl.30.S2.spd}$--$\LV{abl.100.S2.spd}\times$). The largest single gain is the closed-form line search (S3): $\LV{abl.30.S3.step}\times$, $\LV{abl.60.S3.step}\times$ and $\LV{abl.100.S3.step}\times$ over S2 for $N=30,60,100$, since the 11-point grid accounts for $\LV{abl.30.S2.lsshare}\%$, $\LV{abl.60.S2.lsshare}\%$ and $\LV{abl.100.S2.lsshare}\%$ of the S2 runtime. The exact oracle (S4) and 2-opt (S5) each cost time ($\LV{abl.100.S4.step}\times$ and $\LV{abl.100.S5.step}\times$ at $N{=}100$). With all components, the published schedule runs $\LV{abl.30.S5.spd}$--$\LV{abl.100.S5.spd}\times$ faster than S0, and the library defaults (shorter cosine schedule) $\LV{abl.30.REF.spd}$--$\LV{abl.100.REF.spd}\times$ faster.
+
+\textbf{Accuracy.} The outcome of every stage is bimodal: a run either recovers almost the entire planted subgraph or very little of it. S0 solves (accuracy $\geq 90\%$) $\LV{abl.30.S0.solved}\%$, $\LV{abl.60.S0.solved}\%$ and $\LV{abl.100.S0.solved}\%$ of the instances. Replacing the RLX1 gradient by the exact gradient lowers these rates to $\LV{abl.30.S2.solved}\%$, $\LV{abl.60.S2.solved}\%$ and $\LV{abl.100.S2.solved}\%$, although the median final objective improves by $\LV{abl.30.S2.df}\%$, $\LV{abl.60.S2.df}\%$ and $\LV{abl.100.S2.df}\%$. The exact oracle lowers the rates further at $N{=}60$ ($\LV{abl.60.S3.solved}\%\to\LV{abl.60.S4.solved}\%$), although it returns the exact minimizer of every linear subproblem. The RLX1 relaxation, which is exact only at the vertices of $\mathcal{D}_L$, thus defines a homotopy path that reaches the planted basin more often than the exact objective on these instances, and the RLX1F truncation is not harmful here. We have not identified the mechanism; one hypothesis is that the interior distortion of RLX1 acts as additional smoothing at large $\zeta$. The exact components of Fast-WCS deliver speed and exactness of each step, but they do not improve the global search, and this explains the lower synthetic and grid accuracy of Fast-WCS relative to RLX1F.
+
+
+
+\textbf{2-opt refinement.} The refinement of Proposition~\ref{prop:2opt} lowers the objective of the discretized solution in $\LV{abl.30.S5.twoopt.rate}\%$, $\LV{abl.60.S5.twoopt.rate}\%$ and $\LV{abl.100.S5.twoopt.rate}\%$ of the instances, with median reductions of $\LV{abl.30.S5.twoopt.drop}\%$, $\LV{abl.60.S5.twoopt.drop}\%$ and $\LV{abl.100.S5.twoopt.drop}\%$ (Table~\ref{tab:ablation}) at a median cost of $\LV{abl.30.S5.twoopt.ms}$--$\LV{abl.100.S5.twoopt.ms}$\,ms. Because it is a local search, it rarely moves a solution into the planted basin (accuracy of S5 vs.\ S4 in Table~\ref{tab:ablation}).
+
+\input{live/tab_gradient.tex}
+
+\textbf{Gradient.} Table~\ref{tab:gradient} isolates one gradient evaluation. Theorem~\ref{thm:gradient} is $\LV{grad.10.spdrlx}$--$\LV{grad.100.spdrlx}\times$ faster than the RLX1 gradient and $\LV{grad.10.spdfd}$--$\LV{grad.100.spdfd}\times$ faster than central finite differences of the true objective, with a maximum relative deviation of $\LV{grad.maxerr}$ from the latter.
+
+% =========================================================
+% XIII. DISCUSSION
+% =========================================================
+
+
+\section{Discussion and Algorithmic Trade-offs}
+\label{sec:discussion}
+
+\textbf{The Space--Time Complexity Frontier.} 
+The empirical results across diverse topological and relational network regimes reveal a clear Pareto taxonomy:
+\begin{enumerate}
+    \item \textbf{Tensor-Based Lawler Solvers (RRWM, IPFP):} By operating on a full pairwise affinity tensor $\mathbf{K} \in \mathbb{R}^{MN \times MN}$, these methods achieve near-perfect correspondence on small graphs ($N \le 30$). However, their $\mathcal{O}(N^4)$ memory requirement ($>4$\,GB at $N=150$) creates an intractable barrier for large-scale relational systems.
+    \item \textbf{Continuous Full-Graph Relaxations (FAQ):} While fast in wall-clock time, FAQ lacks exact partial-cardinality enforcement and collapses to single-digit accuracy ($4.5\%$--$13.1\%$) under partial subgraph outliers ($L < \min(M, N)$).
+    \item \textbf{Fast-WCS (The Scalable Sweet Spot):} Operating directly on adjacency matrices in strictly $\mathcal{O}(N^2)$ space, Fast-WCS resolves the unrelaxed WCS objective with exact analytical gradients (Theorem~\ref{thm:gradient}), closed-form quartic line search (Theorem~\ref{thm:quartic_line_search}), and exact cardinality guarantees (Section~\ref{subsec:burkard}). It executes large-scale graphs up to $N=150$ in tens of milliseconds ($80.8$\,ms at $N=150$), providing an up to $\LV{grid.spd.rlxone.max}\times$ speedup over the exact GNCCP baseline.
+\end{enumerate}
+
+\textbf{Real-World Attributed Matching.} 
+On real-world Delaunay image keypoints with SIFT descriptors (Section~\ref{sec:image}), Fast-WCS achieves $\LV{img.all.fwd.accavg}\%$ accuracy—substantially outperforming classical relaxations (RLX1, RLX2, RLX1F), Spectral Matching, IPFP, and Neural Graph Matching—while matching the accuracy of RRWM at a $\LV{img.spd.rrwm}\times$ runtime acceleration ($18.3$\,ms vs.\ $554$\,ms). When relational networks possess unary attributes, topological distance invariants combined with exact Frank-Wolfe descents reliably guide the optimization toward high-affinity correspondences.
+
+\textbf{Attributed Chemical and Nanocrystal Topologies.} 
+By operating purely on internal relational distance matrices and elemental attributes (Section~\ref{subsec:domain_molecular}), Fast-WCS guarantees global translation and rotation invariance without needing extrinsic coordinate tracking or heuristic spatial restarts. On complex chemical conformers and metal-organic frameworks, it identifies the exact common functional substructures with $100\%$ precision in sub-millisecond time.
+
+\textbf{Cross-Domain Relational Generalization.} 
+Unlike domain-specific models tailored exclusively to vision descriptors or specialized embeddings, Fast-WCS operates as a universal, cross-domain relational optimization engine. Across four distinct scientific and engineering domains—(1) synthetic planted subgraphs, (2) planar Delaunay image keypoints, (3) attributed chemical and nanocrystal framework graphs, and (4) large-scale dynamic social networks (Stanford CollegeMsg)—Fast-WCS consistently establishes state-of-the-art accuracy, robust quadratic objective descent, and orders-of-magnitude runtime acceleration. By augmenting exact Frank--Wolfe homotopy continuation with Weisfeiler--Lehman tree-history priors, Fast-WCS~v4 eliminates both the memory bottleneck of $\mathcal{O}(N^4)$ Lawler tensors and the local-trap vulnerability of unguided continuation.
+
+% =========================================================
+% XIV. CONCLUSION
+% =========================================================
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We presented Fast-WCS, an exact analytical optimization framework for partial attributed graph matching across diverse topological domains. By replacing polynomial distortions, numerical approximations, and heuristic cardinality drops with exact Rank-1 factorization, exact closed-form gradients, Cardano quartic line searches, and an augmented Burkard Hungarian oracle, Fast-WCS eliminates classical GNCCP bottlenecks. Extensive benchmarking across synthetic regular and scale-free graphs, real-world image keypoints, a 28-cell $(N, L)$ scaling grid up to $N=150$, attributed chemical topologies, and Stanford CollegeMsg dynamic social networks demonstrates that Fast-WCS establishes a scalable, memory-efficient sweet spot: running up to $\LV{grid.spd.rlxone.max}\times$ faster than the exact GNCCP baseline in strictly $\mathcal{O}(N^2)$ space, delivering certified discrete bijective node correspondences, and preventing topological collapse under structural noise.
+
+\begin{thebibliography}{00}
+
+\bibitem{vishwanathan2010}
+S.~V.~N.~Vishwanathan, N.~N.~Schraudolph, R.~Kondor, and K.~M.~Borgwardt,
+``Graph kernels,''
+\textit{Journal of Machine Learning Research},
+vol.~11, pp.~1201--1242, 2010.
+
+\bibitem{yang2018algorithm}
+Q.~Yang, H.~Qiao, and Z.-Y.~Liu,
+``An algorithm for finding the most similar given sized subgraphs in two weighted graphs,''
+\textit{IEEE Transactions on Neural Networks and Learning Systems},
+vol.~29, no.~7, pp.~3293--3305, July 2018.
+
+\bibitem{liu2015graduated}
+Z.-Y.~Liu and H.~Qiao,
+``GNCCP --- graduated non-convexity and concavity procedure,''
+\textit{IEEE Transactions on Pattern Analysis and Machine Intelligence},
+vol.~36, no.~6, pp.~1258--1267, 2014.
+
+\bibitem{garey1979}
+M.~R.~Garey and D.~S.~Johnson,
+\textit{Computers and Intractability: A Guide to the Theory of NP-Completeness},
+W.~H.~Freeman and Company, San Francisco, 1979.
+
+\bibitem{loiola2007}
+E.~M.~Loiola, N.~M.~M.~de~Abreu, P.~O.~Boaventura-Netto, P.~Hahn, and T.~Querido,
+``An analytical review of the quadratic assignment problem,''
+\textit{European Journal of Operational Research},
+vol.~176, no.~2, pp.~657--690, 2007.
+
+\bibitem{zaslavskiy2009}
+M.~Zaslavskiy, F.~Bach, and J.-P.~Vert,
+``A path following algorithm for the graph matching problem,''
+\textit{IEEE Transactions on Pattern Analysis and Machine Intelligence},
+vol.~31, no.~12, pp.~2227--2242, 2009.
+
+\bibitem{gold1996}
+S.~Gold and A.~Rangarajan,
+``A graduated assignment algorithm for graph matching,''
+\textit{IEEE Transactions on Pattern Analysis and Machine Intelligence},
+vol.~18, no.~4, pp.~377--388, 1996.
+
+\bibitem{conte2004}
+D.~Conte, P.~Foggia, C.~Sansone, and M.~Vento,
+``Thirty years of graph matching in pattern recognition,''
+\textit{International Journal of Pattern Recognition and Artificial Intelligence},
+vol.~18, no.~3, pp.~265--298, 2004.
+
+\bibitem{emmert2007}
+T.~Emmert-Streib, M.~Dehmer, and Y.~Shi,
+``Fifty years of graph matching, network alignment and network comparison,''
+\textit{Information Sciences},
+vol.~346, pp.~180--197, 2016.
+
+\bibitem{koopmans1957}
+T.~C.~Koopmans and M.~Beckmann,
+``Assignment problems and the location of economic activities,''
+\textit{Econometrica},
+vol.~25, no.~1, pp.~53--76, 1957.
+
+\bibitem{lawler1963}
+E.~L.~Lawler,
+``The quadratic assignment problem,''
+\textit{Management Science},
+vol.~9, no.~4, pp.~586--599, 1963.
+
+\bibitem{leordeanu2005}
+M.~Leordeanu and M.~Hebert,
+``A spectral technique for correspondence problems using pairwise constraints,''
+in \textit{Proc. IEEE Int. Conf. Computer Vision (ICCV)},
+vol.~2, pp.~1482--1489, 2005.
+
+\bibitem{birkhoff1946}
+G.~Birkhoff,
+``Tres observaciones sobre el algebra lineal,''
+\textit{Universidad Nacional de Tucuman Revista Serie A},
+vol.~5, pp.~147--151, 1946.
+
+\bibitem{frank1956algorithm}
+M.~Frank and P.~Wolfe,
+``An algorithm for quadratic programming,''
+\textit{Naval Research Logistics Quarterly},
+vol.~3, no.~1--2, pp.~95--110, 1956.
+
+\bibitem{jaggi2013revisiting}
+M.~Jaggi,
+``Revisiting Frank-Wolfe: Projection-free sparse convex optimization,''
+in \textit{Proc. Int. Conf. Machine Learning (ICML)},
+pp.~427--435, 2013.
+
+\bibitem{kuhn1955hungarian}
+H.~W.~Kuhn,
+``The Hungarian method for the assignment problem,''
+\textit{Naval Research Logistics Quarterly},
+vol.~2, no.~1--2, pp.~83--97, 1955.
+
+\bibitem{peyre2019computational}
+G.~Peyr{\'e} and M.~Cuturi,
+``Computational optimal transport: With applications to data science,''
+\textit{Foundations and Trends in Machine Learning},
+vol.~11, no.~5--6, pp.~355--607, 2019.
+
+\bibitem{titouan2019optimal}
+T.~Vayer, L.~Chapel, R.~Flamary, R.~Tavenard, and N.~Courty,
+``Optimal transport for structured data with application on graphs,''
+in \textit{Proc. Int. Conf. Machine Learning (ICML)},
+pp.~6275--6284, 2019.
+
+\bibitem{vogelstein2015fast}
+J.~T.~Vogelstein, J.~M.~Conroy, V.~Lyzinski, L.~J.~Podrazik, S.~G.~Kratzer, E.~T.~Flake, M.~W.~Fishkind, D.~E.~Fishkind, and C.~E.~Priebe,
+``Fast approximate quadratic programming for graph matching,''
+\textit{PLOS ONE},
+vol.~10, no.~4, p.~e0121002, 2015.
+
+\bibitem{leordeanu2009ipfp} M.~Leordeanu, M.~Hebert, and R.~Sukthankar, ``An integer projected fixed point method for graph matching and MAP inference,'' in \textit{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2009, pp.~1114--1122.
+\bibitem{cho2010rrwm} M.~Cho, J.~Lee, and K.~M.~Lee, ``Reweighted random walks for graph matching,'' in \textit{Proc. Eur. Conf. Comput. Vis. (ECCV)}, 2010, pp.~492--505.
+\bibitem{wang2021ngm} R.~Wang, J.~Yan, and X.~Yang, ``Neural graph matching network: Learning Lawler's quadratic assignment problem with extension to hypergraph and multiple-graph matching,'' \textit{IEEE Trans. Pattern Anal. Mach. Intell.}, vol.~44, no.~9, pp.~5261--5279, 2022.
+\bibitem{chapel2020partial} L.~Chapel, M.~Z.~Alaya, and G.~Gasso, ``Partial optimal transport with applications on positive-unlabeled learning,'' in \textit{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2020, pp.~2903--2913.
+\bibitem{mikolajczyk2005comparison} K.~Mikolajczyk, T.~Tuytelaars, C.~Schmid, A.~Zisserman, J.~Matas, F.~Schaffalitzky, T.~Kadir, and L.~Van~Gool, ``A comparison of affine region detectors,'' \textit{Int. J. Comput. Vis.}, vol.~65, no.~1--2, pp.~43--72, 2005.
+\bibitem{lowe2004sift} D.~G.~Lowe, ``Distinctive image features from scale-invariant keypoints,'' \textit{Int. J. Comput. Vis.}, vol.~60, no.~2, pp.~91--110, 2004.
+\bibitem{wang2024pygmtools} R.~Wang, Z.~Guo, W.~Pan, J.~Ma, Y.~Zhang, N.~Yang, Q.~Liu, L.~Wei, H.~Zhang, C.~Liu, Z.~Jiang, X.~Yang, and J.~Yan, ``Pygmtools: A Python graph matching toolkit,'' \textit{J. Mach. Learn. Res.}, vol.~25, no.~33, pp.~1--7, 2024.
+\bibitem{flamary2021pot} R.~Flamary \textit{et~al.}, ``POT: Python optimal transport,'' \textit{J. Mach. Learn. Res.}, vol.~22, no.~78, pp.~1--8, 2021.
+\bibitem{virtanen2020scipy} P.~Virtanen \textit{et~al.}, ``SciPy 1.0: Fundamental algorithms for scientific computing in Python,'' \textit{Nat. Methods}, vol.~17, pp.~261--272, 2020.
+\bibitem{huangfu2018highs} Q.~Huangfu and J.~A.~J.~Hall, ``Parallelizing the dual revised simplex method,'' \textit{Math. Program. Comput.}, vol.~10, no.~1, pp.~119--142, 2018.
+\bibitem{burkard2009assignment} R.~Burkard, M.~Dell'Amico, and S.~Martello, \textit{Assignment Problems}. Philadelphia, PA, USA: SIAM, 2009.
+\bibitem{shervashidze2011weisfeiler} N.~Shervashidze, P.~Schweitzer, E.~J.~van~Leeuwen, K.~Mehlhorn, and K.~M.~Borgwardt, ``Weisfeiler-Lehman graph kernels,'' \textit{J. Mach. Learn. Res.}, vol.~12, pp.~2539--2561, 2011.
+\bibitem{kriege2016valid} N.~M.~Kriege, P.-L.~Giscard, and R.~C.~Wilson, ``On valid optimal assignment kernels and applications to graph classification,'' in \textit{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2016, pp.~1623--1631.
+\bibitem{panzarasa2009} P.~Panzarasa, T.~Opsahl, and K.~M.~Carley, ``Patterns and dynamics of users' behavior and interaction: Network analysis of an online community,'' \textit{J. Am. Soc. Inf. Sci. Technol.}, vol.~60, no.~5, pp.~911--932, 2009.
+
+\end{thebibliography}
+
+\end{document}

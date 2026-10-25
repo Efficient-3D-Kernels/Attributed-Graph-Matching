@@ -1,0 +1,160 @@
+{
+  "timestamp": "2026-10-15 23:32:21",
+  "total_elapsed_sec": 2.7236318588256836,
+  "scaling_benchmark": [
+    {
+      "N": 10,
+      "L": 8,
+      "time_v3_ms": 9.677699999883771,
+      "time_v2_ms": 6.906620000154362,
+      "time_rlx1f_ms": 19.517533332570263,
+      "time_rlx1_ms": 109.31189999973867,
+      "time_fd_ms": 67.59999989299104,
+      "speedup_vs_rlx1f": 2.0167532918776847,
+      "speedup_vs_rlx1": 11.295235438280946,
+      "speedup_vs_fd": 6.9851307535677805,
+      "acc_v3": 87.5
+    },
+    {
+      "N": 20,
+      "L": 16,
+      "time_v3_ms": 5.010479999691597,
+      "time_v2_ms": 5.464180000126362,
+      "time_rlx1f_ms": 23.277333333680872,
+      "time_rlx1_ms": 122.3733999995602,
+      "time_fd_ms": 307.3280001990497,
+      "speedup_vs_rlx1f": 4.6457292185805805,
+      "speedup_vs_rlx1": 24.423488369795404,
+      "speedup_vs_fd": 61.33703761275691,
+      "acc_v3": 93.75
+    },
+    {
+      "N": 30,
+      "L": 24,
+      "time_v3_ms": 7.88122000049043,
+      "time_v2_ms": 14.503560000230209,
+      "time_rlx1f_ms": 50.84569999962696,
+      "time_rlx1_ms": 343.9694000007876,
+      "time_fd_ms": 2164.751999953296,
+      "speedup_vs_rlx1f": 6.4515011630766494,
+      "speedup_vs_rlx1": 43.64418198951218,
+      "speedup_vs_fd": 274.6721953985028,
+      "acc_v3": 83.33333333333334
+    },
+    {
+      "N": 40,
+      "L": 32,
+      "time_v3_ms": 15.97105999935593,
+      "time_v2_ms": 10.033060000205296,
+      "time_rlx1f_ms": 50.802466667543435,
+      "time_rlx1_ms": 1255.2901574064906,
+      "time_fd_ms": 2133.760000579059,
+      "speedup_vs_rlx1f": 3.1809076335316604,
+      "speedup_vs_rlx1": 78.59779860930415,
+      "speedup_vs_fd": 133.60165202967792,
+      "acc_v3": 90.625
+    },
+    {
+      "N": 50,
+      "L": 40,
+      "time_v3_ms": 19.31483999978809,
+      "time_v2_ms": 14.88814000003913,
+      "time_rlx1f_ms": 70.99286666683231,
+      "time_rlx1_ms": 3426.4088420987846,
+      "time_fd_ms": 5934.399996476714,
+      "speedup_vs_rlx1f": 3.6755606915517394,
+      "speedup_vs_rlx1": 177.39773366677522,
+      "speedup_vs_fd": 307.245620286879,
+      "acc_v3": 90.0
+    },
+    {
+      "N": 60,
+      "L": 48,
+      "time_v3_ms": 17.48763333307579,
+      "time_v2_ms": 21.503499999501702,
+      "time_rlx1f_ms": 78.89726666689967,
+      "time_rlx1_ms": 7783.139048359196,
+      "time_fd_ms": 27073.152005905285,
+      "speedup_vs_rlx1f": 4.511603437937757,
+      "speedup_vs_rlx1": 445.0653155929515,
+      "speedup_vs_fd": 1548.1312702674077,
+      "acc_v3": 81.25
+    },
+    {
+      "N": 80,
+      "L": 64,
+      "time_v3_ms": 26.716333333145787,
+      "time_v2_ms": 27.9698333330695,
+      "time_rlx1f_ms": 235.4123034406669,
+      "time_rlx1_ms": 28403.973845083456,
+      "time_fd_ms": 69056.5119870007,
+      "speedup_vs_rlx1f": 8.811549867458838,
+      "speedup_vs_rlx1": 1063.1688671829786,
+      "speedup_vs_fd": 2584.8050002177997,
+      "acc_v3": 76.5625
+    },
+    {
+      "N": 100,
+      "L": 80,
+      "time_v3_ms": 52.21653333319409,
+      "time_v2_ms": 44.21369999969708,
+      "time_rlx1f_ms": 549.6512326094055,
+      "time_rlx1_ms": 77530.78167569908,
+      "time_fd_ms": 244743.99999598972,
+      "speedup_vs_rlx1f": 10.526383073002508,
+      "speedup_vs_rlx1": 1484.7937372819176,
+      "speedup_vs_fd": 4687.097828465104,
+      "acc_v3": 56.25
+    }
+  ],
+  "ablation_study": [
+    {
+      "stage": "Stage 0: Base Paper (2018 RLX1F)",
+      "description": "O(N^4) polynomial gradient, 11-pt grid search, linear schedule, top-L truncation",
+      "time_ms": 31.957299999703537,
+      "obj": 3.433157444000244,
+      "acc": 65.0,
+      "speedup": 1.0
+    },
+    {
+      "stage": "Stage 1: + Theorem 1 Analytical Gradient",
+      "description": "Replaces O(N^4) polynomial expansion with 3 GEMMs (Theta(N^3)) via Lemma 1",
+      "time_ms": 28.98049999930663,
+      "obj": 2.325699316924579,
+      "acc": 77.5,
+      "speedup": 1.1027173444374019
+    },
+    {
+      "stage": "Stage 2: + Theorem 3 Cardano Line Search",
+      "description": "Replaces 11-point matrix grid evaluations with exact O(1) quartic root finder",
+      "time_ms": 6.368500000462518,
+      "obj": 1.5277363061904907,
+      "acc": 82.5,
+      "speedup": 5.01802622240443
+    },
+    {
+      "stage": "Stage 3: + Exact Burkard Hungarian Oracle",
+      "description": "Guarantees exact cardinality L feasibility; eliminates heuristic truncation errors",
+      "time_ms": 7.3879999999917345,
+      "obj": 3.8582136631011963,
+      "acc": 55.00000000000001,
+      "speedup": 4.3255684894070505
+    },
+    {
+      "stage": "Stage 4: + Cosine Schedule & Duality Early Exit",
+      "description": "Concentrates continuation on phase transition and halts subproblems on convergence",
+      "time_ms": 6.7257999999128515,
+      "obj": 2.017094850540161,
+      "acc": 52.5,
+      "speedup": 4.751449641695801
+    },
+    {
+      "stage": "Stage 5: + Level-3 BLAS 2-Opt Refinement",
+      "description": "Vectorized candidate scoring for replacement and exchange moves; escapes mirror basins",
+      "time_ms": 11.30370000100811,
+      "obj": 0.9092280864715576,
+      "acc": 80.0,
+      "speedup": 2.8271539404667014
+    }
+  ]
+}

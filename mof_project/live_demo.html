@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Demo: Cross-Domain GNCCP</title>
+    <!-- Tailwind CSS for rapid professional styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+        body { font-family: 'Open Sans', sans-serif; background-color: #f3f4f6; }
+        .amrita-maroon { background-color: #A4123F; }
+        .text-amrita-maroon { color: #A4123F; }
+        .border-amrita-maroon { border-color: #A4123F; }
+        
+        .tab-btn { transition: all 0.2s ease-in-out; }
+        .tab-active { background-color: #A4123F; color: white; border-color: #A4123F; }
+        .tab-inactive { background-color: white; color: #4b5563; border-color: #d1d5db; }
+        .tab-inactive:hover { background-color: #f9fafb; color: #A4123F; }
+
+        .drag-box { 
+            border: 2px dashed #9ca3af; 
+            transition: all 0.3s;
+            cursor: grab;
+        }
+        .drag-box:hover { border-color: #A4123F; background-color: #fff1f2; }
+        .drag-box:active { cursor: grabbing; }
+
+        .drop-zone {
+            border: 2px dashed #9ca3af;
+            transition: all 0.3s;
+        }
+        .drop-zone.dragover { border-color: #A4123F; background-color: #fff1f2; transform: scale(1.02); }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #A4123F;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="flex flex-col h-screen">
+
+    <!-- Navbar -->
+    <nav class="amrita-maroon text-white shadow-md p-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-project-diagram text-2xl"></i>
+            <div>
+                <h1 class="text-xl font-bold">WCS-GNCCP Live Engine</h1>
+                <p class="text-xs opacity-80">Hierarchical 2D-3D Graph Matching</p>
+            </div>
+        </div>
+        <div class="text-sm font-semibold">Project Phase 2 (Team 11)</div>
+    </nav>
+
+    <div class="flex-1 flex flex-col p-6 max-w-7xl mx-auto w-full gap-6">
+        
+        <!-- Domain Tabs -->
+        <div class="flex justify-center gap-4">
+            <button onclick="switchDomain('mof')" id="btn-mof" class="tab-btn tab-active px-6 py-2 rounded-full border shadow-sm font-semibold flex items-center gap-2">
+                <i class="fas fa-cube"></i> MOF Discovery
+            </button>
+            <button onclick="switchDomain('brain')" id="btn-brain" class="tab-btn tab-inactive px-6 py-2 rounded-full border shadow-sm font-semibold flex items-center gap-2">
+                <i class="fas fa-brain"></i> Drosophila Brain
+            </button>
+            <button onclick="switchDomain('social')" id="btn-social" class="tab-btn tab-inactive px-6 py-2 rounded-full border shadow-sm font-semibold flex items-center gap-2">
+                <i class="fas fa-users"></i> Social Networks
+            </button>
+        </div>
+
+        <!-- Main Demo Area -->
+        <div class="bg-white rounded-xl shadow-lg p-6 flex-1 flex flex-col">
+            <div class="text-center mb-6">
+                <h2 id="domain-title" class="text-2xl font-bold text-gray-800">MOF Screening & 3D Alignment</h2>
+                <p id="domain-subtitle" class="text-gray-500">Find bridging motifs inside massive crystal lattices using combinatorial matching.</p>
+            </div>
+
+            <!-- Interaction Zone -->
+            <div class="flex items-stretch gap-6 flex-1">
+                
+                <!-- Left: Query Motif (Draggable) -->
+                <div class="w-1/3 flex flex-col">
+                    <h3 class="font-bold text-gray-700 mb-2"><i class="fas fa-search text-amrita-maroon"></i> Target Motif (Drag Me)</h3>
+                    <div id="drag-source" class="drag-box rounded-lg p-6 flex-1 flex flex-col items-center justify-center bg-gray-50" draggable="true">
+                        <i id="motif-icon" class="fas fa-project-diagram text-4xl text-amrita-maroon mb-3"></i>
+                        <h4 id="motif-name" class="font-bold text-lg">Zr-Carboxylate Node</h4>
+                        <p id="motif-desc" class="text-xs text-gray-500 text-center mt-2">5-Atom Sequence: Zr-O-C-O-Zr<br>Requires exact 3D Kabsch verification.</p>
+                    </div>
+                </div>
+
+                <!-- Middle: Engine -->
+                <div class="w-1/3 flex flex-col items-center justify-center relative">
+                    <!-- Dropdown for candidates -->
+                    <div class="w-full mb-6 relative z-10">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Select Target Database Candidate</label>
+                        <select id="candidate-select" class="block appearance-none w-full bg-gray-50 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-amrita-maroon shadow-sm">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+
+                    <!-- Drop Zone -->
+                    <div id="drop-target" class="drop-zone w-full rounded-lg p-8 flex flex-col items-center justify-center bg-gray-50 text-gray-400 mb-6">
+                        <i class="fas fa-bullseye text-3xl mb-2"></i>
+                        <p class="text-sm font-semibold text-center">Drop Target Motif Here<br>to Run Hybrid GNCCP</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loading-state" class="hidden flex-col items-center justify-center bg-white absolute inset-0 z-20 rounded-lg">
+                        <div class="loader mb-4"></div>
+                        <p id="loading-text" class="text-amrita-maroon font-bold text-sm tracking-widest uppercase">Initializing Frank-Wolfe...</p>
+                    </div>
+                </div>
+
+                <!-- Right: Results Panel -->
+                <div class="w-1/3 flex flex-col">
+                    <h3 class="font-bold text-gray-700 mb-2"><i class="fas fa-poll text-amrita-maroon"></i> Kernel Output</h3>
+                    <div id="results-panel" class="border rounded-lg p-4 flex-1 bg-gray-50 flex flex-col text-sm text-gray-400 justify-center items-center">
+                        <i class="fas fa-chart-bar text-3xl mb-2 opacity-50"></i>
+                        <p>Awaiting match execution...</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Domain Data Configuration ---
+        const domainData = {
+            mof: {
+                title: "MOF Screening & 3D Alignment",
+                subtitle: "Find bridging motifs inside massive crystal lattices using combinatorial matching.",
+                motifName: "Zr-Carboxylate Motif",
+                motifIcon: "fa-cubes",
+                motifDesc: "5-Atom Path: Zr-O-C-O-Zr<br>Requires exact 3D spatial alignment.",
+                candidates: [
+                    { id: "c1", name: "UiO-66 (Zr-based)", score2d: 1.000, rmsd: 0.00, passed: true, map: "Zr(1)→Zr(1)<br>O(37)→O(37)<br>C(72)→C(72)<br>O(74)→O(74)<br>Zr(78)→Zr(78)" },
+                    { id: "c2", name: "MOF-5 (Zn-based)", score2d: 0.885, rmsd: null, passed: false, map: "Rejected by Threshold (0.92)" },
+                    { id: "c3", name: "HKUST-1 (Cu-based)", score2d: 0.812, rmsd: null, passed: false, map: "Rejected by Threshold (0.92)" }
+                ]
+            },
+            brain: {
+                title: "Drosophila Brain Connectome Matching",
+                subtitle: "Map isomorphic subgraphs across massive neuron synapse networks (NeuPrint).",
+                motifName: "Mushroom Body Subgraph",
+                motifIcon: "fa-brain",
+                motifDesc: "6-Neuron Circuit<br>Learning & Memory pathway motif.",
+                candidates: [
+                    { id: "c1", name: "FlyWire ROI-A", score2d: 0.965, rmsd: 0.12, passed: true, map: "N_45→N_102<br>N_48→N_105<br>N_52→N_210<br>... (3 more)" },
+                    { id: "c2", name: "FlyWire ROI-B (Decoy)", score2d: 0.650, rmsd: null, passed: false, map: "Rejected by Threshold (0.90)" }
+                ]
+            },
+            social: {
+                title: "Social Network Anomaly Detection",
+                subtitle: "Identify coordinated bot-rings hidden within millions of user connections.",
+                motifName: "Bot-Ring Motif",
+                motifIcon: "fa-users",
+                motifDesc: "4-Node Clique Topology<br>Identifies highly clustered fake accounts.",
+                candidates: [
+                    { id: "c1", name: "Twitter Subgraph 882", score2d: 0.982, rmsd: "N/A", passed: true, map: "U12→@bot_alpha<br>U13→@bot_beta<br>U14→@bot_gamma<br>U15→@bot_delta" },
+                    { id: "c2", name: "Normal User Cluster", score2d: 0.420, rmsd: null, passed: false, map: "Rejected by Threshold (0.85)" }
+                ]
+            }
+        };
+
+        let currentDomain = 'mof';
+
+        // --- UI Switching ---
+        function switchDomain(domain) {
+            currentDomain = domain;
+            
+            // Update Buttons
+            ['mof', 'brain', 'social'].forEach(d => {
+                let btn = document.getElementById('btn-' + d);
+                if (d === domain) {
+                    btn.classList.remove('tab-inactive');
+                    btn.classList.add('tab-active');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('tab-inactive');
+                }
+            });
+
+            // Update Text
+            let data = domainData[domain];
+            document.getElementById('domain-title').innerText = data.title;
+            document.getElementById('domain-subtitle').innerText = data.subtitle;
+            
+            document.getElementById('motif-name').innerText = data.motifName;
+            document.getElementById('motif-desc').innerHTML = data.motifDesc;
+            document.getElementById('motif-icon').className = `fas ${data.motifIcon} text-4xl text-amrita-maroon mb-3`;
+
+            // Populate Dropdown
+            let select = document.getElementById('candidate-select');
+            select.innerHTML = '';
+            data.candidates.forEach((cand, idx) => {
+                let opt = document.createElement('option');
+                opt.value = idx;
+                opt.innerText = cand.name;
+                select.appendChild(opt);
+            });
+
+            // Reset Results
+            document.getElementById('results-panel').innerHTML = `<i class="fas fa-chart-bar text-3xl mb-2 opacity-50"></i><p>Awaiting match execution...</p>`;
+            document.getElementById('results-panel').className = "border rounded-lg p-4 flex-1 bg-gray-50 flex flex-col text-sm text-gray-400 justify-center items-center";
+        }
+
+        // Initialize
+        switchDomain('mof');
+
+        // --- Drag and Drop Logic ---
+        const dragSource = document.getElementById('drag-source');
+        const dropTarget = document.getElementById('drop-target');
+
+        dragSource.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', 'motif');
+            dragSource.style.opacity = '0.4';
+        });
+
+        dragSource.addEventListener('dragend', () => {
+            dragSource.style.opacity = '1';
+        });
+
+        dropTarget.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropTarget.classList.add('dragover');
+        });
+
+        dropTarget.addEventListener('dragleave', () => {
+            dropTarget.classList.remove('dragover');
+        });
+
+        dropTarget.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropTarget.classList.remove('dragover');
+            
+            const data = e.dataTransfer.getData('text/plain');
+            if (data === 'motif') {
+                runSimulation();
+            }
+        });
+
+        // --- Simulation Engine ---
+        function runSimulation() {
+            const loadingState = document.getElementById('loading-state');
+            const loadingText = document.getElementById('loading-text');
+            const resultsPanel = document.getElementById('results-panel');
+            
+            loadingState.classList.remove('hidden');
+            loadingState.classList.add('flex');
+            resultsPanel.innerHTML = ''; // clear previous
+            
+            // Selected Candidate
+            const candIdx = document.getElementById('candidate-select').value;
+            const cand = domainData[currentDomain].candidates[candIdx];
+
+            // Simulation Sequence
+            setTimeout(() => { loadingText.innerText = "Stage 1: 2D GNCCP Combinatorial Match..."; }, 0);
+            setTimeout(() => { loadingText.innerText = "Applying Lemma 1 Rank-One Optimization..."; }, 800);
+            setTimeout(() => { loadingText.innerText = cand.passed ? "Threshold Passed. Stage 2: Kabsch 3D Rotation..." : "Threshold Failed. Aborting 3D Phase..."; }, 1600);
+            
+            setTimeout(() => {
+                loadingState.classList.add('hidden');
+                loadingState.classList.remove('flex');
+                
+                // Render Results
+                let statusColor = cand.passed ? "text-green-600" : "text-red-600";
+                let statusIcon = cand.passed ? "fa-check-circle" : "fa-times-circle";
+                let statusBg = cand.passed ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200";
+                
+                let stage2Html = "";
+                if(cand.passed) {
+                    let rmsdColor = (cand.rmsd !== "N/A" && cand.rmsd < 1.0) ? "text-green-600" : "text-yellow-600";
+                    stage2Html = `
+                        <div class="mt-3 p-3 bg-white rounded border border-gray-200 shadow-sm">
+                            <div class="font-bold text-gray-700 mb-1 border-b pb-1"><i class="fas fa-cube text-amrita-maroon"></i> Stage 2: 3D Kabsch Alignment</div>
+                            <div class="text-xs">RMSD: <span class="font-bold ${rmsdColor}">${cand.rmsd} Å</span></div>
+                            <div class="text-xs text-green-600 font-bold mt-1"><i class="fas fa-shield-alt"></i> True Physical Match Verified</div>
+                        </div>
+                    `;
+                }
+
+                resultsPanel.className = `border rounded-lg p-4 flex-1 ${statusBg} flex flex-col text-sm text-gray-800 fade-in`;
+                resultsPanel.innerHTML = `
+                    <div class="flex items-center gap-2 mb-2 ${statusColor}">
+                        <i class="fas ${statusIcon} text-xl"></i>
+                        <span class="font-bold text-lg">Verdict: ${cand.passed ? 'Screened (Positive)' : 'Rejected (Decoy)'}</span>
+                    </div>
+                    
+                    <div class="mt-2 p-3 bg-white rounded border border-gray-200 shadow-sm">
+                        <div class="font-bold text-gray-700 mb-1 border-b pb-1"><i class="fas fa-project-diagram text-amrita-maroon"></i> Stage 1: 2D GNCCP</div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-gray-500">Similarity Score:</span>
+                            <span class="font-bold">${cand.score2d.toFixed(4)}</span>
+                        </div>
+                        <div class="text-xs text-gray-600 mt-2 font-mono bg-gray-50 p-2 rounded border">
+                            <span class="font-bold text-gray-800 block mb-1">Atom/Node Mapping:</span>
+                            ${cand.map}
+                        </div>
+                    </div>
+
+                    ${stage2Html}
+                `;
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

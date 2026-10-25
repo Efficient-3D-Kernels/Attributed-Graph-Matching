@@ -1,0 +1,1064 @@
+{
+  "protocol": {
+    "source": "Yang, Qiao & Liu, IEEE TNNLS 2018, Section III-A (synthetic WCS)",
+    "generation": "2D coordinates iid U[0,1]; random planted L-partial permutation; matched G coordinates replaced by H plus iid N(0,sigma^2); Euclidean edge weights; a shared Erd\u0151s-R\u00e9nyi topology is assigned to the planted vertex pairs and outlier-incident edges are sampled independently; add and remove round(0.5*sigma*edge_count) edges per graph, assigning inserted edges weight 1.0.",
+    "accuracy": "correct planted pairs / L, percent; all methods receive identical seeded graph instances",
+    "timing": "single process wall time including solver and exact-L projection; Python/BLAS environment dependent",
+    "deviations": [
+      "The paper does not state the PRNG, perturbation rounding, or full hyperparameters; these are fixed here and output with the results.",
+      "To instantiate the paper's planted-correspondence setup, the latent topology is shared across planted vertex pairs before edge corruption; edges incident to outliers are sampled independently.",
+      "The paper's SM/GA/PGM/EPF and exact RLX1/RLX2/RLX2F sources are not present in this workspace. The listed PyGMtools algorithms are distinct methods, not renamed substitutes.",
+      "PyGMtools returns a standard graph-matching score matrix; an exact-L Hungarian projection is included and timed. This is an adapter, not native WCS support."
+    ],
+    "accuracy_runs_per_setting": 1,
+    "timing_runs_per_setting": 1,
+    "alpha": 1.0,
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pygmtools_version": "0.6.0"
+  },
+  "method_mapping": {
+    "Fast-WCS v3": "Current proposed implementation, exact-L Burkard oracle, quartic search, exchange/replacement local refinement.",
+    "Fast-WCS v2": "In-repository UniversalGNCCP fast classic.",
+    "Local 2018-style RLX1F": "In-repository higher-order-gradient GNCCP with grid search and heuristic truncation; local reconstruction, not the original MATLAB code.",
+    "PyGMtools SM (2024 toolkit)": "Spectral matching implementation exposed by PyGMtools; exact-L post-projection.",
+    "PyGMtools RRWM (2024 toolkit)": "Reweighted random walks matching implementation exposed by PyGMtools; exact-L post-projection.",
+    "PyGMtools IPFP (2024 toolkit)": "Integer projected fixed point implementation exposed by PyGMtools; exact-L post-projection.",
+    "GRAMPA (ICML 2020)": "Published all-eigenpair spectral method for correlated weighted graph matching, extended to rectangular score matrix and exact-L assignment projection; eta fixed to 0.10."
+  },
+  "base_paper_method_availability": {
+    "SM": "not a separately faithful run: available only as PyGMtools SM implementation",
+    "GA": "not implemented in this workspace; must add a verified source or faithful reproduction",
+    "PGM": "not implemented in this workspace; must add a verified source or faithful reproduction",
+    "EPF": "not implemented in this workspace; must add a verified source or faithful reproduction",
+    "RLX1/RLX2": "not present as original paper implementations; the local solver is an RLX1F-style reconstruction",
+    "RLX1F/RLX2F": "only local 2018-style RLX1F reconstruction is runnable; RLX2F is unavailable"
+  },
+  "results": {
+    "noise": [
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.0,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              9.614600000531937
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 9.614600000531937,
+            "runtime_mean_ms": 9.614600000531937
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              11.71630000044388
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 11.71630000044388,
+            "runtime_mean_ms": 11.71630000044388
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              40.73340000013559
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 40.73340000013559,
+            "runtime_mean_ms": 40.73340000013559
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1.3540999998440384
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1.3540999998440384,
+            "runtime_mean_ms": 1.3540999998440384
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1083.3027999997284
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1083.3027999997284,
+            "runtime_mean_ms": 1083.3027999997284
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1330.6567999998151
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1330.6567999998151,
+            "runtime_mean_ms": 1330.6567999998151
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1021.2709000006726
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1021.2709000006726,
+            "runtime_mean_ms": 1021.2709000006726
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.01,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              16.0
+            ],
+            "runtime_ms": [
+              7.143400000131805
+            ],
+            "accuracy_mean_pct": 16.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 7.143400000131805,
+            "runtime_mean_ms": 7.143400000131805
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              5.7979000002887915
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 5.7979000002887915,
+            "runtime_mean_ms": 5.7979000002887915
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              30.240799999774026
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 30.240799999774026,
+            "runtime_mean_ms": 30.240799999774026
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              0.4880999995293678
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.4880999995293678,
+            "runtime_mean_ms": 0.4880999995293678
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1009.4929000006232
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1009.4929000006232,
+            "runtime_mean_ms": 1009.4929000006232
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1198.1436999994912
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1198.1436999994912,
+            "runtime_mean_ms": 1198.1436999994912
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1032.9213999993954
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1032.9213999993954,
+            "runtime_mean_ms": 1032.9213999993954
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.02,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              9.919300000547082
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 9.919300000547082,
+            "runtime_mean_ms": 9.919300000547082
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              12.0
+            ],
+            "runtime_ms": [
+              6.128300000455056
+            ],
+            "accuracy_mean_pct": 12.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 6.128300000455056,
+            "runtime_mean_ms": 6.128300000455056
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              33.13410000009753
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 33.13410000009753,
+            "runtime_mean_ms": 33.13410000009753
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              8.0
+            ],
+            "runtime_ms": [
+              0.5171999991944176
+            ],
+            "accuracy_mean_pct": 8.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.5171999991944176,
+            "runtime_mean_ms": 0.5171999991944176
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              981.1987000002773
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 981.1987000002773,
+            "runtime_mean_ms": 981.1987000002773
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1225.5777000000307
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1225.5777000000307,
+            "runtime_mean_ms": 1225.5777000000307
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              972.5120000002789
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 972.5120000002789,
+            "runtime_mean_ms": 972.5120000002789
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.03,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              11.182600000211096
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 11.182600000211096,
+            "runtime_mean_ms": 11.182600000211096
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              11.179299999639625
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 11.179299999639625,
+            "runtime_mean_ms": 11.179299999639625
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              41.473799999948824
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 41.473799999948824,
+            "runtime_mean_ms": 41.473799999948824
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              12.0
+            ],
+            "runtime_ms": [
+              0.738900000214926
+            ],
+            "accuracy_mean_pct": 12.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.738900000214926,
+            "runtime_mean_ms": 0.738900000214926
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1101.7821000004915
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1101.7821000004915,
+            "runtime_mean_ms": 1101.7821000004915
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1753.2305000004271
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1753.2305000004271,
+            "runtime_mean_ms": 1753.2305000004271
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1052.041900000404
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1052.041900000404,
+            "runtime_mean_ms": 1052.041900000404
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.04,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              8.0
+            ],
+            "runtime_ms": [
+              24.878900000658177
+            ],
+            "accuracy_mean_pct": 8.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 24.878900000658177,
+            "runtime_mean_ms": 24.878900000658177
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              11.399700000765733
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 11.399700000765733,
+            "runtime_mean_ms": 11.399700000765733
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              28.0
+            ],
+            "runtime_ms": [
+              66.9116999997641
+            ],
+            "accuracy_mean_pct": 28.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 66.9116999997641,
+            "runtime_mean_ms": 66.9116999997641
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              0.6541000002471264
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.6541000002471264,
+            "runtime_mean_ms": 0.6541000002471264
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1101.553700000295
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1101.553700000295,
+            "runtime_mean_ms": 1101.553700000295
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1197.507100000621
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1197.507100000621,
+            "runtime_mean_ms": 1197.507100000621
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1063.4061999999176
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1063.4061999999176,
+            "runtime_mean_ms": 1063.4061999999176
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.05,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              9.522299999844108
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 9.522299999844108,
+            "runtime_mean_ms": 9.522299999844108
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              4.914000000098895
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 4.914000000098895,
+            "runtime_mean_ms": 4.914000000098895
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              8.0
+            ],
+            "runtime_ms": [
+              29.413299999760056
+            ],
+            "accuracy_mean_pct": 8.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 29.413299999760056,
+            "runtime_mean_ms": 29.413299999760056
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              0.478300000395393
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.478300000395393,
+            "runtime_mean_ms": 0.478300000395393
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1211.8420999995578
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1211.8420999995578,
+            "runtime_mean_ms": 1211.8420999995578
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1152.3917000004076
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1152.3917000004076,
+            "runtime_mean_ms": 1152.3917000004076
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              966.4530999998533
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 966.4530999998533,
+            "runtime_mean_ms": 966.4530999998533
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.06,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              12.185300000055577
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 12.185300000055577,
+            "runtime_mean_ms": 12.185300000055577
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              10.332899999411893
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 10.332899999411893,
+            "runtime_mean_ms": 10.332899999411893
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              34.945499999594176
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 34.945499999594176,
+            "runtime_mean_ms": 34.945499999594176
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              0.44919999982084846
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.44919999982084846,
+            "runtime_mean_ms": 0.44919999982084846
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1219.2268999997395
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1219.2268999997395,
+            "runtime_mean_ms": 1219.2268999997395
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              8.0
+            ],
+            "runtime_ms": [
+              1366.8336999999156
+            ],
+            "accuracy_mean_pct": 8.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1366.8336999999156,
+            "runtime_mean_ms": 1366.8336999999156
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1142.1601000001829
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1142.1601000001829,
+            "runtime_mean_ms": 1142.1601000001829
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.07,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              6.914499999766122
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 6.914499999766122,
+            "runtime_mean_ms": 6.914499999766122
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              8.0
+            ],
+            "runtime_ms": [
+              7.796300000336487
+            ],
+            "accuracy_mean_pct": 8.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 7.796300000336487,
+            "runtime_mean_ms": 7.796300000336487
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              35.412600000199745
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 35.412600000199745,
+            "runtime_mean_ms": 35.412600000199745
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              12.0
+            ],
+            "runtime_ms": [
+              0.4955000003974419
+            ],
+            "accuracy_mean_pct": 12.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.4955000003974419,
+            "runtime_mean_ms": 0.4955000003974419
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              942.3741000000518
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 942.3741000000518,
+            "runtime_mean_ms": 942.3741000000518
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1226.1564000000362
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1226.1564000000362,
+            "runtime_mean_ms": 1226.1564000000362
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              1043.9519000001383
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1043.9519000001383,
+            "runtime_mean_ms": 1043.9519000001383
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.08,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              8.280299999569252
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 8.280299999569252,
+            "runtime_mean_ms": 8.280299999569252
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              5.940599999121332
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 5.940599999121332,
+            "runtime_mean_ms": 5.940599999121332
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              24.0
+            ],
+            "runtime_ms": [
+              35.93089999958465
+            ],
+            "accuracy_mean_pct": 24.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 35.93089999958465,
+            "runtime_mean_ms": 35.93089999958465
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              0.4650999999284977
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.4650999999284977,
+            "runtime_mean_ms": 0.4650999999284977
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1062.8071000001
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1062.8071000001,
+            "runtime_mean_ms": 1062.8071000001
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1227.1584000000075
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1227.1584000000075,
+            "runtime_mean_ms": 1227.1584000000075
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              987.6062000003003
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 987.6062000003003,
+            "runtime_mean_ms": 987.6062000003003
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.09,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              12.871199999608507
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 12.871199999608507,
+            "runtime_mean_ms": 12.871199999608507
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              7.816800000000512
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 7.816800000000512,
+            "runtime_mean_ms": 7.816800000000512
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              33.73400000054971
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 33.73400000054971,
+            "runtime_mean_ms": 33.73400000054971
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              0.498899999911373
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.498899999911373,
+            "runtime_mean_ms": 0.498899999911373
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1023.1211999998777
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1023.1211999998777,
+            "runtime_mean_ms": 1023.1211999998777
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              8.0
+            ],
+            "runtime_ms": [
+              1201.2126999998145
+            ],
+            "accuracy_mean_pct": 8.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1201.2126999998145,
+            "runtime_mean_ms": 1201.2126999998145
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              8.0
+            ],
+            "runtime_ms": [
+              1042.5673999998253
+            ],
+            "accuracy_mean_pct": 8.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1042.5673999998253,
+            "runtime_mean_ms": 1042.5673999998253
+          }
+        }
+      },
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.1,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              8.0
+            ],
+            "runtime_ms": [
+              8.721399999558344
+            ],
+            "accuracy_mean_pct": 8.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 8.721399999558344,
+            "runtime_mean_ms": 8.721399999558344
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              16.0
+            ],
+            "runtime_ms": [
+              10.268900000482972
+            ],
+            "accuracy_mean_pct": 16.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 10.268900000482972,
+            "runtime_mean_ms": 10.268900000482972
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "runtime_ms": [
+              47.889699999359436
+            ],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 47.889699999359436,
+            "runtime_mean_ms": 47.889699999359436
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              0.48939999942376744
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 0.48939999942376744,
+            "runtime_mean_ms": 0.48939999942376744
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              968.8302999993539
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 968.8302999993539,
+            "runtime_mean_ms": 968.8302999993539
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              1373.1739000004382
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 1373.1739000004382,
+            "runtime_mean_ms": 1373.1739000004382
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "runtime_ms": [
+              978.3929000004719
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "runtime_median_ms": 978.3929000004719,
+            "runtime_mean_ms": 978.3929000004719
+          }
+        }
+      }
+    ]
+  }
+}

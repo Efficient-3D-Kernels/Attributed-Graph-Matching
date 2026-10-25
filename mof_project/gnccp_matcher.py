@@ -358,6 +358,7 @@ def gnccp_match(
     # --- Proposition 1: initialize at the zeta=+1 minimizer ---
     X = init_X(M, N, L)
     zeta = 1.0
+    history = []
 
     n_outer, n_fw_total = 0, 0
     while zeta >= -1.0 - 1e-9:
@@ -376,6 +377,8 @@ def gnccp_match(
 
             lam = _line_search(X, Y, AG, AH, C, alpha, zeta)
             X = sinkhorn_project(X + lam * (Y - X), L, iters=sinkhorn_iters)  # Proposition 5
+
+        history.append({"zeta": round(zeta, 2), "F": float(F_val), "gap": float(gap)})
 
         if verbose:
             print(f"  zeta={zeta:+.2f}  FW iters={t+1:2d}  gap={gap:.3e}")
@@ -400,6 +403,7 @@ def gnccp_match(
         "n_outer_steps": n_outer,
         "n_fw_iters_total": n_fw_total,
         "runtime_sec": runtime,
+        "history": history,
     }
 
 

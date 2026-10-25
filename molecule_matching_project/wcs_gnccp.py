@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore')
 class WCS_GNCCP:
     """Weighted Common Subgraph Matching using GNCCP with Frank-Wolfe"""
     
-    def __init__(self, alpha=0.7, max_iter=50, fw_max_iter=20, tol=1e-4):
+    def __init__(self, alpha=0.7, gamma=0.5, max_iter=8, fw_max_iter=3, tol=1e-3, use_gpu=False):
         self.alpha = alpha
         self.max_iter = max_iter
         self.fw_max_iter = fw_max_iter
@@ -372,50 +372,9 @@ class WCS_GNCCP:
         return X
     
     def _discretize_to_binary(self, X, L):
-        """
-        Convert continuous X to binary partial permutation
-        ONLY called at the END of GNCCP optimization!
-        """
-        M, N = X.shape
-        L = min(L, M, N)
-        
-        if L == 0:
-            return np.zeros((M, N))
-        
-        # Hungarian for final assignment
-        C = -X
-        row_ind, col_ind = linear_sum_assignment(C)
-        
-        Y = np.zeros((M, N))
-        for r, c in zip(row_ind, col_ind):
-            if r < M and c < N:
-                Y[r, c] = 1
-        
-        # Ensure exactly L matches
-        current_sum = int(Y.sum())
-        if current_sum > L:
-            ones = np.where(Y == 1)
-            if len(ones[0]) > 0:
-                vals = [(X[ones[0][k], ones[1][k]], k) for k in range(len(ones[0]))]
-                vals.sort(key=lambda x: x[0])
-                for _, k in vals[:current_sum - L]:
-                    Y[ones[0][k], ones[1][k]] = 0
-        elif current_sum < L:
-            zeros = np.where(Y == 0)
-            if len(zeros[0]) > 0:
-                vals = [(X[zeros[0][k], zeros[1][k]], k) for k in range(len(zeros[0]))]
-                vals.sort(key=lambda x: x[0], reverse=True)
-                added = 0
-                for _, k in vals:
-                    if added >= L - current_sum:
-                        break
-                    i, j = zeros[0][k], zeros[1][k]
-                    if Y[i, :].sum() == 0 and Y[:, j].sum() == 0:
-                        Y[i, j] = 1
-                        added += 1
-        
-        return Y
-    
+        """Discretizes continuous assignment X to exact cardinality-L partial permutation via oracle."""
+        return self._solve_lp_direction(-X, L)
+
     def _is_binary(self, X, tol=1e-3):
         """Check if X is binary"""
         return np.all((X < tol) | (X > 1 - tol))

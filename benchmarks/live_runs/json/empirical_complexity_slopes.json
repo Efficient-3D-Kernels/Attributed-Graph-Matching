@@ -1,0 +1,8 @@
+{
+ "fit": "log(ms) = a + b log(N), N >= 40, L/N = 0.8, medians of large_scale_grid.csv",
+ "slopes": {
+  "fast": 1.397239151617863,
+  "rlx1f": 1.5842938556478103,
+  "rlx1": 1.7186484303977583
+ }
+}

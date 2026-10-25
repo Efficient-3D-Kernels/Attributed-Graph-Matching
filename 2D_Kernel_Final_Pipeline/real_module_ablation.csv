@@ -1,0 +1,6 @@
+module,time_ms,speedup,notes
+Naive Numerical Baseline 2018,44956.2089368701,1.0,Finite-diff sampling Theta(N^5)
++ Theorem 1 (Analytical Gradient),22.070333284015458,2036.9519734180835,Eliminates Theta(MN) objective evaluations
++ Lemma 1 (Rank-1 U = r r^T),19.07216664403677,2357.163177940583,Drops tensor multiplication to O(N^2)
++ Theorem 2 (Duality Gap Early Exit),19.254566558326285,2334.8335991198724,Bypasses redundant iterations when gap < 0.01
++ Cosine Continuation Schedule,38.16033333229522,1178.0874277328053,Concentrates steps along non-convex boundary

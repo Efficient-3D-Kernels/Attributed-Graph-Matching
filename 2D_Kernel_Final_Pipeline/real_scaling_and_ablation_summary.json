@@ -1,0 +1,71 @@
+{
+  "scaling": [
+    {
+      "N": 10,
+      "L": 8,
+      "naive_baseline_ms": 409.65117886662483,
+      "fast_wcs_ms": 11.713779950514436,
+      "speedup_factor": 34.97173248918972
+    },
+    {
+      "N": 25,
+      "L": 20,
+      "naive_baseline_ms": 4673.74074831605,
+      "fast_wcs_ms": 18.353719962760806,
+      "speedup_factor": 254.64814532415997
+    },
+    {
+      "N": 50,
+      "L": 40,
+      "naive_baseline_ms": 26588.787987828255,
+      "fast_wcs_ms": 31.97294003330171,
+      "speedup_factor": 831.6028479124677
+    },
+    {
+      "N": 75,
+      "L": 60,
+      "naive_baseline_ms": 196697.02639617026,
+      "fast_wcs_ms": 72.79609997446339,
+      "speedup_factor": 2702.026983109959
+    },
+    {
+      "N": 100,
+      "L": 80,
+      "naive_baseline_ms": 800505.0833076239,
+      "fast_wcs_ms": 139.99983334603408,
+      "speedup_factor": 5717.900258702705
+    }
+  ],
+  "ablation": [
+    {
+      "module": "Naive Numerical Baseline 2018",
+      "time_ms": 44956.2089368701,
+      "speedup": 1.0,
+      "notes": "Finite-diff sampling Theta(N^5)"
+    },
+    {
+      "module": "+ Theorem 1 (Analytical Gradient)",
+      "time_ms": 22.070333284015458,
+      "speedup": 2036.9519734180835,
+      "notes": "Eliminates Theta(MN) objective evaluations"
+    },
+    {
+      "module": "+ Lemma 1 (Rank-1 U = r r^T)",
+      "time_ms": 19.07216664403677,
+      "speedup": 2357.163177940583,
+      "notes": "Drops tensor multiplication to O(N^2)"
+    },
+    {
+      "module": "+ Theorem 2 (Duality Gap Early Exit)",
+      "time_ms": 19.254566558326285,
+      "speedup": 2334.8335991198724,
+      "notes": "Bypasses redundant iterations when gap < 0.01"
+    },
+    {
+      "module": "+ Cosine Continuation Schedule",
+      "time_ms": 38.16033333229522,
+      "speedup": 1178.0874277328053,
+      "notes": "Concentrates steps along non-convex boundary"
+    }
+  ]
+}

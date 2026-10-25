@@ -1,0 +1,492 @@
+{
+  "protocol": {
+    "run_mode": "smoke",
+    "limited_settings_per_sweep": 1,
+    "source": "Yang, Qiao & Liu, IEEE TNNLS 2018, Section III-A (synthetic WCS)",
+    "generation": "2D coordinates iid U[0,1]; random planted L-partial permutation; matched G coordinates replaced by H plus iid N(0,sigma^2); Euclidean edge weights; a shared Erd\u0151s-R\u00e9nyi topology is assigned to the planted vertex pairs and outlier-incident edges are sampled independently; independently add and remove round(0.5*sigma*edge_count) edges per graph, with every edge weighted by its endpoint Euclidean distance.",
+    "accuracy": "correct planted pairs / L, percent; all methods receive identical seeded graph instances",
+    "timing": "Separate from accuracy runs. One process; randomized method order per timing repetition; configured warm-ups excluded; wall-clock includes solver construction and adapter projection. BLAS/OpenMP thread count is fixed by --threads. Hardware-dependent; report medians and raw samples, not a universal speed claim.",
+    "objective": "F(X)=||(X1)(X1)^T o A_G - X A_H X^T||_F^2, alpha=1; lower is better. Reported on every returned discrete exact-L assignment.",
+    "deviations": [
+      "The paper does not fully specify the PRNG, perturbation rounding, topology coupling, or all solver settings; these are fixed here and exposed in this output.",
+      "A shared latent topology over planted pairs is an explicit reconstruction assumption; do not describe this as exact reproduction of the original code without author-code verification.",
+      "The base-paper methods are not all available as original executable implementations. In-repository GNCCP variants and PyGMtools/GRAMPA adapters are labelled accordingly.",
+      "Generic PyGMtools and GRAMPA scores are converted to an exact-L partial permutation using an augmented assignment problem; the adapter is timed and is not native WCS support.",
+      "This is a synthetic WCS/PIW benchmark inspired by ECCV 2022's common-input, version-pinned, objective/runtime reporting. It is not a reproduction of ECCV's computer-vision datasets or containerized solver suite.",
+      "A smoke run using --limit-settings is for code validation only and must not be reported as a full paper benchmark."
+    ],
+    "accuracy_runs_per_setting": 1,
+    "timing_runs_per_setting": 1,
+    "warmups_per_method_per_setting": 1,
+    "threads_per_process": 1,
+    "seed": 20261015,
+    "alpha": 1.0,
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "host": "krtsk",
+    "cpu": "Intel64 Family 6 Model 186 Stepping 3, GenuineIntel",
+    "logical_cpu_count": 12,
+    "threadpools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "C:\\Users\\abdus\\AppData\\Roaming\\Python\\Python313\\site-packages\\numpy.libs\\libscipy_openblas64_-9e3e5a4229c1ca39f10dc82bba9e2b2b.dll",
+        "version": "0.3.30",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "C:\\Users\\abdus\\AppData\\Roaming\\Python\\Python313\\site-packages\\scipy.libs\\libscipy_openblas-48c358d105077551cc9cc3ba79387ed5.dll",
+        "version": "0.3.29.dev",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      }
+    ],
+    "numpy_version": "2.3.5",
+    "scipy_version": "1.16.3",
+    "pygmtools_version": "0.6.0",
+    "pot_version": "0.9.7.post1",
+    "source_sha256": {
+      "benchmarks\\benchmark_paper_synthetic_wcs.py": "79e3097410b001c02c00c8f73724acfa78d7a1edb09cbb8063e9a6b76b086122",
+      "gnccp_advanced_v3.py": "77b0ff429d9e8e674d2f825452629061883eeb40a8e175d41007ffd5e27e3d45",
+      "gnccp_v2_classic.py": "9075caeca14f5bf1e4bac4524f45c94a79c41ce023cee5331e90e3e30adb2eac",
+      "gnccp_baseline_2018.py": "656823ae149c273523722738f75d0b4ae34da4ef71e88f06ea9cd45e27f8e8f7"
+    }
+  },
+  "method_mapping": {
+    "Fast-WCS v3": "Current proposed implementation, exact-L Burkard oracle, quartic search, exchange/replacement local refinement.",
+    "Fast-WCS v2": "In-repository UniversalGNCCP fast classic.",
+    "Local 2018-style RLX1F": "In-repository higher-order-gradient GNCCP with grid search and heuristic truncation; local reconstruction, not the original MATLAB code.",
+    "PyGMtools SM (2024 toolkit)": "Spectral matching implementation exposed by PyGMtools; exact-L post-projection.",
+    "PyGMtools RRWM (2024 toolkit)": "Reweighted random walks matching implementation exposed by PyGMtools; exact-L post-projection.",
+    "PyGMtools IPFP (2024 toolkit)": "Integer projected fixed point implementation exposed by PyGMtools; exact-L post-projection.",
+    "GRAMPA (ICML 2020)": "Published all-eigenpair spectral method for correlated weighted graph matching, extended to rectangular score matrix and exact-L assignment projection; eta fixed to 0.10."
+  },
+  "solver_hyperparameters": {
+    "Fast-WCS v3": {
+      "alpha": 1.0,
+      "max_iter": 8,
+      "fw_max_iter": 3,
+      "schedule": "cosine",
+      "line_search": "quartic",
+      "oracle": "exact_augmented",
+      "local_refinement": true,
+      "restarts": 1
+    },
+    "Fast-WCS v2": {
+      "alpha": 1.0,
+      "max_iter": 8,
+      "fw_max_iter": 3,
+      "schedule": "cosine",
+      "line_search": "closed_form",
+      "oracle": "dummy_padded",
+      "local_refinement": true,
+      "restarts": 1
+    },
+    "Local 2018-style RLX1F": {
+      "alpha": 1.0,
+      "max_iter": 10,
+      "fw_iter": 6,
+      "relaxation": "RLX1",
+      "oracle": "fast_heuristic",
+      "grid_points": 11
+    },
+    "GRAMPA (ICML 2020)": {
+      "eta": 0.1,
+      "projection": "augmented exact-L assignment"
+    },
+    "PyGMtools SM (2024 toolkit)": {
+      "max_iter": 50,
+      "backend": "numpy",
+      "projection": "augmented exact-L assignment"
+    },
+    "PyGMtools RRWM (2024 toolkit)": {
+      "max_iter": 50,
+      "backend": "numpy",
+      "projection": "augmented exact-L assignment"
+    },
+    "PyGMtools IPFP (2024 toolkit)": {
+      "max_iter": 50,
+      "backend": "numpy",
+      "projection": "augmented exact-L assignment"
+    }
+  },
+  "base_paper_method_availability": {
+    "SM": "not a separately faithful run: available only as PyGMtools SM implementation",
+    "GA": "not implemented in this workspace; must add a verified source or faithful reproduction",
+    "PGM": "not implemented in this workspace; must add a verified source or faithful reproduction",
+    "EPF": "not implemented in this workspace; must add a verified source or faithful reproduction",
+    "RLX1/RLX2": "not present as original paper implementations; the local solver is an RLX1F-style reconstruction",
+    "RLX1F/RLX2F": "only local 2018-style RLX1F reconstruction is runnable; RLX2F is unavailable"
+  },
+  "available_methods": [
+    "Fast-WCS v3",
+    "Fast-WCS v2",
+    "Local 2018-style RLX1F",
+    "GRAMPA (ICML 2020)",
+    "PyGMtools SM (2024 toolkit)",
+    "PyGMtools RRWM (2024 toolkit)",
+    "PyGMtools IPFP (2024 toolkit)"
+  ],
+  "selected_methods": [
+    "Fast-WCS v3",
+    "Fast-WCS v2",
+    "Local 2018-style RLX1F",
+    "GRAMPA (ICML 2020)",
+    "PyGMtools SM (2024 toolkit)",
+    "PyGMtools RRWM (2024 toolkit)",
+    "PyGMtools IPFP (2024 toolkit)"
+  ],
+  "omitted_optional_methods": [],
+  "results": {
+    "noise": [
+      {
+        "M": 30,
+        "N": 35,
+        "L": 25,
+        "density": 0.5,
+        "sigma": 0.0,
+        "uniform_random_exact_L_chance_accuracy_pct": 2.380952380952381,
+        "methods": {
+          "Fast-WCS v3": {
+            "accuracy_pct": [
+              4.0
+            ],
+            "accuracy_seeds": [
+              74461015
+            ],
+            "objective": [
+              39.825928300180024
+            ],
+            "runtime_ms": [
+              29.73989999918558
+            ],
+            "timing_seeds": [
+              75061015
+            ],
+            "failures": [],
+            "warnings": [],
+            "accuracy_mean_pct": 4.0,
+            "accuracy_sd_pct": 0.0,
+            "accuracy_mean_ci95_pct": [
+              4.0,
+              4.0
+            ],
+            "objective_mean": 39.825928300180024,
+            "objective_sd": 0.0,
+            "runtime_median_ms": 29.73989999918558,
+            "runtime_mean_ms": 29.73989999918558,
+            "runtime_median_ci95_ms": [
+              29.73989999918558,
+              29.73989999918558
+            ],
+            "n_accuracy_success": 1,
+            "n_timing_success": 1,
+            "n_failures": 0,
+            "n_warnings": 0,
+            "success_rate_pct": 100.0
+          },
+          "Fast-WCS v2": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "accuracy_seeds": [
+              74461015
+            ],
+            "objective": [
+              48.52705281144537
+            ],
+            "runtime_ms": [
+              14.348900000186404
+            ],
+            "timing_seeds": [
+              75061015
+            ],
+            "failures": [],
+            "warnings": [],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "accuracy_mean_ci95_pct": [
+              0.0,
+              0.0
+            ],
+            "objective_mean": 48.52705281144537,
+            "objective_sd": 0.0,
+            "runtime_median_ms": 14.348900000186404,
+            "runtime_mean_ms": 14.348900000186404,
+            "runtime_median_ci95_ms": [
+              14.348900000186404,
+              14.348900000186404
+            ],
+            "n_accuracy_success": 1,
+            "n_timing_success": 1,
+            "n_failures": 0,
+            "n_warnings": 0,
+            "success_rate_pct": 100.0
+          },
+          "Local 2018-style RLX1F": {
+            "accuracy_pct": [
+              12.0
+            ],
+            "accuracy_seeds": [
+              74461015
+            ],
+            "objective": [
+              51.32375672556779
+            ],
+            "runtime_ms": [
+              162.11719999955676
+            ],
+            "timing_seeds": [
+              75061015
+            ],
+            "failures": [],
+            "warnings": [],
+            "accuracy_mean_pct": 12.0,
+            "accuracy_sd_pct": 0.0,
+            "accuracy_mean_ci95_pct": [
+              12.0,
+              12.0
+            ],
+            "objective_mean": 51.32375672556779,
+            "objective_sd": 0.0,
+            "runtime_median_ms": 162.11719999955676,
+            "runtime_mean_ms": 162.11719999955676,
+            "runtime_median_ci95_ms": [
+              162.11719999955676,
+              162.11719999955676
+            ],
+            "n_accuracy_success": 1,
+            "n_timing_success": 1,
+            "n_failures": 0,
+            "n_warnings": 0,
+            "success_rate_pct": 100.0
+          },
+          "GRAMPA (ICML 2020)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "accuracy_seeds": [
+              74461015
+            ],
+            "objective": [
+              104.58171744222435
+            ],
+            "runtime_ms": [
+              1.2004000000160886
+            ],
+            "timing_seeds": [
+              75061015
+            ],
+            "failures": [],
+            "warnings": [],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "accuracy_mean_ci95_pct": [
+              0.0,
+              0.0
+            ],
+            "objective_mean": 104.58171744222435,
+            "objective_sd": 0.0,
+            "runtime_median_ms": 1.2004000000160886,
+            "runtime_mean_ms": 1.2004000000160886,
+            "runtime_median_ci95_ms": [
+              1.2004000000160886,
+              1.2004000000160886
+            ],
+            "n_accuracy_success": 1,
+            "n_timing_success": 1,
+            "n_failures": 0,
+            "n_warnings": 0,
+            "success_rate_pct": 100.0
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "accuracy_seeds": [
+              74461015
+            ],
+            "objective": [
+              132.9787011212884
+            ],
+            "runtime_ms": [
+              32.46209999997518
+            ],
+            "timing_seeds": [
+              75061015
+            ],
+            "failures": [],
+            "warnings": [],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "accuracy_mean_ci95_pct": [
+              0.0,
+              0.0
+            ],
+            "objective_mean": 132.9787011212884,
+            "objective_sd": 0.0,
+            "runtime_median_ms": 32.46209999997518,
+            "runtime_mean_ms": 32.46209999997518,
+            "runtime_median_ci95_ms": [
+              32.46209999997518,
+              32.46209999997518
+            ],
+            "n_accuracy_success": 1,
+            "n_timing_success": 1,
+            "n_failures": 0,
+            "n_warnings": 0,
+            "success_rate_pct": 100.0
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "accuracy_seeds": [
+              74461015
+            ],
+            "objective": [
+              130.2763293203468
+            ],
+            "runtime_ms": [
+              665.161499999158
+            ],
+            "timing_seeds": [
+              75061015
+            ],
+            "failures": [],
+            "warnings": [],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "accuracy_mean_ci95_pct": [
+              0.0,
+              0.0
+            ],
+            "objective_mean": 130.2763293203468,
+            "objective_sd": 0.0,
+            "runtime_median_ms": 665.161499999158,
+            "runtime_mean_ms": 665.161499999158,
+            "runtime_median_ci95_ms": [
+              665.161499999158,
+              665.161499999158
+            ],
+            "n_accuracy_success": 1,
+            "n_timing_success": 1,
+            "n_failures": 0,
+            "n_warnings": 0,
+            "success_rate_pct": 100.0
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "accuracy_pct": [
+              0.0
+            ],
+            "accuracy_seeds": [
+              74461015
+            ],
+            "objective": [
+              133.49096817287023
+            ],
+            "runtime_ms": [
+              97.06029999870225
+            ],
+            "timing_seeds": [
+              75061015
+            ],
+            "failures": [],
+            "warnings": [
+              {
+                "phase": "timing",
+                "seed": 75061015,
+                "category": "RuntimeWarning",
+                "message": "invalid value encountered in divide"
+              }
+            ],
+            "accuracy_mean_pct": 0.0,
+            "accuracy_sd_pct": 0.0,
+            "accuracy_mean_ci95_pct": [
+              0.0,
+              0.0
+            ],
+            "objective_mean": 133.49096817287023,
+            "objective_sd": 0.0,
+            "runtime_median_ms": 97.06029999870225,
+            "runtime_mean_ms": 97.06029999870225,
+            "runtime_median_ci95_ms": [
+              97.06029999870225,
+              97.06029999870225
+            ],
+            "n_accuracy_success": 1,
+            "n_timing_success": 1,
+            "n_failures": 0,
+            "n_warnings": 1,
+            "success_rate_pct": 100.0
+          }
+        },
+        "paired_accuracy_delta_vs_v3_pp": {
+          "Fast-WCS v3": {
+            "n_paired": 1,
+            "mean_delta_pp": 0.0,
+            "mean_delta_ci95_pp": [
+              0.0,
+              0.0
+            ]
+          },
+          "Fast-WCS v2": {
+            "n_paired": 1,
+            "mean_delta_pp": -4.0,
+            "mean_delta_ci95_pp": [
+              -4.0,
+              -4.0
+            ]
+          },
+          "Local 2018-style RLX1F": {
+            "n_paired": 1,
+            "mean_delta_pp": 8.0,
+            "mean_delta_ci95_pp": [
+              8.0,
+              8.0
+            ]
+          },
+          "GRAMPA (ICML 2020)": {
+            "n_paired": 1,
+            "mean_delta_pp": -4.0,
+            "mean_delta_ci95_pp": [
+              -4.0,
+              -4.0
+            ]
+          },
+          "PyGMtools SM (2024 toolkit)": {
+            "n_paired": 1,
+            "mean_delta_pp": -4.0,
+            "mean_delta_ci95_pp": [
+              -4.0,
+              -4.0
+            ]
+          },
+          "PyGMtools RRWM (2024 toolkit)": {
+            "n_paired": 1,
+            "mean_delta_pp": -4.0,
+            "mean_delta_ci95_pp": [
+              -4.0,
+              -4.0
+            ]
+          },
+          "PyGMtools IPFP (2024 toolkit)": {
+            "n_paired": 1,
+            "mean_delta_pp": -4.0,
+            "mean_delta_ci95_pp": [
+              -4.0,
+              -4.0
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

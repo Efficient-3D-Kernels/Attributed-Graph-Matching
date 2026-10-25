@@ -1,0 +1,7 @@
+stage,description,time_ms,obj,acc,speedup
+Stage 0: Base Paper (2018 RLX1F),"O(N^4) polynomial gradient, 11-pt grid search, linear schedule, top-L truncation",31.957299999703537,3.433157444000244,65.0,1.0
+Stage 1: + Theorem 1 Analytical Gradient,Replaces O(N^4) polynomial expansion with 3 GEMMs (Theta(N^3)) via Lemma 1,28.98049999930663,2.325699316924579,77.5,1.1027173444374019
+Stage 2: + Theorem 3 Cardano Line Search,Replaces 11-point matrix grid evaluations with exact O(1) quartic root finder,6.368500000462518,1.5277363061904907,82.5,5.01802622240443
+Stage 3: + Exact Burkard Hungarian Oracle,Guarantees exact cardinality L feasibility; eliminates heuristic truncation errors,7.3879999999917345,3.8582136631011963,55.00000000000001,4.3255684894070505
+Stage 4: + Cosine Schedule & Duality Early Exit,Concentrates continuation on phase transition and halts subproblems on convergence,6.7257999999128515,2.017094850540161,52.5,4.751449641695801
+Stage 5: + Level-3 BLAS 2-Opt Refinement,Vectorized candidate scoring for replacement and exchange moves; escapes mirror basins,11.30370000100811,0.9092280864715576,80.0,2.8271539404667014

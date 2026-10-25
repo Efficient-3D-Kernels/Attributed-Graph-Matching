@@ -1,0 +1,186 @@
+{
+ "figures": {
+  "fig_matching_accuracy_vs_noise": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\synthetic_results.csv": "aec73e67e1375505fbdbafba948c0eb6bbcfa7a10ee17b5784c88ab3181df2b6"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
+    "benchmarks\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf",
+    "paper\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
+    "paper\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf"
+   ]
+  },
+  "fig_matching_accuracy_vs_outliers": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\synthetic_results.csv": "aec73e67e1375505fbdbafba948c0eb6bbcfa7a10ee17b5784c88ab3181df2b6"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
+    "benchmarks\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf",
+    "paper\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
+    "paper\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf"
+   ]
+  },
+  "fig_synthetic_accuracy_vs_size": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\synthetic_results.csv": "aec73e67e1375505fbdbafba948c0eb6bbcfa7a10ee17b5784c88ab3181df2b6"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
+    "benchmarks\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf",
+    "paper\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
+    "paper\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf"
+   ]
+  },
+  "fig_synthetic_accuracy_vs_density": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\synthetic_results.csv": "aec73e67e1375505fbdbafba948c0eb6bbcfa7a10ee17b5784c88ab3181df2b6"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
+    "benchmarks\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf",
+    "paper\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
+    "paper\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf"
+   ]
+  },
+  "fig_image_accuracy_vs_outliers": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\image_results.csv": "4e812354fcaa29c7f7e4c733b40e9bd82063426baca9808768cf5d1e1a9477b6"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
+    "benchmarks\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf",
+    "paper\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
+    "paper\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf"
+   ]
+  },
+  "fig_image_accuracy_vs_size": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\image_results.csv": "4e812354fcaa29c7f7e4c733b40e9bd82063426baca9808768cf5d1e1a9477b6"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_image_accuracy_vs_size.png",
+    "benchmarks\\figures\\standalone/fig_image_accuracy_vs_size.pdf",
+    "paper\\figures\\standalone/fig_image_accuracy_vs_size.png",
+    "paper\\figures\\standalone/fig_image_accuracy_vs_size.pdf"
+   ]
+  },
+  "fig_scaling_runtime_vs_n": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\large_scale_grid.csv": "15dfdcea6cc161657076fb00de78bb37380d7fe86a70e7bdb5482cc8509b8526"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_scaling_runtime_vs_n.png",
+    "benchmarks\\figures\\standalone/fig_scaling_runtime_vs_n.pdf",
+    "paper\\figures\\standalone/fig_scaling_runtime_vs_n.png",
+    "paper\\figures\\standalone/fig_scaling_runtime_vs_n.pdf"
+   ]
+  },
+  "fig_speedup_factor_vs_baseline": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\large_scale_grid.csv": "15dfdcea6cc161657076fb00de78bb37380d7fe86a70e7bdb5482cc8509b8526"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
+    "benchmarks\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf",
+    "paper\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
+    "paper\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf"
+   ]
+  },
+  "fig_empirical_complexity_slopes": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\large_scale_grid.csv": "15dfdcea6cc161657076fb00de78bb37380d7fe86a70e7bdb5482cc8509b8526"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_empirical_complexity_slopes.png",
+    "benchmarks\\figures\\standalone/fig_empirical_complexity_slopes.pdf",
+    "paper\\figures\\standalone/fig_empirical_complexity_slopes.png",
+    "paper\\figures\\standalone/fig_empirical_complexity_slopes.pdf"
+   ]
+  },
+  "fig_cardano_vs_gridsearch_latency": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\ablation_linesearch_calls.csv": "6a9fc05cb5523b5ff567a6850eaaed1dd86acdb414b1f7e796aa4ae7cb55695d"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
+    "benchmarks\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf",
+    "paper\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
+    "paper\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf"
+   ]
+  },
+  "fig_2opt_refinement_objective_drop": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\ablation_trials.csv": "4834c5db375ebc729495823b6ffab7f54d96a12f08939a6f4fb1e7a68e6de055"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
+    "benchmarks\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf",
+    "paper\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
+    "paper\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf"
+   ]
+  },
+  "fig_rmsd_cumulative_distribution": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\superposition_3d_trials.csv": "9e46e12ca77ed407f178b9fab9c38ee3fe6b96397209e381417737de557eae52"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
+    "benchmarks\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf",
+    "paper\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
+    "paper\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf"
+   ]
+  },
+  "fig_pareto_latency_vs_rmsd": {
+   "sources": {
+    "benchmarks\\live_runs\\csv\\superposition_3d_trials.csv": "9e46e12ca77ed407f178b9fab9c38ee3fe6b96397209e381417737de557eae52",
+    "benchmarks\\live_runs\\csv\\superposition_3d_results.csv": "d64edb09966707ddba8cfada37a93d5be706d135014befae13fe897ceb12ae92"
+   },
+   "outputs": [
+    "benchmarks\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
+    "benchmarks\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf",
+    "paper\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
+    "paper\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf"
+   ]
+  }
+ },
+ "provenance": {
+  "generated_at": "2026-10-17T01:37:20",
+  "python": "3.13.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cpu": "Intel64 Family 6 Model 186 Stepping 3, GenuineIntel",
+  "logical_cpus": 12,
+  "host": "krtsk",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.16.3",
+   "pygmtools": "0.6.0",
+   "POT": "0.9.7.post1",
+   "torch": "2.13.0",
+   "open3d": "0.20.0",
+   "rdkit": "2025.9.5",
+   "opencv-python": "4.12.0.88",
+   "pycpd": "2.0.0",
+   "matplotlib": "3.10.6"
+  },
+  "threadpools_main_process": [
+   {
+    "internal_api": "openblas",
+    "num_threads": 1,
+    "version": "0.3.30"
+   },
+   {
+    "internal_api": "openblas",
+    "num_threads": 1,
+    "version": "0.3.29.dev"
+   }
+  ],
+  "sha256": {
+   "benchmarks\\scripts\\make_standalone_figures_live.py": "3086cdba3474fccfb3e6992ad8f333c53789f4f0b145eb3133fcb0273ad62a3d",
+   "gnccp_advanced_v3.py": "bbb734dacaf07fd88600947ca3aecf018ff85a8e7eb9b9bfa70090e8e960902d",
+   "gnccp_baseline_2018.py": "656823ae149c273523722738f75d0b4ae34da4ef71e88f06ea9cd45e27f8e8f7",
+   "benchmarks\\scripts\\live_common.py": "12fcf2f98741c91bd018a76463d61305221aaa6d8748cd50eb86386ac7a45d58"
+  }
+ }
+}

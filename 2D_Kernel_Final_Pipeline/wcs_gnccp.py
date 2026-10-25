@@ -18,7 +18,7 @@ except ImportError:
 class WCS_GNCCP:
     """Weighted Common Subgraph Matching using GNCCP with Frank-Wolfe and Optional GPU Support"""
     
-    def __init__(self, alpha=0.7, gamma=0.5, max_iter=50, fw_max_iter=20, tol=1e-4, use_gpu=False):
+    def __init__(self, alpha=0.7, gamma=0.5, max_iter=8, fw_max_iter=3, tol=1e-3, use_gpu=False):
         self.alpha = alpha
         self.gamma = gamma
         self.max_iter = max_iter
@@ -31,7 +31,7 @@ class WCS_GNCCP:
         """Main matching function"""
         if verbose:
             print("="*60)
-            print("🔬 WCS+GNCCP Matching (Frank-Wolfe)")
+            print("[*] WCS+GNCCP Matching (Frank-Wolfe)")
             print(f"   Hardware Backend: {'GPU (CuPy)' if self.use_gpu else 'CPU (NumPy)'}")
             print("="*60)
         
@@ -41,7 +41,7 @@ class WCS_GNCCP:
         
         M, N = A_G.shape[0], A_H.shape[0]
         
-        # Normalize adjacency matrices so structural cost is scale-invariant
+        # Frobenius Normalization is REQUIRED to keep structural cost bounded
         norm_G = np.linalg.norm(A_G, 'fro')
         norm_H = np.linalg.norm(A_H, 'fro')
         if norm_G > 0: A_G = A_G / norm_G
@@ -60,11 +60,16 @@ class WCS_GNCCP:
         # Build cost matrix (atom features on CPU)
         C = self._build_cost_matrix(mol1, mol2)
         
-        # Normalize cost
+        # Normalize fine-grained features to [0, 1]
         if C.max() > C.min():
             C = (C - C.min()) / (C.max() - C.min() + 1e-8)
         else:
             C = C / (C.max() + 1e-8)
+        
+        # Element-mismatch penalty applied AFTER normalization
+        nums1 = np.array([a.GetAtomicNum() for a in mol1.GetAtoms()])
+        nums2 = np.array([a.GetAtomicNum() for a in mol2.GetAtoms()])
+        C[nums1[:, None] != nums2[None, :]] = 50.0
         
         # Run GNCCP with Frank-Wolfe (GPU or CPU)
         X = self._gnccp_optimization(A_G, A_H, C, L, verbose)
@@ -72,31 +77,27 @@ class WCS_GNCCP:
         # Extract matches from binary X (ensure it's back on CPU for pure python logic)
         X_cpu = cp.asnumpy(X) if self.use_gpu else X
         
-        matches = []
-        for i in range(M):
-            for j in range(N):
-                if X_cpu[i, j] > 0.5:
-                    matches.append((i, j))
+        # Vectorized match extraction
+        match_idx = np.where(X_cpu > 0.5)
+        matches = list(zip(match_idx[0], match_idx[1]))
         
         # Ensure exactly L matches
         if len(matches) > L:
             matches = matches[:L]
         elif len(matches) < L:
-            remaining = []
-            for i in range(M):
-                for j in range(N):
-                    if (i, j) not in matches and X_cpu[i, j] > 0.1:
-                        remaining.append((i, j, X_cpu[i, j]))
-            remaining.sort(key=lambda x: x[2], reverse=True)
-            needed = L - len(matches)
-            for i, j, _ in remaining[:needed]:
-                matches.append((i, j))
+            remaining_idx = np.where((X_cpu > 0.1) & (X_cpu <= 0.5))
+            if len(remaining_idx[0]) > 0:
+                vals = X_cpu[remaining_idx]
+                order = np.argsort(-vals)  # descending
+                needed = L - len(matches)
+                for k in order[:needed]:
+                    matches.append((remaining_idx[0][k], remaining_idx[1][k]))
         
         # Calculate final similarity score using the objective F(X)
         score = self._compute_final_score(A_G, A_H, C, X_cpu, L)
         
         if verbose:
-            print(f"✅ Found {len(matches)} matches (Sim Score: {score:.3f})")
+            print(f"[OK] Found {len(matches)} matches (Sim Score: {score:.3f})")
             print("="*60)
         
         return X_cpu, matches, score
@@ -131,11 +132,11 @@ class WCS_GNCCP:
         return A
     
     def _build_cost_matrix(self, mol1, mol2):
-        """Build cost matrix via numpy broadcasting (CPU bound)."""
+        """Build cost matrix via numpy broadcasting (CPU bound).
+        NOTE: Element-mismatch penalty is applied AFTER normalization in the caller."""
         f1 = self._extract_atom_features(mol1)
         f2 = self._extract_atom_features(mol2)
         C = np.zeros((len(f1['atomic_num']), len(f2['atomic_num'])))
-        C += (f1['atomic_num'][:, None] != f2['atomic_num'][None, :]) * 100
         C += np.abs(f1['degree'][:, None] - f2['degree'][None, :]) * 10
         C += (f1['is_in_ring'][:, None] != f2['is_in_ring'][None, :]) * 5
         C += (f1['is_aromatic'][:, None] != f2['is_aromatic'][None, :]) * 10
@@ -176,13 +177,15 @@ class WCS_GNCCP:
         
         # Initialize X uniformly
         X = xp.ones((M, N)) * (L / (M * N))
-        zeta_values = xp.linspace(1.0, -1.0, self.max_iter)
+        # Cosine ζ schedule: spends more iterations near ζ=0 (the real objective)
+        t_schedule = xp.linspace(0, float(xp.pi), self.max_iter)
+        zeta_values = xp.cos(t_schedule)  # +1 → 0 → -1, slow near 0
         
         for idx, zeta in enumerate(zeta_values):
             if verbose and idx % 10 == 0:
                 print(f"   GNCCP Iteration {idx+1}/{self.max_iter}, ζ = {zeta:.3f}")
             
-            for fw_iter in range(self.fw_max_iter):
+            for t in range(self.fw_max_iter):
                 grad = self._compute_gradient_Jzeta(X, A_G, A_H, C, zeta)
                 Y = self._solve_lp_direction(grad, L)
                 
@@ -191,14 +194,30 @@ class WCS_GNCCP:
                 if fw_gap < self.tol:
                     break
                 
-                lambda_opt = self._line_search_Jzeta(X, Y, A_G, A_H, C, zeta, L)
-                X_new = X + lambda_opt * (Y - X)
-                X_new = self._project_to_relaxation(X_new, L)
-                X = X_new
+                # Exact Line Search: sample 5 points, pick best
+                lambda_opt = self._exact_line_search(X, D_fw, A_G, A_H, C, zeta, L)
+                
+                X = X - lambda_opt * D_fw
+            if float(xp.max(X * (1.0 - X))) < 1e-3:
+                break
         
         # Final Discretization
         X_binary = self._discretize_to_binary(X, L)
         return X_binary
+    
+    def _exact_line_search(self, X, D, A_G, A_H, C, zeta, L):
+        """Exact line search by sampling 5 points along the FW direction."""
+        xp = self.xp
+        best_lam = 0.0
+        best_val = float('inf')
+        for lam in [0.0, 0.25, 0.5, 0.75, 1.0]:
+            X_trial = X - lam * D
+            X_trial = xp.clip(X_trial, 0, 1)
+            val = self._compute_Jzeta(X_trial, A_G, A_H, C, zeta)
+            if val < best_val:
+                best_val = val
+                best_lam = lam
+        return best_lam
     
     def _compute_gradient_Jzeta(self, X, A_G, A_H, C, zeta):
         xp = self.xp
@@ -216,10 +235,12 @@ class WCS_GNCCP:
         r = X.sum(axis=1)
         U = xp.outer(r, r)
         
-        R = (U * A_G) - (X @ A_H @ X.T)
+        # Cache X @ A_H — used for both the residual and term2
+        XA_H = X @ A_H
+        R = (U * A_G) - (XA_H @ X.T)
         RA_X = (R * A_G) @ X
         term1 = RA_X.sum(axis=1, keepdims=True)
-        term2 = R @ X @ A_H
+        term2 = R @ XA_H
         
         grad_struct = 4.0 * term1 - 4.0 * term2
         grad_F = self.alpha * grad_struct + (1 - self.alpha) * C
@@ -228,17 +249,28 @@ class WCS_GNCCP:
     def _solve_lp_direction(self, grad, L):
         xp = self.xp
         M, N = grad.shape
-        
-        # Linear Sum Assignment ONLY runs on CPU via SciPy
         grad_cpu = cp.asnumpy(grad) if self.use_gpu else grad
-        row_ind, col_ind = linear_sum_assignment(grad_cpu)
         
-        Y = xp.zeros((M, N))
+        if L >= min(M, N):
+            row_ind, col_ind = linear_sum_assignment(grad_cpu)
+            Y = xp.zeros((M, N), dtype=np.float32)
+            for r, c in zip(row_ind, col_ind):
+                if r < M and c < N: Y[r, c] = 1.0
+            return Y
+            
+        dim = M + N - L
+        g_min = float(np.min(grad_cpu))
+        g_shift = grad_cpu - g_min + 1e-9 if g_min < 0 else grad_cpu
+        
+        aug = np.full((dim, dim), 1e6, dtype=np.float32)
+        aug[:M, :N] = g_shift
+        aug[:M, N:] = 0.0
+        aug[M:, :N] = 0.0
+        
+        row_ind, col_ind = linear_sum_assignment(aug)
+        Y = xp.zeros((M, N), dtype=np.float32)
         for r, c in zip(row_ind, col_ind):
-            if r < M and c < N:
-                Y[r, c] = 1.0
-        
-        Y = self._project_to_relaxation(Y, L)
+            if r < M and c < N: Y[r, c] = 1.0
         return Y
     
     def _line_search_Jzeta(self, X, Y, A_G, A_H, C, zeta, L):
@@ -303,54 +335,9 @@ class WCS_GNCCP:
         return X
     
     def _discretize_to_binary(self, X, L):
-        xp = self.xp
-        M, N = X.shape
-        L = min(L, M, N)
-        if L == 0:
-            return xp.zeros((M, N))
-        
-        # Hungarian for final assignment (CPU bound)
-        C_matrix = -X
-        C_cpu = cp.asnumpy(C_matrix) if self.use_gpu else C_matrix
-        row_ind, col_ind = linear_sum_assignment(C_cpu)
-        
-        Y_cpu = np.zeros((M, N))
-        for r, c in zip(row_ind, col_ind):
-            if r < M and c < N:
-                Y_cpu[r, c] = 1
-                
-        # Ensure exactly L matches (pure python/numpy logic)
-        X_cpu = cp.asnumpy(X) if self.use_gpu else X
-        current_sum = int(Y_cpu.sum())
-        
-        if current_sum > L:
-            ones = np.where(Y_cpu == 1)
-            if len(ones[0]) > 0:
-                vals = [(X_cpu[ones[0][k], ones[1][k]], k) for k in range(len(ones[0]))]
-                vals.sort(key=lambda x: x[0])
-                for _, k in vals[:current_sum - L]:
-                    Y_cpu[ones[0][k], ones[1][k]] = 0
-        elif current_sum < L:
-            zeros = np.where(Y_cpu == 0)
-            if len(zeros[0]) > 0:
-                vals = [(X_cpu[zeros[0][k], zeros[1][k]], k) for k in range(len(zeros[0]))]
-                vals.sort(key=lambda x: x[0], reverse=True)
-                added = 0
-                for _, k in vals:
-                    if added >= L - current_sum:
-                        break
-                    i, j = zeros[0][k], zeros[1][k]
-                    if Y_cpu[i, :].sum() == 0 and Y_cpu[:, j].sum() == 0:
-                        Y_cpu[i, j] = 1
-                        added += 1
-                        
-        Y = xp.asarray(Y_cpu) if self.use_gpu else Y_cpu
-        return Y
+        """Discretizes continuous assignment X to exact cardinality-L partial permutation via oracle."""
+        return self._solve_lp_direction(-X, L)
 
-    # ------------------------------------------------------------------
-    # Precomputation API — avoids redundant work during hyperparameter sweeps
-    # ------------------------------------------------------------------
-    @staticmethod
     def precompute_molecular_data(mol):
         instance = WCS_GNCCP.__new__(WCS_GNCCP)
         return {
@@ -359,19 +346,20 @@ class WCS_GNCCP:
             'n_atoms': mol.GetNumAtoms(),
         }
     
-    def match_from_precomputed(self, data1, data2, L=None):
+    def match_from_precomputed(self, data1, data2, L=None, return_map=False):
         A_G = data1['A'].copy()
         A_H = data2['A'].copy()
         M, N = data1['n_atoms'], data2['n_atoms']
         
-        norm_G = np.linalg.norm(A_G, 'fro')
-        norm_H = np.linalg.norm(A_H, 'fro')
-        if norm_G > 0: A_G /= norm_G
-        if norm_H > 0: A_H /= norm_H
+        # Shared Scale Normalization to preserve exact ground-truth subgraph zero loss
+        max_val = max(float(np.max(np.abs(A_G))), float(np.max(np.abs(A_H))))
+        if max_val > 0:
+            A_G /= max_val
+            A_H /= max_val
         
         f1, f2 = data1['features'], data2['features']
+        # Fine-grained atom feature cost (element penalty added AFTER normalization)
         C = np.zeros((M, N))
-        C += (f1['atomic_num'][:, None] != f2['atomic_num'][None, :]) * 100
         C += np.abs(f1['degree'][:, None] - f2['degree'][None, :]) * 10
         C += (f1['is_in_ring'][:, None] != f2['is_in_ring'][None, :]) * 5
         C += (f1['is_aromatic'][:, None] != f2['is_aromatic'][None, :]) * 10
@@ -382,10 +370,16 @@ class WCS_GNCCP:
         C += (f1['chiral_tag'][:, None] != f2['chiral_tag'][None, :]) * 5
         C += (f1['isotope'][:, None] != f2['isotope'][None, :]) * 2
         
+        # Normalize fine-grained features to [0, 1]
         if C.max() > C.min():
             C = (C - C.min()) / (C.max() - C.min() + 1e-8)
         else:
             C = C / (C.max() + 1e-8)
+        
+        # Heuristic Atom Pruning: element-mismatch penalty AFTER normalization
+        # Prevents normalization from compressing fine features (PDF §I: C_ij → ∞)
+        element_mismatch = (f1['atomic_num'][:, None] != f2['atomic_num'][None, :])
+        C[element_mismatch] = 50.0
         
         if L is None:
             L = max(min(M, N) - 2, 1)
@@ -396,4 +390,6 @@ class WCS_GNCCP:
         X_cpu = cp.asnumpy(X) if self.use_gpu else X
         
         score = self._compute_final_score(A_G, A_H, C, X_cpu, L)
+        if return_map:
+            return score, X_cpu
         return score
