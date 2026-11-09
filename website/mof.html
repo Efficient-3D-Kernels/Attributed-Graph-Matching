@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOF (CoRE MOF) Real-World Results — Fast-WCS</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* everything below is scoped with the "mof-" prefix so no existing page/style is affected */
+.mof-card{background:var(--paper-raised,#fff);border:1px solid var(--line,#ddd);border-radius:8px;padding:22px;margin-bottom:22px}
+.mof-card h3{margin:0 0 6px;font-family:var(--sans,sans-serif);font-size:1.12rem;color:var(--maroon,#7a1f2b)}
+.mof-card p.mof-note{font-family:var(--sans,sans-serif);font-size:13.5px;color:var(--ink-soft,#555);margin:0 0 12px}
+.mof-grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:18px}
+.mof-grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mof-chart{position:relative;height:300px}
+.mof-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.mof-tab{font-family:var(--sans,sans-serif);font-size:13px;font-weight:600;padding:7px 14px;border:1px solid var(--line,#ddd);background:var(--paper,#fafafa);border-radius:6px;cursor:pointer;color:var(--ink,#222)}
+.mof-tab.active{background:var(--maroon,#7a1f2b);color:#fff;border-color:var(--maroon,#7a1f2b)}
+.mof-stat-band{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:8px 0 26px}
+.mof-stat{background:var(--paper-raised,#fff);border:1px solid var(--line,#ddd);border-radius:8px;padding:16px;text-align:center}
+.mof-stat .n{font-family:var(--sans,sans-serif);font-size:1.55rem;font-weight:700;color:var(--maroon,#7a1f2b)}
+.mof-stat .l{font-family:var(--sans,sans-serif);font-size:12.5px;color:var(--ink-soft,#555);margin-top:4px}
+.mof-table{width:100%;border-collapse:collapse;font-family:var(--sans,sans-serif);font-size:13.5px}
+.mof-table th,.mof-table td{padding:8px 10px;border-bottom:1px solid var(--line,#ddd);text-align:left}
+.mof-table th{border-bottom:2px solid var(--line,#ddd)}
+.mof-warn{background:#fff7e6;border:1px solid #f3d9a4;border-radius:8px;padding:16px 20px;font-family:var(--sans,sans-serif);font-size:14px;color:#5b4300}
+.mof-warn li{margin:4px 0}
+#mof-viewer{width:100%;height:480px;background:#0f1218;border-radius:8px;position:relative;overflow:hidden}
+.mof-viewbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:10px 0;font-family:var(--sans,sans-serif);font-size:13px}
+.mof-viewbar label{display:flex;align-items:center;gap:5px;cursor:pointer}
+.mof-legend{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--sans,sans-serif);font-size:12.5px;margin-top:8px}
+.mof-legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.mof-info{font-family:var(--sans,sans-serif);font-size:13px;color:var(--ink-soft,#555);margin-top:8px}
+.mof-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#cbd5e0;font-family:var(--sans,sans-serif);font-size:14px;text-align:center;padding:30px}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">Fast-WCS <small>· Final Year Research</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="demo.html">Live Terminal &amp; Demo</a></li>
+      <li><a href="mapping.html">3D Molecular Viewer &amp; Sweeps</a></li>
+      <li><a href="methodology.html">Methodology</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="mof.html" aria-current="page">MOF Results</a></li>
+    </ul>
+    <a class="gh-btn" href="https://github.com/Efficient-3D-Kernels/Efficient-3D-Kernels-for-molecular-property-prediction" target="_blank" rel="noopener">View on GitHub</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="page-header">
+      <p class="eyebrow">Domain: Metal&ndash;Organic Frameworks (CoRE MOF 2019)</p>
+      <h1>Fast-WCS on Real MOF Crystal Structures</h1>
+      <p class="subtitle">2D weighted-common-subgraph matching, 3D Kabsch superposition and kernel screening on real experimentally synthesized MOFs. All numbers on this page come from our own runs (planted ground truth).</p>
+    </div>
+
+    <div class="mof-stat-band">
+      <div class="mof-stat"><div class="n">100 MOFs</div><div class="l">random sample of the 6,603 computation-ready, solvent-removed (CR/ASR) CoRE MOF 2019 structures</div></div>
+      <div class="mof-stat"><div class="n" id="mof-s1">&ndash;</div><div class="l">best multi-start accuracy in the 2D sweeps (10 restarts)</div></div>
+      <div class="mof-stat"><div class="n" id="mof-s2">&ndash;</div><div class="l">median RMSD, 24-atom scenario, multi-start (planted floor &asymp; 0.08 &Aring;)</div></div>
+      <div class="mof-stat"><div class="n" id="mof-s3">&ndash;</div><div class="l">screening AUC of the 2D kernel (composition baseline: 0.633)</div></div>
+    </div>
+
+    <section class="mof-card">
+      <h3>Dataset &amp; experimental protocol</h3>
+      <div class="prose">
+        <p><strong>Data.</strong> CoRE MOF 2019 (v2.0.1, Zenodo), CIF files, computation-ready set with all solvent removed. Atoms are vertices, edges are internal interatomic distances (rotation/translation invariant), unary cost = feature distance (covalent radius, atomic mass) + 50 per element mismatch.</p>
+        <p><strong>Planted ground truth.</strong> For each MOF, the target graph H is the N atoms nearest a random metal centre; the query G is the L nearest atoms with Gaussian coordinate noise plus M&minus;L outlier atoms from the shell just beyond H, with random relabelling. The true correspondence is known by construction. This is a planted benchmark on real atomic geometry, not an independently annotated matching task.</p>
+        <p><strong>Methods.</strong> Fast-WCS single-start, Fast-WCS multi-start (10 restarts unless noted), RLX1F (our re-implementation, not the original authors&rsquo; code), SciPy FAQ, feature-only Hungarian. Intervals are 95% bootstrap CIs over MOFs.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>1. 2D matching benchmark (Phase 1)</h2>
+      <div class="mof-card">
+        <div class="mof-tabs" id="mof-tabs2d">
+          <button class="mof-tab active" data-sw="noise">Coordinate noise &sigma;</button>
+          <button class="mof-tab" data-sw="outliers">Outliers M&minus;L</button>
+          <button class="mof-tab" data-sw="size">Graph size M</button>
+        </div>
+        <p class="mof-note" id="mof-note2d"></p>
+        <div class="mof-grid2">
+          <div><div class="mof-chart"><canvas id="mof-c-acc"></canvas></div></div>
+          <div><div class="mof-chart"><canvas id="mof-c-time"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="mof-card">
+        <h3>More restarts help, with diminishing returns</h3>
+        <p class="mof-note">Multi-start accuracy on the noise sweep with 10 vs 30 restarts (same 100 MOFs, same instances). Mean accuracy rises from 69.1% to 75.7% over 500 paired instances (paired Wilcoxon p = 6.8&times;10<sup>&minus;6</sup>; instances share MOFs across noise levels, so these pairs are not fully independent). Runtime rises from about 70 ms to about 200 ms.</p>
+        <div class="mof-chart"><canvas id="mof-c-starts"></canvas></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 3D conformer alignment (Phase 2: Kabsch SVD)</h2>
+      <div class="mof-card">
+        <p class="mof-note">Each query conformer is rotated and translated by a random rigid motion, perturbed with &sigma; = 0.05 &Aring; noise, and given 2 outlier atoms. The solver sees only internal distances; matched atoms are superposed with Kabsch and the RMSD is reported. Scenarios: 16, 20 and 24 atoms (60 MOFs each). Success = RMSD &lt; 1.0 &Aring;.</p>
+        <div class="mof-grid2">
+          <div><div class="mof-chart"><canvas id="mof-c-cacc"></canvas></div></div>
+          <div><div class="mof-chart"><canvas id="mof-c-crmsd"></canvas></div></div>
+          <div><div class="mof-chart"><canvas id="mof-c-csucc"></canvas></div></div>
+          <div><div class="mof-chart"><canvas id="mof-c-ctime"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="mof-card">
+        <h3>Interactive 3D alignment of a real MOF fragment</h3>
+        <p class="mof-note">Target fragment (solid atoms) and the superposed query conformer (translucent atoms). Lines connect matched atoms: <span style="color:#38a169;font-weight:600">green</span> = correct, <span style="color:#e53e3e;font-weight:600">red</span> = wrong. Drag to rotate, scroll to zoom, right-drag to pan.</p>
+        <div class="mof-viewbar">
+          <label><input type="checkbox" id="mof-v-target" checked> target (H)</label>
+          <label><input type="checkbox" id="mof-v-query" checked> query (G, aligned)</label>
+          <label><input type="checkbox" id="mof-v-lines" checked> match lines</label>
+          <label><input type="checkbox" id="mof-v-wrong"> only wrong matches</label>
+          <label><input type="checkbox" id="mof-v-rot"> auto-rotate</label>
+        </div>
+        <div id="mof-viewer"><div class="mof-empty" id="mof-viewer-empty">3D data not found. Run export_mof_fragment.py and place the generated mof_fragment.js next to mof.html.</div></div>
+        <div class="mof-legend">
+          <span><i style="background:#909090"></i>C</span><span><i style="background:#ffffff;border:1px solid #888"></i>H</span>
+          <span><i style="background:#ff0d0d"></i>O</span><span><i style="background:#3050f8"></i>N</span>
+          <span><i style="background:#bf5fff"></i>metal</span><span><i style="background:#20b2aa"></i>other</span>
+        </div>
+        <div class="mof-info" id="mof-info"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. Kernel virtual screening (2D / 3D / hybrid)</h2>
+      <div class="mof-card">
+        <p class="mof-note">Library of 300 MOFs, 30 query &ldquo;actives&rdquo; (label: pore-limiting diameter in the top 25%). Each MOF is its 30-atom local fragment; MOFs are ranked by kernel similarity to the query. ROC-AUC with 95% bootstrap CI over queries. k<sub>2D</sub> = exp(&minus;&gamma;F*/L), k<sub>3D</sub> = exp(&minus;&gamma;RMSD&sup2;), hybrid = (1&minus;&beta;)k<sub>2D</sub> + &beta;k<sub>3D</sub>; &gamma; = 1/median over scored pairs; all &beta; values are reported. The task and baseline are our own design.</p>
+        <div class="mof-chart"><canvas id="mof-c-screen"></canvas></div>
+      </div>
+    </section>
+
+    <section class="mof-warn">
+      <strong>Limitations (please read)</strong>
+      <ul>
+        <li>Ground truth is planted (conserved core + noise + outliers); it is not an independent MOF-to-MOF annotation.</li>
+        <li>Multi-start uses 10&ndash;30 restarts, i.e. several times the compute of single-start; absolute accuracy saturates well below 100%.</li>
+        <li>Many MOF atoms are symmetry-equivalent, so exact atom-identity accuracy understates geometric correctness; RMSD success rates are the more reliable 3D measure.</li>
+        <li>RLX1F is our re-implementation of the published description. The screening task (PLD label, local fragments, composition baseline) is our own design.</li>
+        <li>In screening, k<sub>2D</sub> only matches the composition baseline, and k<sub>3D</sub> and the hybrid give no gain on this task.</li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Fast-WCS: Fast Weighted Common Subgraph Matching Platform &middot; Department of Computer Science and Engineering &middot; Amrita Vishwa Vidyapeetham, Coimbatore
+  </div>
+</footer>
+
+<script src="mof_fragment.js" onerror="void 0"></script>
+<script>
+const MOF = {"tw": {"noise": {"Fast-WCS (single-start)": {"x": [0.0, 0.05, 0.1, 0.2, 0.3], "acc": [44.63, 45.5, 44.0, 39.83, 42.6], "lo": [37.2, 38.73, 36.87, 32.5, 35.77], "hi": [52.23, 52.4, 51.77, 46.77, 49.7], "rmsd": [1.906, 2.095, 2.011, 2.112, 2.163], "t": [10.44, 8.59, 8.87, 9.32, 9.71], "n": 100}, "Fast-WCS (multi-start)": {"x": [0.0, 0.05, 0.1, 0.2, 0.3], "acc": [70.93, 64.13, 71.9, 72.4, 66.0], "lo": [63.2, 55.8, 64.5, 65.3, 57.67], "hi": [78.23, 71.67, 79.37, 79.3, 73.53], "rmsd": [0.9, 1.066, 0.962, 1.258, 1.063], "t": [68.62, 70.72, 65.88, 73.25, 65.93], "n": 100}, "RLX1F (re-impl.)": {"x": [0.0, 0.05, 0.1, 0.2, 0.3], "acc": [38.5, 35.9, 34.57, 32.93, 29.4], "lo": [32.67, 30.2, 29.13, 27.2, 24.13], "hi": [44.47, 42.23, 39.9, 38.77, 34.67], "rmsd": [2.339, 2.358, 2.502, 2.386, 2.594], "t": [45.24, 40.65, 45.46, 44.94, 43.09], "n": 100}, "SciPy FAQ": {"x": [0.0, 0.05, 0.1, 0.2, 0.3], "acc": [6.67, 8.2, 6.63, 6.7, 5.0], "lo": [4.87, 6.03, 4.97, 4.93, 3.17], "hi": [8.7, 10.37, 8.57, 8.8, 7.1], "rmsd": [3.025, 2.979, 2.97, 2.967, 3.027], "t": [2.72, 2.37, 2.57, 2.2, 2.44], "n": 100}, "Feature-only Hungarian": {"x": [0.0, 0.05, 0.1, 0.2, 0.3], "acc": [10.03, 9.17, 9.53, 10.27, 9.6], "lo": [9.0, 8.17, 8.57, 9.17, 8.5], "hi": [11.0, 10.17, 10.53, 11.33, 10.73], "rmsd": [4.865, 4.867, 4.812, 4.866, 4.852], "t": [0.12, 0.11, 0.12, 0.11, 0.1], "n": 100}}, "outliers": {"Fast-WCS (single-start)": {"x": [0.0, 2.0, 4.0, 6.0, 8.0, 10.0], "acc": [68.46, 57.36, 48.97, 44.59, 39.37, 39.0], "lo": [61.31, 49.57, 41.06, 37.34, 32.89, 32.64], "hi": [75.66, 65.0, 56.58, 51.66, 45.93, 45.36], "rmsd": [1.349, 1.484, 1.835, 2.013, 2.05, 1.932], "t": [6.72, 8.16, 8.86, 9.81, 10.13, 10.26], "n": 100}, "Fast-WCS (multi-start)": {"x": [0.0, 2.0, 4.0, 6.0, 8.0, 10.0], "acc": [81.71, 73.55, 73.16, 66.34, 56.0, 53.08], "lo": [74.28, 66.06, 65.29, 58.24, 47.89, 45.56], "hi": [88.29, 80.76, 80.68, 73.86, 63.63, 60.6], "rmsd": [0.446, 0.736, 0.74, 0.96, 1.314, 1.511], "t": [120.0, 77.09, 69.96, 70.83, 72.89, 72.21], "n": 100}, "RLX1F (re-impl.)": {"x": [0.0, 2.0, 4.0, 6.0, 8.0, 10.0], "acc": [59.34, 47.42, 36.23, 30.17, 27.96, 23.24], "lo": [51.77, 40.15, 30.48, 25.07, 23.04, 18.72], "hi": [66.86, 54.49, 42.49, 35.38, 33.0, 28.04], "rmsd": [1.387, 2.099, 2.44, 2.523, 2.573, 2.684], "t": [28.84, 45.74, 41.82, 44.77, 45.42, 46.49], "n": 100}, "SciPy FAQ": {"x": [0.0, 2.0, 4.0, 6.0, 8.0, 10.0], "acc": [7.86, 6.85, 8.32, 5.66, 6.26, 5.76], "lo": [5.86, 5.18, 6.39, 4.07, 4.78, 4.08], "hi": [9.94, 8.67, 10.52, 7.62, 7.89, 7.84], "rmsd": [3.172, 2.959, 3.009, 2.887, 2.975, 2.812], "t": [1.94, 2.31, 2.3, 2.39, 2.53, 2.71], "n": 100}, "Feature-only Hungarian": {"x": [0.0, 2.0, 4.0, 6.0, 8.0, 10.0], "acc": [12.06, 9.55, 9.77, 7.9, 9.11, 8.68], "lo": [10.91, 8.55, 8.71, 6.93, 7.93, 7.68], "hi": [13.23, 10.55, 10.84, 8.83, 10.37, 9.8], "rmsd": [4.734, 4.765, 4.81, 4.85, 4.903, 4.913], "t": [0.1, 0.1, 0.11, 0.11, 0.12, 0.12], "n": 100}}, "size": {"Fast-WCS (single-start)": {"x": [20.0, 30.0, 40.0, 60.0], "acc": [35.4, 45.56, 46.89, 54.78], "lo": [29.2, 38.52, 39.48, 47.43], "hi": [41.67, 52.6, 54.46, 62.51], "rmsd": [1.596, 1.808, 2.098, 2.141], "t": [7.03, 8.61, 10.8, 18.44], "n": 100}, "Fast-WCS (multi-start)": {"x": [20.0, 30.0, 40.0, 60.0], "acc": [49.73, 65.44, 73.26, 79.33], "lo": [42.2, 57.56, 65.63, 71.98], "hi": [57.13, 73.28, 80.6, 86.28], "rmsd": [1.308, 1.091, 1.07, 0.819], "t": [52.39, 63.1, 79.9, 142.65], "n": 100}, "RLX1F (re-impl.)": {"x": [20.0, 30.0, 40.0, 60.0], "acc": [23.2, 35.12, 35.26, 40.78], "lo": [19.27, 29.96, 29.37, 34.58], "hi": [27.4, 40.4, 40.91, 47.53], "rmsd": [2.028, 2.357, 2.561, 2.943], "t": [33.1, 43.14, 51.08, 85.77], "n": 100}, "SciPy FAQ": {"x": [20.0, 30.0, 40.0, 60.0], "acc": [4.47, 5.52, 6.94, 8.85], "lo": [3.2, 4.12, 5.11, 6.56], "hi": [6.13, 7.16, 9.0, 11.58], "rmsd": [2.823, 2.834, 3.177, 3.544], "t": [1.49, 2.31, 2.89, 5.41], "n": 100}, "Feature-only Hungarian": {"x": [20.0, 30.0, 40.0, 60.0], "acc": [12.2, 10.92, 8.94, 6.62], "lo": [10.47, 9.68, 7.94, 5.89], "hi": [14.0, 12.08, 10.0, 7.38], "rmsd": [3.849, 4.482, 5.161, 6.12], "t": [0.09, 0.1, 0.12, 0.17], "n": 100}}}, "conf": [{"sc": "Sc. A (M=16)", "m": "Fast-WCS (single-start)", "n": 60, "acc": 43.69, "lo": 35.12, "hi": 52.38, "rmsd": 1.485, "s1": 33.33, "s1lo": 21.67, "s1hi": 45.0, "s01": 18.33, "t": 6.64, "ref": 0.076}, {"sc": "Sc. A (M=16)", "m": "Fast-WCS (multi-start)", "n": 60, "acc": 62.86, "lo": 52.5, "hi": 73.1, "rmsd": 0.214, "s1": 66.67, "s1lo": 53.33, "s1hi": 78.33, "s01": 48.33, "t": 49.53, "ref": 0.076}, {"sc": "Sc. A (M=16)", "m": "RLX1F (re-impl.)", "n": 60, "acc": 43.45, "lo": 35.71, "hi": 51.43, "rmsd": 1.683, "s1": 18.33, "s1lo": 8.33, "s1hi": 28.33, "s01": 6.67, "t": 33.16, "ref": 0.076}, {"sc": "Sc. A (M=16)", "m": "SciPy FAQ", "n": 60, "acc": 6.07, "lo": 4.05, "hi": 8.1, "rmsd": 2.881, "s1": 0.0, "s1lo": 0.0, "s1hi": 0.0, "s01": 0.0, "t": 1.29, "ref": 0.076}, {"sc": "Sc. B (M=20)", "m": "Fast-WCS (single-start)", "n": 60, "acc": 46.76, "lo": 37.31, "hi": 56.57, "rmsd": 1.282, "s1": 36.67, "s1lo": 25.0, "s1hi": 48.33, "s01": 16.67, "t": 7.08, "ref": 0.081}, {"sc": "Sc. B (M=20)", "m": "Fast-WCS (multi-start)", "n": 60, "acc": 67.5, "lo": 57.22, "hi": 77.69, "rmsd": 0.101, "s1": 70.0, "s1lo": 58.33, "s1hi": 81.67, "s01": 48.33, "t": 56.8, "ref": 0.081}, {"sc": "Sc. B (M=20)", "m": "RLX1F (re-impl.)", "n": 60, "acc": 46.2, "lo": 38.15, "hi": 54.63, "rmsd": 1.537, "s1": 35.0, "s1lo": 23.33, "s1hi": 46.67, "s01": 3.33, "t": 32.39, "ref": 0.081}, {"sc": "Sc. B (M=20)", "m": "SciPy FAQ", "n": 60, "acc": 8.24, "lo": 5.93, "hi": 11.02, "rmsd": 3.021, "s1": 0.0, "s1lo": 0.0, "s1hi": 0.0, "s01": 0.0, "t": 1.42, "ref": 0.081}, {"sc": "Sc. C (M=24)", "m": "Fast-WCS (single-start)", "n": 60, "acc": 45.53, "lo": 36.67, "hi": 54.17, "rmsd": 2.105, "s1": 33.33, "s1lo": 21.67, "s1hi": 45.0, "s01": 18.33, "t": 7.77, "ref": 0.083}, {"sc": "Sc. C (M=24)", "m": "Fast-WCS (multi-start)", "n": 60, "acc": 71.89, "lo": 61.82, "hi": 81.59, "rmsd": 0.095, "s1": 76.67, "s1lo": 65.0, "s1hi": 86.67, "s01": 53.33, "t": 59.89, "ref": 0.083}, {"sc": "Sc. C (M=24)", "m": "RLX1F (re-impl.)", "n": 60, "acc": 34.77, "lo": 26.74, "hi": 42.8, "rmsd": 2.381, "s1": 21.67, "s1lo": 11.67, "s1hi": 33.33, "s01": 3.33, "t": 38.73, "ref": 0.083}, {"sc": "Sc. C (M=24)", "m": "SciPy FAQ", "n": 60, "acc": 8.94, "lo": 6.14, "hi": 12.12, "rmsd": 2.89, "s1": 1.67, "s1lo": 0.0, "s1hi": 5.0, "s01": 0.0, "t": 1.82, "ref": 0.083}], "starts30": {"x": [0, 0.05, 0.1, 0.2, 0.3], "acc": [78.63, 77.87, 72.1, 78.57, 71.07], "lo": [71.67, 70.43, 63.8, 71.7, 63.5], "hi": [85.37, 85.07, 79.57, 85.13, 78.47], "t": [207.59, 216.45, 199.89, 211.24, 197.26]}, "screen": [{"m": "composition cosine (baseline)", "auc": 0.633, "lo": 0.609, "hi": 0.655}, {"m": "k_2D (beta=0)", "auc": 0.635, "lo": 0.613, "hi": 0.655}, {"m": "k_hybrid (beta=0.25)", "auc": 0.632, "lo": 0.609, "hi": 0.652}, {"m": "k_hybrid (beta=0.5)", "auc": 0.607, "lo": 0.583, "hi": 0.628}, {"m": "k_hybrid (beta=0.75)", "auc": 0.565, "lo": 0.545, "hi": 0.584}, {"m": "k_3D (beta=1)", "auc": 0.52, "lo": 0.504, "hi": 0.536}, {"m": "random (reference)", "auc": 0.501, "lo": 0.49, "hi": 0.512}]};
+const COL = {'Fast-WCS (multi-start)':'#7a1f2b','Fast-WCS (single-start)':'#d9822b','RLX1F (re-impl.)':'#2b6cb0','SciPy FAQ':'#718096','Feature-only Hungarian':'#38a169'};
+const XLAB = {noise:'Coordinate noise σ (Å)', outliers:'Outliers M−L', size:'Graph size M'};
+const NOTE = {noise:'M=35, N=40, L=30. Accuracy does not fall with noise and stays well below 100% even at σ=0 (symmetry-equivalent atoms and a rugged landscape).',
+              outliers:'M=35, N=40, σ=0.1 Å. Accuracy falls as outliers increase.',
+              size:'N=M+5, L=M−5, σ=0.1 Å. Larger fragments are easier.'};
+
+/* error-bar and horizontal-line plugins */
+const errBars = {id:'errBars', afterDatasetsDraw(chart){
+  const ctx = chart.ctx;
+  chart.data.datasets.forEach((ds,i)=>{
+    if(!ds.ci) return;
+    const meta = chart.getDatasetMeta(i); if(meta.hidden) return;
+    meta.data.forEach((el,j)=>{
+      const c = ds.ci[j]; if(!c) return;
+      const y1 = chart.scales.y.getPixelForValue(c[0]), y2 = chart.scales.y.getPixelForValue(c[1]);
+      const x = el.x; ctx.save(); ctx.strokeStyle='#222'; ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,y2); ctx.moveTo(x-3,y1); ctx.lineTo(x+3,y1); ctx.moveTo(x-3,y2); ctx.lineTo(x+3,y2); ctx.stroke(); ctx.restore();
+    });
+  });
+}};
+const hLine = {id:'hLine', afterDatasetsDraw(chart){
+  const o = chart.options.plugins.hLine; if(!o) return;
+  const y = chart.scales.y.getPixelForValue(o.value); const a = chart.chartArea;
+  const ctx = chart.ctx; ctx.save(); ctx.setLineDash([6,4]); ctx.strokeStyle=o.color||'#000'; ctx.beginPath();
+  ctx.moveTo(a.left,y); ctx.lineTo(a.right,y); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle=o.color||'#000'; ctx.font='11px sans-serif'; ctx.fillText(o.label||'', a.left+6, y-5); ctx.restore();
+}};
+Chart.register(errBars, hLine);
+Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+
+/* ---- stat band ---- */
+(function(){
+  let best = 0; Object.values(MOF.tw).forEach(s=>{ const m=s['Fast-WCS (multi-start)']; m.acc.forEach(v=>{best=Math.max(best,v)}); });
+  document.getElementById('mof-s1').textContent = best.toFixed(1)+'%';
+  const c = MOF.conf.find(r=>r.sc.startsWith('Sc. C') && r.m==='Fast-WCS (multi-start)');
+  document.getElementById('mof-s2').textContent = c.rmsd.toFixed(3)+' Å';
+  document.getElementById('mof-s3').textContent = MOF.screen.find(r=>r.m.startsWith('k_2D')).auc.toFixed(3);
+})();
+
+/* ---- 2D sweeps ---- */
+let accChart=null, timeChart=null;
+function draw2d(sw){
+  document.getElementById('mof-note2d').textContent = NOTE[sw];
+  const S = MOF.tw[sw]; const names = Object.keys(S);
+  const xs = S[names[0]].x;
+  const accDs = names.map(m=>({label:m, data:S[m].acc, ci:S[m].lo.map((l,i)=>[l,S[m].hi[i]]), borderColor:COL[m], backgroundColor:COL[m], tension:.2, pointRadius:4}));
+  const tDs = names.map(m=>({label:m, data:S[m].t, borderColor:COL[m], backgroundColor:COL[m], tension:.2, pointRadius:4}));
+  if(accChart) accChart.destroy(); if(timeChart) timeChart.destroy();
+  accChart = new Chart(document.getElementById('mof-c-acc'),{type:'line',data:{labels:xs,datasets:accDs},options:{maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Matching accuracy (%) — mean, 95% CI'},legend:{labels:{boxWidth:12,font:{size:10}}}},
+    scales:{x:{title:{display:true,text:XLAB[sw]}},y:{min:0,max:100,title:{display:true,text:'Accuracy (%)'}}}}});
+  timeChart = new Chart(document.getElementById('mof-c-time'),{type:'line',data:{labels:xs,datasets:tDs},options:{maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Median time per instance (ms, log)'},legend:{display:false}},
+    scales:{x:{title:{display:true,text:XLAB[sw]}},y:{type:'logarithmic',title:{display:true,text:'ms'}}}}});
+}
+document.querySelectorAll('#mof-tabs2d .mof-tab').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#mof-tabs2d .mof-tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); draw2d(b.dataset.sw);}));
+draw2d('noise');
+
+/* ---- restarts ---- */
+(function(){
+  const m10 = MOF.tw.noise['Fast-WCS (multi-start)']; const m30 = MOF.starts30;
+  new Chart(document.getElementById('mof-c-starts'),{type:'bar',data:{labels:m30.x.map(v=>'σ='+v),datasets:[
+    {label:'10 restarts',data:m10.acc,backgroundColor:'#c9a0a8',ci:m10.lo.map((l,i)=>[l,m10.hi[i]])},
+    {label:'30 restarts',data:m30.acc,backgroundColor:'#7a1f2b',ci:m30.lo.map((l,i)=>[l,m30.hi[i]])}]},
+    options:{maintainAspectRatio:false,plugins:{title:{display:true,text:'Fast-WCS multi-start accuracy (%) vs number of restarts'}},scales:{y:{min:0,max:100}}}});
+})();
+
+/* ---- conformer ---- */
+(function(){
+  const scs = [...new Set(MOF.conf.map(r=>r.sc))]; const ms = [...new Set(MOF.conf.map(r=>r.m))];
+  const get = (m,sc)=>MOF.conf.find(r=>r.m===m&&r.sc===sc);
+  function mk(id,title,key,lo,hi,opts){
+    const ds = ms.map(m=>({label:m,data:scs.map(s=>get(m,s)[key]),backgroundColor:COL[m],
+      ci: lo? scs.map(s=>[get(m,s)[lo],get(m,s)[hi]]) : undefined}));
+    new Chart(document.getElementById(id),{type:'bar',data:{labels:scs,datasets:ds},options:Object.assign({maintainAspectRatio:false,
+      plugins:Object.assign({title:{display:true,text:title},legend:{labels:{boxWidth:12,font:{size:10}}}}, opts.plugins||{}),
+      scales:{y:Object.assign({title:{display:true,text:opts.ylab}},opts.y||{})}},{})});
+  }
+  mk('mof-c-cacc','Matching accuracy (%)','acc','lo','hi',{ylab:'%',y:{min:0,max:100}});
+  mk('mof-c-crmsd','Median RMSD after Kabsch (Å) — dashed: 1.0 Å threshold','rmsd',null,null,{ylab:'Å',plugins:{hLine:{value:1.0,color:'#c00',label:'1.0 Å'}}});
+  mk('mof-c-csucc','Success rate: RMSD < 1.0 Å (%)','s1','s1lo','s1hi',{ylab:'%',y:{min:0,max:100}});
+  mk('mof-c-ctime','Median time (ms, log)','t',null,null,{ylab:'ms',y:{type:'logarithmic'}});
+})();
+
+/* ---- screening ---- */
+(function(){
+  const S = MOF.screen;
+  new Chart(document.getElementById('mof-c-screen'),{type:'bar',data:{labels:S.map(r=>r.m),datasets:[{label:'ROC-AUC',data:S.map(r=>r.auc),
+    backgroundColor:S.map(r=>r.m.startsWith('random')?'#a0aec0':(r.m.startsWith('composition')?'#2b6cb0':'#7a1f2b')),ci:S.map(r=>[r.lo,r.hi])}]},
+    options:{indexAxis:'x',maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:'Virtual screening ROC-AUC (30 queries, library 300) — dashed: 0.5'},hLine:{value:0.5,color:'#444',label:'chance'}},
+      scales:{y:{min:0.4,max:0.7,title:{display:true,text:'AUC'}},x:{ticks:{font:{size:10}}}}}});
+})();
+
+/* ---- 3D viewer ---- */
+(function(){
+  const F = window.MOF_FRAGMENT; const host = document.getElementById('mof-viewer');
+  if(!F || typeof THREE==='undefined') return;
+  document.getElementById('mof-viewer-empty').style.display='none';
+  const W = host.clientWidth, H = host.clientHeight;
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0f1218);
+  const cam = new THREE.PerspectiveCamera(50,W/H,0.1,500); cam.position.set(0,0,22);
+  const ren = new THREE.WebGLRenderer({antialias:true}); ren.setSize(W,H); ren.setPixelRatio(window.devicePixelRatio||1); host.appendChild(ren.domElement);
+  const ctl = new THREE.OrbitControls(cam, ren.domElement); ctl.enableDamping = true;
+  scene.add(new THREE.AmbientLight(0xffffff,0.6)); const dl = new THREE.DirectionalLight(0xffffff,0.8); dl.position.set(10,15,20); scene.add(dl);
+  const METAL_FROM = 21; // atomic numbers >=21 treated as metals except listed nonmetals
+  const NONMET = new Set([1,2,5,6,7,8,9,10,14,15,16,17,18,33,34,35,36,52,53,54]);
+  const colorOf = z => z===1?0xffffff : z===6?0x909090 : z===7?0x3050f8 : z===8?0xff0d0d : z===9?0x90e050 : z===16?0xffff30 : z===17?0x1ff01f : (NONMET.has(z)?0x20b2aa:0xbf5fff);
+  const radOf = z => z===1?0.28 : NONMET.has(z)?0.42 : 0.62;
+  const gT = new THREE.Group(), gQ = new THREE.Group(), gL = new THREE.Group(); scene.add(gT,gQ,gL);
+  F.posH.forEach((p,i)=>{ const m=new THREE.Mesh(new THREE.SphereGeometry(radOf(F.Zh[i]),20,16), new THREE.MeshPhongMaterial({color:colorOf(F.Zh[i])})); m.position.set(...p); gT.add(m); });
+  F.posG.forEach((p,i)=>{ const m=new THREE.Mesh(new THREE.SphereGeometry(radOf(F.Zg[i])*0.8,16,12), new THREE.MeshPhongMaterial({color:colorOf(F.Zg[i]),transparent:true,opacity:0.45})); m.position.set(...p); gQ.add(m); });
+  const truth = new Map(F.gt.map(([g,h])=>[g,h])); let nOk=0; const lines=[];
+  F.pairs.forEach(([g,h])=>{ const ok = truth.get(g)===h; if(ok) nOk++;
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...F.posG[g]), new THREE.Vector3(...F.posH[h])]);
+    const ln = new THREE.Line(geo, new THREE.LineBasicMaterial({color: ok?0x38a169:0xe53e3e})); ln.userData.ok = ok; gL.add(ln); lines.push(ln); });
+  const refresh = ()=>{ gT.visible = document.getElementById('mof-v-target').checked; gQ.visible = document.getElementById('mof-v-query').checked;
+    gL.visible = document.getElementById('mof-v-lines').checked; const ow = document.getElementById('mof-v-wrong').checked; lines.forEach(l=>l.visible = !ow || !l.userData.ok); };
+  ['mof-v-target','mof-v-query','mof-v-lines','mof-v-wrong'].forEach(id=>document.getElementById(id).addEventListener('change',refresh)); refresh();
+  document.getElementById('mof-v-rot').addEventListener('change',e=>{ctl.autoRotate=e.target.checked; ctl.autoRotateSpeed=1.2;});
+  document.getElementById('mof-info').textContent = `${F.name} · M=${F.M}, N=${F.N}, L=${F.L} · ${nOk}/${F.pairs.length} matches correct · RMSD after Kabsch = ${F.rmsd.toFixed(3)} Å (planted reference ${F.rmsd_planted.toFixed(3)} Å) · σ = ${F.sigma} Å`;
+  (function loop(){ requestAnimationFrame(loop); ctl.update(); ren.render(scene,cam); })();
+  window.addEventListener('resize',()=>{ const w=host.clientWidth; ren.setSize(w,H); cam.aspect=w/H; cam.updateProjectionMatrix(); });
+})();
+</script>
+</body>
+</html>
