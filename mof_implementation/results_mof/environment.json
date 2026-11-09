@@ -1,0 +1,43 @@
+{
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "ase": "3.29.0",
+  "pandas": "2.3.3",
+  "args": {
+    "cif_dir": "data/CoREMOF2019_public_v2_20241118/CR/ASR",
+    "filter": null,
+    "n_structures": 100,
+    "seed": 0,
+    "alpha": 0.7,
+    "omegas": [
+      50.0
+    ],
+    "sweeps": [
+      "noise",
+      "outliers",
+      "size"
+    ],
+    "methods": [
+      "single",
+      "multi",
+      "rlx1f",
+      "faq",
+      "feature"
+    ],
+    "multi_starts": 10,
+    "drop_hydrogen": false,
+    "max_atoms": 3000,
+    "out": "results_mof"
+  },
+  "source_sha256": {
+    "download_coremof.py": "7bb7150cb80eb07fe8655297b6fb14ac9d1f9d688ce42c1d1051c9eef7f43e03",
+    "expcommon.py": "db8dec5b88668e5bb56127357b052834df36f8fa74258deacc7840f046451dc4",
+    "fastwcs.py": "e60efe99a4b036eeea70585d3233e8e3529685de1ee99ba79fb8131706b76d65",
+    "mof_data.py": "c7a8c08ea216ac65ae4eea7f52093c0cfc080fa35db3560d7004ddc5d430e7d2",
+    "run_mof.py": "2e11f6a2fba6d2e9bfa20f64470eb667cd4b7224e913af43ceb3c5859eeb4aef",
+    "run_synthetic.py": "a46bd5d2d0ee45d556adb42ec6c7935a4d0d4aa3468072a1c97d00a0ae578b67",
+    "selftest.py": "d729ba4b64eb92d3c29330cafc5f3e5152b3f29fff2640dad6e1df5ec9acd24e"
+  }
+}

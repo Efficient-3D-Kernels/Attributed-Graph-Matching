@@ -1,0 +1,211 @@
+query,method,auc
+SABVUN_clean_h_min_pacman,composition cosine (baseline),0.5143243243243243
+SABVUN_clean_h_min_pacman,k_2D (beta=0),0.5428828828828829
+SABVUN_clean_h_min_pacman,k_hybrid (beta=0.25),0.5552552552552552
+SABVUN_clean_h_min_pacman,k_hybrid (beta=0.5),0.552972972972973
+SABVUN_clean_h_min_pacman,k_hybrid (beta=0.75),0.5473873873873873
+SABVUN_clean_h_min_pacman,k_3D (beta=1),0.5461261261261261
+SABVUN_clean_h_min_pacman,random (reference),0.47225225225225226
+cm501138g_si_009_clean_pacman,composition cosine (baseline),0.6999099099099099
+cm501138g_si_009_clean_pacman,k_2D (beta=0),0.7016216216216217
+cm501138g_si_009_clean_pacman,k_hybrid (beta=0.25),0.703003003003003
+cm501138g_si_009_clean_pacman,k_hybrid (beta=0.5),0.6788588588588589
+cm501138g_si_009_clean_pacman,k_hybrid (beta=0.75),0.6237837837837837
+cm501138g_si_009_clean_pacman,k_3D (beta=1),0.5637837837837838
+cm501138g_si_009_clean_pacman,random (reference),0.5553153153153153
+AMIMAL_clean_pacman,composition cosine (baseline),0.6066066066066066
+AMIMAL_clean_pacman,k_2D (beta=0),0.5822222222222222
+AMIMAL_clean_pacman,k_hybrid (beta=0.25),0.5582582582582583
+AMIMAL_clean_pacman,k_hybrid (beta=0.5),0.5171771771771771
+AMIMAL_clean_pacman,k_hybrid (beta=0.75),0.4918918918918919
+AMIMAL_clean_pacman,k_3D (beta=1),0.47075075075075073
+AMIMAL_clean_pacman,random (reference),0.47063063063063065
+VUGXUS_clean_pacman,composition cosine (baseline),0.6272672672672672
+VUGXUS_clean_pacman,k_2D (beta=0),0.6451651651651652
+VUGXUS_clean_pacman,k_hybrid (beta=0.25),0.6447447447447447
+VUGXUS_clean_pacman,k_hybrid (beta=0.5),0.6180780780780781
+VUGXUS_clean_pacman,k_hybrid (beta=0.75),0.5697297297297297
+VUGXUS_clean_pacman,k_3D (beta=1),0.5081681681681681
+VUGXUS_clean_pacman,random (reference),0.5064864864864865
+USAWIW_clean_pacman,composition cosine (baseline),0.6311111111111111
+USAWIW_clean_pacman,k_2D (beta=0),0.6111711711711711
+USAWIW_clean_pacman,k_hybrid (beta=0.25),0.6035435435435436
+USAWIW_clean_pacman,k_hybrid (beta=0.5),0.5656456456456457
+USAWIW_clean_pacman,k_hybrid (beta=0.75),0.5186186186186186
+USAWIW_clean_pacman,k_3D (beta=1),0.48162162162162164
+USAWIW_clean_pacman,random (reference),0.49591591591591594
+ANAWOD_clean_pacman,composition cosine (baseline),0.5256156156156157
+ANAWOD_clean_pacman,k_2D (beta=0),0.5424024024024025
+ANAWOD_clean_pacman,k_hybrid (beta=0.25),0.5144744744744745
+ANAWOD_clean_pacman,k_hybrid (beta=0.5),0.4721921921921922
+ANAWOD_clean_pacman,k_hybrid (beta=0.75),0.46534534534534533
+ANAWOD_clean_pacman,k_3D (beta=1),0.4603003003003003
+ANAWOD_clean_pacman,random (reference),0.48978978978978976
+BEXPAX_clean_pacman,composition cosine (baseline),0.6966066066066066
+BEXPAX_clean_pacman,k_2D (beta=0),0.6986186186186186
+BEXPAX_clean_pacman,k_hybrid (beta=0.25),0.6920720720720721
+BEXPAX_clean_pacman,k_hybrid (beta=0.5),0.6554954954954955
+BEXPAX_clean_pacman,k_hybrid (beta=0.75),0.5685285285285285
+BEXPAX_clean_pacman,k_3D (beta=1),0.49051051051051053
+BEXPAX_clean_pacman,random (reference),0.5272672672672672
+OKOSUE_clean_pacman,composition cosine (baseline),0.6509309309309309
+OKOSUE_clean_pacman,k_2D (beta=0),0.6531531531531531
+OKOSUE_clean_pacman,k_hybrid (beta=0.25),0.6296696696696696
+OKOSUE_clean_pacman,k_hybrid (beta=0.5),0.5766966966966967
+OKOSUE_clean_pacman,k_hybrid (beta=0.75),0.5225225225225225
+OKOSUE_clean_pacman,k_3D (beta=1),0.4603603603603604
+OKOSUE_clean_pacman,random (reference),0.5281081081081082
+SOMFIK_clean_pacman,composition cosine (baseline),0.6889189189189189
+SOMFIK_clean_pacman,k_2D (beta=0),0.6958558558558559
+SOMFIK_clean_pacman,k_hybrid (beta=0.25),0.6885885885885886
+SOMFIK_clean_pacman,k_hybrid (beta=0.5),0.6633033033033033
+SOMFIK_clean_pacman,k_hybrid (beta=0.75),0.5950750750750751
+SOMFIK_clean_pacman,k_3D (beta=1),0.527987987987988
+SOMFIK_clean_pacman,random (reference),0.48018018018018016
+PEPLAY_clean_pacman,composition cosine (baseline),0.5988288288288288
+PEPLAY_clean_pacman,k_2D (beta=0),0.6145345345345345
+PEPLAY_clean_pacman,k_hybrid (beta=0.25),0.633993993993994
+PEPLAY_clean_pacman,k_hybrid (beta=0.5),0.6378978978978979
+PEPLAY_clean_pacman,k_hybrid (beta=0.75),0.6195195195195196
+PEPLAY_clean_pacman,k_3D (beta=1),0.5814414414414414
+PEPLAY_clean_pacman,random (reference),0.5200600600600601
+YEKXUJ_clean_pacman,composition cosine (baseline),0.67006006006006
+YEKXUJ_clean_pacman,k_2D (beta=0),0.6782582582582583
+YEKXUJ_clean_pacman,k_hybrid (beta=0.25),0.693033033033033
+YEKXUJ_clean_pacman,k_hybrid (beta=0.5),0.7054054054054054
+YEKXUJ_clean_pacman,k_hybrid (beta=0.75),0.6805405405405406
+YEKXUJ_clean_pacman,k_3D (beta=1),0.6116516516516517
+YEKXUJ_clean_pacman,random (reference),0.46396396396396394
+CUNWEO_clean_pacman,composition cosine (baseline),0.620990990990991
+CUNWEO_clean_pacman,k_2D (beta=0),0.587987987987988
+CUNWEO_clean_pacman,k_hybrid (beta=0.25),0.59993993993994
+CUNWEO_clean_pacman,k_hybrid (beta=0.5),0.5917117117117117
+CUNWEO_clean_pacman,k_hybrid (beta=0.75),0.5557957957957957
+CUNWEO_clean_pacman,k_3D (beta=1),0.5338138138138138
+CUNWEO_clean_pacman,random (reference),0.5111111111111111
+OFAWEZ_clean_pacman,composition cosine (baseline),0.4484684684684685
+OFAWEZ_clean_pacman,k_2D (beta=0),0.4918318318318318
+OFAWEZ_clean_pacman,k_hybrid (beta=0.25),0.5103903903903904
+OFAWEZ_clean_pacman,k_hybrid (beta=0.5),0.5311711711711712
+OFAWEZ_clean_pacman,k_hybrid (beta=0.75),0.5351351351351351
+OFAWEZ_clean_pacman,k_3D (beta=1),0.5449849849849849
+OFAWEZ_clean_pacman,random (reference),0.48834834834834834
+LAVTOT_clean_pacman,composition cosine (baseline),0.6349249249249249
+LAVTOT_clean_pacman,k_2D (beta=0),0.6370570570570571
+LAVTOT_clean_pacman,k_hybrid (beta=0.25),0.6277477477477478
+LAVTOT_clean_pacman,k_hybrid (beta=0.5),0.5869669669669669
+LAVTOT_clean_pacman,k_hybrid (beta=0.75),0.5402402402402402
+LAVTOT_clean_pacman,k_3D (beta=1),0.4869069069069069
+LAVTOT_clean_pacman,random (reference),0.5291891891891892
+SARHAW_clean_pacman,composition cosine (baseline),0.6515015015015015
+SARHAW_clean_pacman,k_2D (beta=0),0.6652852852852853
+SARHAW_clean_pacman,k_hybrid (beta=0.25),0.6618018018018018
+SARHAW_clean_pacman,k_hybrid (beta=0.5),0.626966966966967
+SARHAW_clean_pacman,k_hybrid (beta=0.75),0.5584984984984985
+SARHAW_clean_pacman,k_3D (beta=1),0.5057657657657658
+SARHAW_clean_pacman,random (reference),0.4744144144144144
+DEKHUX_clean_pacman,composition cosine (baseline),0.6457957957957958
+DEKHUX_clean_pacman,k_2D (beta=0),0.6237837837837837
+DEKHUX_clean_pacman,k_hybrid (beta=0.25),0.6306306306306306
+DEKHUX_clean_pacman,k_hybrid (beta=0.5),0.6012012012012012
+DEKHUX_clean_pacman,k_hybrid (beta=0.75),0.5444444444444444
+DEKHUX_clean_pacman,k_3D (beta=1),0.4996996996996997
+DEKHUX_clean_pacman,random (reference),0.5153753753753754
+PIHWAG_clean_pacman,composition cosine (baseline),0.6287987987987989
+PIHWAG_clean_pacman,k_2D (beta=0),0.6413813813813813
+PIHWAG_clean_pacman,k_hybrid (beta=0.25),0.6166966966966967
+PIHWAG_clean_pacman,k_hybrid (beta=0.5),0.5488288288288288
+PIHWAG_clean_pacman,k_hybrid (beta=0.75),0.500960960960961
+PIHWAG_clean_pacman,k_3D (beta=1),0.4541141141141141
+PIHWAG_clean_pacman,random (reference),0.47129129129129127
+ja406030p_si_004_clean_pacman,composition cosine (baseline),0.6820720720720721
+ja406030p_si_004_clean_pacman,k_2D (beta=0),0.675075075075075
+ja406030p_si_004_clean_pacman,k_hybrid (beta=0.25),0.6761561561561562
+ja406030p_si_004_clean_pacman,k_hybrid (beta=0.5),0.6413813813813813
+ja406030p_si_004_clean_pacman,k_hybrid (beta=0.75),0.5930930930930931
+ja406030p_si_004_clean_pacman,k_3D (beta=1),0.5412012012012012
+ja406030p_si_004_clean_pacman,random (reference),0.49867867867867866
+KOSJUZ_clean_pacman,composition cosine (baseline),0.6766666666666666
+KOSJUZ_clean_pacman,k_2D (beta=0),0.6780780780780781
+KOSJUZ_clean_pacman,k_hybrid (beta=0.25),0.6776576576576576
+KOSJUZ_clean_pacman,k_hybrid (beta=0.5),0.6460660660660661
+KOSJUZ_clean_pacman,k_hybrid (beta=0.75),0.5888888888888889
+KOSJUZ_clean_pacman,k_3D (beta=1),0.5213813813813813
+KOSJUZ_clean_pacman,random (reference),0.5126126126126126
+CURYOE01_clean_pacman,composition cosine (baseline),0.5782582582582583
+CURYOE01_clean_pacman,k_2D (beta=0),0.5655855855855856
+CURYOE01_clean_pacman,k_hybrid (beta=0.25),0.5496096096096096
+CURYOE01_clean_pacman,k_hybrid (beta=0.5),0.5271471471471472
+CURYOE01_clean_pacman,k_hybrid (beta=0.75),0.5095495495495496
+CURYOE01_clean_pacman,k_3D (beta=1),0.5009009009009009
+CURYOE01_clean_pacman,random (reference),0.5742942942942943
+UWALEL_clean_pacman,composition cosine (baseline),0.6961861861861862
+UWALEL_clean_pacman,k_2D (beta=0),0.6972372372372372
+UWALEL_clean_pacman,k_hybrid (beta=0.25),0.6966366366366367
+UWALEL_clean_pacman,k_hybrid (beta=0.5),0.6775975975975976
+UWALEL_clean_pacman,k_hybrid (beta=0.75),0.6257057057057057
+UWALEL_clean_pacman,k_3D (beta=1),0.5772972972972973
+UWALEL_clean_pacman,random (reference),0.5293093093093093
+c5sc03494a_c5sc03494a2_clean_pacman,composition cosine (baseline),0.676036036036036
+c5sc03494a_c5sc03494a2_clean_pacman,k_2D (beta=0),0.6921921921921922
+c5sc03494a_c5sc03494a2_clean_pacman,k_hybrid (beta=0.25),0.6735135135135135
+c5sc03494a_c5sc03494a2_clean_pacman,k_hybrid (beta=0.5),0.6266066066066066
+c5sc03494a_c5sc03494a2_clean_pacman,k_hybrid (beta=0.75),0.5722522522522523
+c5sc03494a_c5sc03494a2_clean_pacman,k_3D (beta=1),0.5111711711711712
+c5sc03494a_c5sc03494a2_clean_pacman,random (reference),0.5407207207207207
+XAKZOZ_clean_pacman,composition cosine (baseline),0.5756156156156156
+XAKZOZ_clean_pacman,k_2D (beta=0),0.558978978978979
+XAKZOZ_clean_pacman,k_hybrid (beta=0.25),0.561981981981982
+XAKZOZ_clean_pacman,k_hybrid (beta=0.5),0.558018018018018
+XAKZOZ_clean_pacman,k_hybrid (beta=0.75),0.5426426426426426
+XAKZOZ_clean_pacman,k_3D (beta=1),0.5273273273273273
+XAKZOZ_clean_pacman,random (reference),0.5148948948948949
+ADASOP_clean_pacman,composition cosine (baseline),0.6942942942942943
+ADASOP_clean_pacman,k_2D (beta=0),0.6993993993993994
+ADASOP_clean_pacman,k_hybrid (beta=0.25),0.706006006006006
+ADASOP_clean_pacman,k_hybrid (beta=0.5),0.69009009009009
+ADASOP_clean_pacman,k_hybrid (beta=0.75),0.6337537537537538
+ADASOP_clean_pacman,k_3D (beta=1),0.5498498498498499
+ADASOP_clean_pacman,random (reference),0.5270870870870871
+XIGFOJ_manual_pacman,composition cosine (baseline),0.665015015015015
+XIGFOJ_manual_pacman,k_2D (beta=0),0.6703303303303303
+XIGFOJ_manual_pacman,k_hybrid (beta=0.25),0.6633633633633633
+XIGFOJ_manual_pacman,k_hybrid (beta=0.5),0.6253453453453454
+XIGFOJ_manual_pacman,k_hybrid (beta=0.75),0.5533333333333333
+XIGFOJ_manual_pacman,k_3D (beta=1),0.4933933933933934
+XIGFOJ_manual_pacman,random (reference),0.4482282282282282
+YOYPEJ_clean_pacman,composition cosine (baseline),0.6357357357357357
+YOYPEJ_clean_pacman,k_2D (beta=0),0.5982582582582583
+YOYPEJ_clean_pacman,k_hybrid (beta=0.25),0.5746546546546547
+YOYPEJ_clean_pacman,k_hybrid (beta=0.5),0.5244444444444445
+YOYPEJ_clean_pacman,k_hybrid (beta=0.75),0.4774774774774775
+YOYPEJ_clean_pacman,k_3D (beta=1),0.44624624624624626
+YOYPEJ_clean_pacman,random (reference),0.4654054054054054
+LOQLIN_SL_pacman,composition cosine (baseline),0.515045045045045
+LOQLIN_SL_pacman,k_2D (beta=0),0.5481681681681682
+LOQLIN_SL_pacman,k_hybrid (beta=0.25),0.5512912912912913
+LOQLIN_SL_pacman,k_hybrid (beta=0.5),0.5423423423423424
+LOQLIN_SL_pacman,k_hybrid (beta=0.75),0.5442642642642642
+LOQLIN_SL_pacman,k_3D (beta=1),0.5403603603603604
+LOQLIN_SL_pacman,random (reference),0.49381381381381384
+XAFFIV_clean_pacman,composition cosine (baseline),0.6978078078078078
+XAFFIV_clean_pacman,k_2D (beta=0),0.6977177177177177
+XAFFIV_clean_pacman,k_hybrid (beta=0.25),0.7085285285285285
+XAFFIV_clean_pacman,k_hybrid (beta=0.5),0.7167567567567568
+XAFFIV_clean_pacman,k_hybrid (beta=0.75),0.6867867867867868
+XAFFIV_clean_pacman,k_3D (beta=1),0.6237837837837837
+XAFFIV_clean_pacman,random (reference),0.502942942942943
+NEDWAW_clean_pacman,composition cosine (baseline),0.6826726726726726
+NEDWAW_clean_pacman,k_2D (beta=0),0.6918918918918919
+NEDWAW_clean_pacman,k_hybrid (beta=0.25),0.7003003003003003
+NEDWAW_clean_pacman,k_hybrid (beta=0.5),0.6796996996996997
+NEDWAW_clean_pacman,k_hybrid (beta=0.75),0.6154954954954955
+NEDWAW_clean_pacman,k_3D (beta=1),0.544924924924925
+NEDWAW_clean_pacman,random (reference),0.4875675675675676
+XEXLUJ_clean_pacman,composition cosine (baseline),0.6738738738738739
+XEXLUJ_clean_pacman,k_2D (beta=0),0.6625225225225225
+XEXLUJ_clean_pacman,k_hybrid (beta=0.25),0.6562162162162162
+XEXLUJ_clean_pacman,k_hybrid (beta=0.5),0.6135135135135135
+XEXLUJ_clean_pacman,k_hybrid (beta=0.75),0.5572972972972973
+XEXLUJ_clean_pacman,k_3D (beta=1),0.5020420420420421
+XEXLUJ_clean_pacman,random (reference),0.4463063063063063

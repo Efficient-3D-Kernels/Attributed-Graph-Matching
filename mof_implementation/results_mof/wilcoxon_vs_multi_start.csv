@@ -1,0 +1,5 @@
+ref,other,metric,mean_diff,p_value,n
+Fast-WCS (multi-start),Fast-WCS (single-start),acc,21.33539841303727,4.325887613084664e-62,1500
+Fast-WCS (multi-start),Feature-only Hungarian,acc,58.17498540037806,1.3882865470554973e-205,1500
+Fast-WCS (multi-start),RLX1F (re-impl.),acc,32.462868662613566,6.201643752079273e-127,1500
+Fast-WCS (multi-start),SciPy FAQ,acc,61.15223763100219,8.558267323864954e-222,1500
