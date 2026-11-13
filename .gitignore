@@ -33,6 +33,8 @@ desktop.ini
 # Redundant temporary files
 redundant_files/
 *.tmp
+*.bak
+website/backup_user_request/
 
 # Large Datasets and Molecular Dumps (keep repository lightweight)
 Data/

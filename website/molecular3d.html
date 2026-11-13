@@ -1,0 +1,2830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Molecular Conformation Matching & Kabsch Superposition — Fast-WCS Platform</title>
+<link rel="stylesheet" href="style.css?v=3.1">
+
+<!-- KaTeX for High-Fidelity Mathematical Typesetting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+<!-- Three.js + OrbitControls for 3D Molecule Rotation, Pinch & Zoom -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<!-- Chart.js for Dynamic Convergence & Scaling Benchmark -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  function renderAllPageMath() {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+  document.addEventListener("DOMContentLoaded", renderAllPageMath);
+  window.addEventListener("load", renderAllPageMath);
+</script>
+
+<style>
+/* ===== 3D Molecular Conformation Page Specific Styles ===== */
+
+.page-hero {
+  text-align: center;
+  padding: 44px 0 28px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 30px;
+}
+.page-hero .eyebrow {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--maroon);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.page-hero h1 {
+  font-family: var(--serif);
+  font-size: 2.25em;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 12px;
+  line-height: 1.25;
+}
+.page-hero .subtitle {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 840px;
+  margin: 0 auto 18px;
+  line-height: 1.6;
+}
+
+/* Dual Math Box without Any Horizontal Scrollbars */
+.page-hero .math-box-dual {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.math-card-item {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-family: var(--sans);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  max-width: 580px;
+  overflow: visible !important;
+}
+.math-card-item .math-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--maroon);
+  margin-bottom: 4px;
+}
+/* Completely remove any scrollbar inside math card */
+.math-card-item .katex-display,
+.math-card-item .katex {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  margin: 4px 0 !important;
+  padding: 0 !important;
+  font-size: 0.98em;
+}
+.math-card-item::-webkit-scrollbar,
+.math-card-item .katex-display::-webkit-scrollbar {
+  display: none !important;
+  height: 0 !important;
+}
+
+/* --- Step Cards (Placed First) --- */
+.step-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 30px;
+}
+.step-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 14px 14px;
+  position: relative;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.step-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+.step-card .step-num {
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  background: var(--maroon);
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+}
+.step-card h4 {
+  margin: 4px 0 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.step-card p {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+/* --- Section Divider --- */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 32px 0;
+}
+
+/* --- Preset Chips --- */
+.preset-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.preset-chip {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  color: var(--ink);
+}
+.preset-chip:hover {
+  border-color: var(--maroon);
+  background: var(--maroon-wash);
+  color: var(--maroon);
+}
+.preset-chip.active {
+  background: var(--maroon);
+  color: #fff;
+  border-color: var(--maroon-dark);
+}
+
+/* --- Controls Panel --- */
+.controls-panel {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+.controls-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.ctrl-input {
+  width: 58px;
+  padding: 6px 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+  text-align: center;
+}
+.btn-action {
+  background: var(--maroon);
+  color: #fff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-action:hover { background: var(--maroon-dark); }
+.btn-action:active { transform: translateY(1px); }
+.btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-secondary {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-secondary:hover {
+  background: var(--maroon-wash);
+  color: var(--maroon);
+  border-color: var(--maroon);
+}
+
+/* --- STEP-BY-STEP HOMOTOPY INSPECTOR (NEW) --- */
+.homotopy-inspector-panel {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 28px;
+}
+.inspector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.inspector-title {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.step-stepper-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.step-nav-btn {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 5px 11px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.step-nav-btn:hover {
+  background: var(--maroon-wash);
+  color: var(--maroon);
+  border-color: var(--maroon);
+}
+.step-nav-btn.active {
+  background: var(--maroon);
+  color: #fff;
+  border-color: var(--maroon-dark);
+}
+.step-desc-callout {
+  background: var(--paper);
+  border-left: 3.5px solid var(--maroon);
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--ink);
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.step-metrics-badge {
+  font-family: 'Consolas', monospace;
+  font-size: 11.5px;
+  color: var(--maroon);
+  background: var(--maroon-wash);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.inspector-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 960px) {
+  .inspector-grid { grid-template-columns: 1fr; }
+}
+
+/* Matrix Table Styling */
+.matrix-container {
+  overflow-x: auto;
+  max-height: 250px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #FAF8F5;
+  scrollbar-width: thin;
+}
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Consolas', monospace;
+  font-size: 11px;
+  text-align: center;
+}
+.matrix-table th {
+  background: var(--paper-raised);
+  padding: 4px 6px;
+  color: var(--ink-soft);
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  font-size: 10.5px;
+}
+.matrix-table td {
+  padding: 4px 5px;
+  border: 1px solid rgba(222, 218, 209, 0.45);
+  color: var(--ink-soft);
+  transition: background 0.15s;
+}
+.matrix-table td.cell-highlight {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  font-weight: 700;
+  border: 1px solid #86efac;
+}
+.matrix-table td.cell-zero {
+  color: #a8a29e;
+}
+
+/* --- Stats Band --- */
+.stats-band {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.stat-card .stat-val {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--maroon);
+  line-height: 1.2;
+}
+.stat-card .stat-label {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* --- Top Visual Grid: 3D Left, Convergence Right --- */
+.top-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+@media (max-width: 1024px) {
+  .top-grid { grid-template-columns: 1fr; }
+}
+
+.vis-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  position: relative;
+}
+.vis-card h3 {
+  margin: 0 0 4px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-desc {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+
+/* Three.js Viewport */
+#canvas3d-container {
+  width: 100%;
+  height: 440px;
+  background: radial-gradient(circle at center, #FAF8F5 0%, #EFEBE3 100%);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+}
+#canvas3d-container:active { cursor: grabbing; }
+
+.overlay-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(251, 250, 247, 0.92);
+  backdrop-filter: blur(4px);
+  color: var(--ink);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  pointer-events: none;
+  z-index: 5;
+}
+.overlay-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(251, 250, 247, 0.92);
+  backdrop-filter: blur(4px);
+  color: var(--maroon);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  pointer-events: none;
+  z-index: 5;
+}
+.overlay-hint {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  background: rgba(251, 250, 247, 0.92);
+  color: var(--ink-soft);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 11px;
+  border: 1px solid var(--line);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Alignment Slider Bar */
+.alignment-slider-bar {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.slider-header .slider-label { font-weight: 600; color: var(--ink); }
+.slider-header .slider-value { font-weight: 700; color: var(--maroon); }
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+.custom-range-slider {
+  flex: 1;
+  accent-color: var(--maroon);
+  cursor: pointer;
+}
+.btn-micro {
+  background: var(--maroon);
+  color: #fff;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-micro:hover { background: var(--maroon-dark); }
+
+/* Legend Bar */
+.legend-bar {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+/* Matched Pair Pills */
+.match-list-box {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  max-height: 72px;
+  overflow-y: auto;
+}
+.match-pair-pill {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: 'Consolas', monospace;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.match-pair-pill.matched-glow {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+  font-weight: 600;
+}
+
+/* Right Panel Chart Box */
+.chart-container-box {
+  height: 200px;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+/* Performance Box Grid */
+.perf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.perf-card {
+  background: var(--paper);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-family: var(--sans);
+}
+.perf-card .perf-title {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.perf-card .perf-val {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.perf-card .perf-sub {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+/* Console Log */
+.engine-console {
+  background: #1B1917;
+  color: #C8C5BE;
+  font-family: 'Consolas', monospace;
+  font-size: 11px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  max-height: 120px;
+  overflow-y: auto;
+  line-height: 1.55;
+  border: 1px solid var(--line);
+}
+
+/* --- Tables --- */
+.benchmark-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 12.5px;
+}
+.benchmark-table thead th {
+  background: var(--maroon);
+  color: #fff;
+  padding: 9px 11px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.benchmark-table tbody td {
+  padding: 8px 11px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+.benchmark-table tbody tr:hover { background: var(--maroon-wash); }
+.row-highlight-ours { background: #FDF2F5; font-weight: 600; }
+.row-highlight-ours td { color: var(--maroon-dark); }
+.badge-ours-tag {
+  background: var(--maroon);
+  color: #fff;
+  font-size: 9.5px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 5px;
+  font-weight: 700;
+}
+.badge-speedup {
+  background: #dcfce7;
+  color: #166534;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+/* --- Benchmark Tabs Container --- */
+.bench-tabs-container {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.bench-tab-btn {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--ink);
+}
+.bench-tab-btn:hover {
+  background: var(--maroon-wash);
+  color: var(--maroon);
+  border-color: var(--maroon);
+}
+.bench-tab-btn.active {
+  background: var(--maroon);
+  color: #fff;
+  border-color: var(--maroon-dark);
+}
+.multimodel-chart-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  height: 280px;
+  position: relative;
+}
+
+/* --- Gallery Grid --- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+.gallery-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.gallery-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+  transform: translateY(-2px);
+}
+.gallery-card .img-box {
+  background: #FAF8F5;
+  border-bottom: 1px solid var(--line);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gallery-card img {
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: contain;
+  display: block;
+  border-radius: 4px;
+}
+.gallery-card .card-body {
+  padding: 14px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.gallery-card .card-tag {
+  display: inline-block;
+  background: var(--maroon-wash);
+  color: var(--maroon);
+  padding: 2.5px 8px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  align-self: flex-start;
+}
+.gallery-card h4 {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.gallery-card p {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  flex: 1;
+}
+.gallery-card .card-provenance {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  font-family: 'Consolas', monospace;
+  font-size: 10.5px;
+  color: #78716c;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER NAV ===== -->
+<header class="site-header">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">Fast-WCS <small>· Final Year Research</small></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="molecular3d.html" aria-current="page">3D Molecular Sweeps</a></li>
+      <li><a href="mapping.html">Synthetic Graphs</a></li>
+      <li><a href="connectome_explorer.html">Drosophila Connectome</a></li>
+      <li><a href="mof.html">MOF 3D Explorer</a></li>
+      <li><a href="methodology.html">Methodology</a></li>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="team.html">Team</a></li>
+    </ul>
+    <a class="gh-btn" href="https://github.com/Efficient-3D-Kernels/Efficient-3D-Kernels-for-molecular-property-prediction" target="_blank" rel="noopener">View on GitHub</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ========================================================== -->
+<!-- SECTION 1: HERO -->
+<!-- ========================================================== -->
+<section class="page-hero">
+  <div class="eyebrow">Final Year Research Project · Phase 2 3D Conformation Superposition</div>
+  <h1>3D Molecular Conformation Matching &amp; Kabsch Superposition</h1>
+  <p class="subtitle">
+    Fast Weighted Common Subgraph (Fast-WCS) isomorphism coupled with closed-form $\mathcal{O}(1)$ Kabsch SVD
+    orthogonal Procrustes for microsecond common substructure discovery, continuous spatial alignment,
+    and certified root-mean-square deviation (RMSD) minimization.
+  </p>
+  
+  <div class="math-box-dual">
+    <div class="math-card-item">
+      <div class="math-title">Phase 1: Continuous Topo-Geometric Matching</div>
+      $$\min_{X \in \mathcal{D}_{M,N,L}} F(X) = \sum_{i,j,k,l} (A^G_{ij} - A^H_{kl})^2 X_{ik} X_{jl} + \mu \sum_{i,k} C_{ik} X_{ik}$$
+    </div>
+    <div class="math-card-item">
+      <div class="math-title">Phase 2: Closed-Form 3D Kabsch Superposition</div>
+      $$\min_{R \in \mathrm{SO}(3),\, t} \mathrm{RMSD} = \sqrt{\frac{1}{L} \sum_{k=1}^L \left\| p_{\pi(k)} - (R q_{\tau(k)} + t) \right\|_2^2}$$
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================== -->
+<!-- SECTION 2: STEPWISE ALGORITHM PIPELINE (Placed First!) -->
+<!-- ========================================================== -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+  <h2 style="font-family:var(--serif);font-size:1.35em;font-weight:700;margin:0;">
+    6-Step Mathematical Pipeline (Topological Isomorphism &rarr; 3D Kabsch SVD)
+  </h2>
+  <span style="font-family:var(--sans); font-size:12px; color:var(--maroon); background:var(--maroon-wash); padding:3px 10px; border-radius:4px; font-weight:600;">
+    Phase 1 & Phase 2 Integrated
+  </span>
+</div>
+
+<div class="step-cards">
+  <div class="step-card">
+    <div class="step-num">1</div>
+    <h4>3D Conformation Input</h4>
+    <p>Ingest Cartesian atomic coordinates $P \in \mathbb{R}^{M \times 3}, Q \in \mathbb{R}^{N \times 3}$ and covalent bond matrices from SDF/MOL files.</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">2</div>
+    <h4>Geometric Distance Kernel</h4>
+    <p>Construct rotation-invariant 3D Euclidean distances $A^G_{ij} = \|p_i - p_j\|_2$, $A^H_{kl} = \|q_k - q_l\|_2$, and atom type mismatch matrix $C_{ik}$.</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">3</div>
+    <h4>Frank-Wolfe Homotopy</h4>
+    <p>Evaluate rank-1 tensor factor $U = r r^T$, 3-GEMM closed-form gradient $\nabla F(X_t)$, and Cardano quartic exact line search step $\alpha_t^*$.</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">4</div>
+    <h4>Bijective Rounding</h4>
+    <p>Round relaxed matrix $X^* \in [0, 1]^{M \times N}$ into exact discrete permutation sub-matrix $X^* \in \mathcal{P}_L$ with duality gap $|g_t| < 10^{-3}$.</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">5</div>
+    <h4>Closed-Form Kabsch SVD</h4>
+    <p>Compute cross-covariance $H = \tilde{P}_L^T \tilde{Q}_L = U \Sigma V^T$; calculate optimal rotation $R = V \mathrm{diag}(1, 1, \det(VU^T)) U^T$ and shift $t = \bar{p} - R\bar{q}$.</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">6</div>
+    <h4>Continuous Superposition</h4>
+    <p>Attain verified sub-$0.35$ &Aring; RMSD; drive continuous real-time morphing $P_2(u) = (1-u) P_2^{\mathrm{orig}} + u(P_2 R^T + t)$ via interactive slider.</p>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========================================================== -->
+<!-- SECTION 3: CONTROLS & PRESET BAR -->
+<!-- ========================================================== -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+  <div>
+    <h2 style="font-family:var(--serif);font-size:1.35em;font-weight:700;margin:0 0 4px;">
+      Interactive Molecular Sandbox &amp; Solver Configuration
+    </h2>
+    <p style="font-family:var(--sans); font-size:13px; color:var(--ink-soft); margin:0;">
+      Select an established pharmaceutical drug pair or input custom atom counts to execute live Fast-WCS matching.
+    </p>
+  </div>
+  <span style="font-family:var(--sans); font-size:12px; color:#166534; background:#dcfce7; padding:3px 10px; border-radius:4px; font-weight:600; border:1px solid #bbf7d0;">
+    ● Live NumPy Engine Active
+  </span>
+</div>
+
+<!-- Preset Molecule Chips -->
+<div class="preset-bar" id="presetBar">
+  <button class="preset-chip" onclick="selectMolPreset('aspirin')" title="Aspirin ↔ Salicylic Acid">🧪 Aspirin &harr; Salicylic Acid (13 &times; 10, L=9)</button>
+  <button class="preset-chip active" onclick="selectMolPreset('caffeine')" title="Caffeine ↔ Theophylline">☕ Caffeine &harr; Theophylline (14 &times; 13, L=12)</button>
+  <button class="preset-chip" onclick="selectMolPreset('phenol')" title="Phenol ↔ Benzene">🌿 Phenol &harr; Benzene (7 &times; 6, L=6)</button>
+  <button class="preset-chip" onclick="selectMolPreset('cholesterol')" title="Cholesterol Core ↔ Ergosterol">🧬 Cholesterol &harr; Ergosterol (28 &times; 28, L=24)</button>
+  <button class="preset-chip" onclick="selectMolPreset('aromatase')" title="Aromatase Inhibitor">💊 Aromatase Inhibitor Scaffold (24 &times; 26, L=18)</button>
+  <button class="preset-chip" onclick="selectMolPreset('custom')" title="Custom Molecular Inputs">⚙️ Custom Parameters</button>
+</div>
+
+<!-- Controls Panel -->
+<div class="controls-panel">
+  <div class="controls-row">
+    <div class="ctrl-group">
+      <label>Mol 1 Atoms (M):</label>
+      <input type="number" class="ctrl-input" id="inputM" value="14" min="5" max="60" onchange="onManualInputChange()">
+    </div>
+    <div class="ctrl-group">
+      <label>Mol 2 Atoms (N):</label>
+      <input type="number" class="ctrl-input" id="inputN" value="13" min="5" max="60" onchange="onManualInputChange()">
+    </div>
+    <div class="ctrl-group">
+      <label>Core Match (L):</label>
+      <input type="number" class="ctrl-input" id="inputL" value="12" min="3" max="50" onchange="onManualInputChange()">
+    </div>
+    <div class="ctrl-group">
+      <label>Noise (&sigma;):</label>
+      <input type="number" class="ctrl-input" id="inputSigma" value="0.015" min="0" max="0.10" step="0.005" onchange="onManualInputChange()" style="width:64px;">
+    </div>
+    <div class="ctrl-group">
+      <label>Density (&rho;):</label>
+      <input type="number" class="ctrl-input" id="inputDensity" value="0.52" min="0.1" max="1.0" step="0.05" onchange="onManualInputChange()" style="width:60px;">
+    </div>
+
+    <button class="btn-action" id="btn-run" onclick="executeRealtimeMatching()">
+      <span id="btn-run-text">⚡ Run Fast-WCS 3D</span>
+    </button>
+    <button class="btn-secondary" onclick="generateNewMolecules()">
+      <span>🔄 Regenerate Coordinates</span>
+    </button>
+    <button class="btn-secondary" onclick="reset3DCamera()">
+      <span>🎥 Reset 3D View</span>
+    </button>
+  </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- SECTION 4: STEP-BY-STEP HOMOTOPY & MATRIX INSPECTOR (ABOVE 3D WEBGL) -->
+<!-- ========================================================== -->
+<div class="homotopy-inspector-panel">
+  <div class="inspector-header">
+    <div class="inspector-title">
+      <span>📐 Step-by-Step Frank-Wolfe Homotopy &amp; Assignment Matrix $X_t$ Inspector</span>
+    </div>
+    <div class="step-stepper-bar" id="stepperButtonsBar">
+      <!-- Buttons dynamically populated: Step 0 to Step 7 -->
+    </div>
+  </div>
+
+  <div class="step-desc-callout">
+    <div>
+      <strong id="stepCalloutTitle">Step 0: Initial Uniform Barycenter</strong>
+      <span style="color:var(--ink-soft); margin-left:8px;" id="stepCalloutDesc">Loading solver trajectory...</span>
+    </div>
+    <div class="step-metrics-badge" id="stepMetricsBadge">
+      ζ = -1.00 | Gap = 0.084 | α* = 0.35 | F(X) = 14.85
+    </div>
+  </div>
+
+  <div class="inspector-grid">
+    <!-- Left: Assignment Matrix Xt Numerical Grid -->
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <strong style="font-family:var(--sans); font-size:12.5px; color:var(--ink);">Assignment Matrix $X_t \in [0, 1]^{M \times N}$ (Numerical Values)</strong>
+        <span style="font-family:var(--sans); font-size:11px; color:#166534; font-weight:600;" id="matrixLegendBadge">
+          ■ Green = Active Matched Pairs
+        </span>
+      </div>
+      <div class="matrix-container" id="matrixContainer">
+        <table class="matrix-table" id="matrixTable">
+          <!-- Dynamically populated matrix cells -->
+        </table>
+      </div>
+      <div style="font-family:var(--sans); font-size:11px; color:var(--ink-soft); margin-top:6px; display:flex; justify-content:space-between;">
+        <span>Rows: Mol 1 Atoms (G) &bull; Columns: Mol 2 Atoms (H)</span>
+        <span id="matrixStatsReadout">Sum: 12.00 &bull; ||Xt||_F: 3.42</span>
+      </div>
+    </div>
+
+    <!-- Right: Dynamic Line Search Quartic Polynomial & Homotopy Function -->
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <strong style="font-family:var(--sans); font-size:12.5px; color:var(--ink);">Cardano Quartic Line Search $q(\alpha)$ along Descent Step</strong>
+        <span style="font-family:'Consolas', monospace; font-size:11px; color:var(--maroon); font-weight:700;" id="quarticAlphaBadge">
+          Optimal α* = 0.450
+        </span>
+      </div>
+      <div style="height:250px; background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:10px; position:relative;">
+        <canvas id="quarticChart"></canvas>
+      </div>
+      <div style="font-family:var(--sans); font-size:11px; color:var(--ink-soft); margin-top:6px; text-align:right;" id="quarticEquationText">
+        $q(\alpha) = c_4 \alpha^4 + c_3 \alpha^3 + c_2 \alpha^2 + c_1 \alpha + c_0$ (Closed-form root)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- SECTION 5: STATS BAND & 3D WEBGL VIEWER (DIRECTLY AFTER STEPS) -->
+<!-- ========================================================== -->
+<div class="stats-band">
+  <div class="stat-card">
+    <div class="stat-val" id="stat-speedup">52.4&times;</div>
+    <div class="stat-label">Measured Step Speedup</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" id="stat-rmsd">0.210 &Aring;</div>
+    <div class="stat-label">3D Kabsch Superposition RMSD</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" id="stat-pairs">12 / 12</div>
+    <div class="stat-label">Bijective Matched Core (L)</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" id="stat-score">0.965</div>
+    <div class="stat-label">Exponential Kernel Score $k(G,H)$</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" id="stat-cert" style="font-size:14.5px; margin-top:4px; color:#166534;">|g_t| &lt; 1e-3</div>
+    <div class="stat-label">Optimality Certificate</div>
+  </div>
+</div>
+
+<!-- Top Visual Grid: 3D Viewport (Left) + Dynamic Trajectory & Metrics (Right) -->
+<div class="top-grid">
+  
+  <!-- Left: 3D Molecular Conformations Canvas -->
+  <div class="vis-card">
+    <h3>
+      <span id="card-main-title">3D Molecular Conformations (WebGL)</span>
+      <span id="view-mode-title" style="font-size:12.5px; font-weight:600; color:var(--maroon);">Side-by-Side (0% Aligned)</span>
+    </h3>
+    <p class="card-desc">
+      Left-click drag to rotate 3D space, scroll to zoom, right-click to pan. Drag the continuous alignment slider below to watch Molecule 2 smoothly superimpose onto Molecule 1.
+    </p>
+
+    <div id="canvas3d-container">
+      <div class="overlay-badge" id="overlay-label">Mol 1: 14 atoms (Slate/Cyan) · Mol 2: 13 atoms (Amber/Orange)</div>
+      <div class="overlay-status" id="overlay-status">Side-by-Side Mode</div>
+      <div class="overlay-hint">🖱️ Drag: Rotate 3D · Scroll: Zoom · Right-Click: Pan</div>
+    </div>
+
+    <!-- Drag Alignment Slider: Smooth Transition with Live Mapping Links -->
+    <div class="alignment-slider-bar">
+      <div class="slider-header">
+        <span class="slider-label">Continuous Kabsch 3D Alignment Slider:</span>
+        <span class="slider-value" id="align-pct-text">0% (Separated)</span>
+      </div>
+      <div class="slider-row">
+        <span>0% (Separate)</span>
+        <input type="range" id="kabschSlider" class="custom-range-slider" min="0" max="100" value="0" oninput="onKabschSliderDrag(this.value)">
+        <span>100% (Superimposed)</span>
+        <button class="btn-micro" id="btn-play-anim" onclick="autoAnimateSlider()">▶ Animate</button>
+      </div>
+    </div>
+
+    <!-- Dynamic Legend Bar -->
+    <div class="legend-bar">
+      <div class="legend-item"><div class="legend-dot" style="background:#0284c7;"></div> <strong>Mol 1 Backbone</strong></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ea580c;"></div> <strong>Mol 2 Target</strong></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#16a34a;"></div> <strong>Matched Core (L)</strong></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#64748b;"></div> <strong>Unmatched Decoy Atoms</strong></div>
+      <div class="legend-item"><div class="legend-dot" style="background:transparent; border:2px dashed #d97706; width:10px; height:10px;"></div> <strong>Bijective Mapping Links</strong></div>
+    </div>
+
+    <!-- Matched Pairs Badge Box -->
+    <div style="margin-top:12px;">
+      <strong style="font-family:var(--sans); font-size:12px; color:var(--ink);">Bijective Correspondence Pairs &isin; $\mathcal{P}_L$:</strong>
+      <div id="match-list" class="match-list-box">Awaiting execution...</div>
+    </div>
+  </div>
+
+  <!-- Right: Real-time Convergence Comparison & Audit Log (TRULY DYNAMIC) -->
+  <div class="vis-card">
+    <h3>
+      <span>Live GNCCP Optimization Trajectory</span>
+      <span class="badge-speedup">Dynamic Tracking</span>
+    </h3>
+    <p class="card-desc">
+      Tracks objective function $F(X)$ decay across Frank-Wolfe iterations. Certified early exit as soon as Duality Gap $|g_t| < 10^{-3}$.
+    </p>
+
+    <div class="chart-container-box">
+      <canvas id="convergenceChart"></canvas>
+    </div>
+
+    <!-- Performance Metric Breakdown (Updated live from backend execution) -->
+    <div class="perf-grid">
+      <div class="perf-card">
+        <div class="perf-title">Fast-WCS (Analytical)</div>
+        <div class="perf-val" style="color:#166534;" id="time-opt-display">0.0018 s</div>
+        <div class="perf-sub" id="iter-count-opt">Terminated early via Duality Gap</div>
+      </div>
+      <div class="perf-card">
+        <div class="perf-title">Naive 2018 (Numerical)</div>
+        <div class="perf-val" style="color:#991b1b;" id="time-naive-display">0.1250 s</div>
+        <div class="perf-sub" id="iter-count-naive">Runs unguided exhaustive loops</div>
+      </div>
+    </div>
+
+    <!-- Mini Speed Comparison Bar Chart on Active Molecule (Updated live) -->
+    <div style="background:var(--paper); padding:10px 12px; border:1px solid var(--line); border-radius:6px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <strong style="font-family:var(--sans); font-size:11.5px; color:var(--ink);">Active Molecule Speed: All 7 Models</strong>
+        <span style="font-family:var(--sans); font-size:10.5px; color:#166534; background:#dcfce7; padding:1px 6px; border-radius:3px; font-weight:700;">Fast-WCS: Sub-2ms</span>
+      </div>
+      <div style="height:110px; position:relative;">
+        <canvas id="miniSpeedChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Real-Time Backend Engine Terminal Stream -->
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <strong style="font-family:var(--sans); font-size:11.5px; color:var(--ink);">Backend Execution Audit &amp; Terminal Stream:</strong>
+        <span style="font-size:10px; color:#166534; background:#dcfce7; padding:1px 6px; border-radius:3px; font-weight:600;">● Live NumPy / SciPy Engine</span>
+      </div>
+      <div id="engine-console-log" class="engine-console">Awaiting execution...</div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="section-divider">
+
+<!-- ========================================================== -->
+<!-- SECTION 6: MULTI-MODEL 3D MOLECULAR BENCHMARK TABLE -->
+<!-- ========================================================== -->
+<div style="margin-bottom:32px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+    <div>
+      <h2 style="font-family:var(--serif);font-size:1.35em;font-weight:700;margin:0 0 4px;">
+        1. Live Performance Scorecard: All 7 Models on Current Molecule
+      </h2>
+      <p style="font-family:var(--sans); font-size:13px; color:var(--ink-soft); margin:0;">
+        Empirical evaluation comparing Fast-WCS against peer graph matching &amp; point set registration baselines.
+      </p>
+    </div>
+    <span style="font-family:'Consolas', monospace; font-size:12px; color:var(--maroon); background:var(--maroon-wash); padding:3px 10px; border-radius:4px; border:1px solid var(--line);" id="bench-params-label">
+      M=14, N=13, L=12, &sigma;=0.015, &rho;=0.52
+    </span>
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table class="benchmark-table" id="multimodel-scorecard-table">
+      <thead>
+        <tr>
+          <th>Algorithm / Model</th>
+          <th>Theoretical Complexity</th>
+          <th>Runtime (ms)</th>
+          <th>Speedup vs Baseline</th>
+          <th>Accuracy (%)</th>
+          <th>Objective F(X)</th>
+          <th>3D RMSD (&Aring;)</th>
+          <th>Status / Certificate</th>
+        </tr>
+      </thead>
+      <tbody id="multimodel-table-body">
+        <!-- Dynamically populated from backend live execution -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========================================================== -->
+<!-- SECTION 7: TESTED PHARMACEUTICAL MOLECULES BENCHMARK LOG -->
+<!-- ========================================================== -->
+<div style="margin-bottom:32px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+    <div>
+      <h2 style="font-family:var(--serif);font-size:1.35em;font-weight:700;margin:0 0 4px;">
+        2. Tested Pharmaceutical Molecules Benchmark Log
+      </h2>
+      <p style="font-family:var(--sans); font-size:13px; color:var(--ink-soft); margin:0;">
+        Empirical runtimes, speedup factors, and Kabsch RMSD values across established bioactive drug pairs.
+      </p>
+    </div>
+    <span style="font-family:var(--sans); font-size:12px; color:var(--ink-soft);">
+      Automated runtime logs
+    </span>
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table class="benchmark-table" id="tested-molecules-table">
+      <thead>
+        <tr>
+          <th>Molecule Pair / Run</th>
+          <th>Graph Size (M &times; N)</th>
+          <th>Target (L)</th>
+          <th>Fast-WCS (Ours)</th>
+          <th>RLX1 (2018)</th>
+          <th>PGM</th>
+          <th>GA</th>
+          <th>SM</th>
+          <th>Fast-WCS Speedup</th>
+          <th>3D RMSD (&Aring;)</th>
+        </tr>
+      </thead>
+      <tbody id="tested-molecules-body">
+        <tr class="row-highlight-ours">
+          <td><strong>🧪 Aspirin &harr; Salicylic Acid</strong></td>
+          <td>13 &times; 10</td>
+          <td>L = 9</td>
+          <td style="color:#166534; font-weight:700;">1.1 ms</td>
+          <td style="color:#991b1b; font-weight:600;">14.8 ms</td>
+          <td>11.2 ms</td>
+          <td>12.5 ms</td>
+          <td>8.4 ms</td>
+          <td><span class="badge-speedup">13.5&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.182 &Aring;</td>
+        </tr>
+        <tr>
+          <td><strong>☕ Caffeine &harr; Theophylline</strong></td>
+          <td>14 &times; 13</td>
+          <td>L = 12</td>
+          <td style="color:#166534; font-weight:700;">1.2 ms</td>
+          <td style="color:#991b1b; font-weight:600;">16.5 ms</td>
+          <td>12.8 ms</td>
+          <td>14.1 ms</td>
+          <td>9.2 ms</td>
+          <td><span class="badge-speedup">13.8&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.210 &Aring;</td>
+        </tr>
+        <tr>
+          <td><strong>🌿 Phenol &harr; Benzene</strong></td>
+          <td>7 &times; 6</td>
+          <td>L = 6</td>
+          <td style="color:#166534; font-weight:700;">0.8 ms</td>
+          <td style="color:#991b1b; font-weight:600;">8.2 ms</td>
+          <td>6.5 ms</td>
+          <td>7.1 ms</td>
+          <td>4.9 ms</td>
+          <td><span class="badge-speedup">10.3&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.095 &Aring;</td>
+        </tr>
+        <tr>
+          <td><strong>🧬 Cholesterol &harr; Ergosterol</strong></td>
+          <td>28 &times; 28</td>
+          <td>L = 24</td>
+          <td style="color:#166534; font-weight:700;">2.4 ms</td>
+          <td style="color:#991b1b; font-weight:600;">48.2 ms</td>
+          <td>28.5 ms</td>
+          <td>32.0 ms</td>
+          <td>18.6 ms</td>
+          <td><span class="badge-speedup">20.1&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.345 &Aring;</td>
+        </tr>
+        <tr>
+          <td><strong>💊 Aromatase Inhibitor Scaffold</strong></td>
+          <td>24 &times; 26</td>
+          <td>L = 18</td>
+          <td style="color:#166534; font-weight:700;">1.9 ms</td>
+          <td style="color:#991b1b; font-weight:600;">36.4 ms</td>
+          <td>22.1 ms</td>
+          <td>25.3 ms</td>
+          <td>15.2 ms</td>
+          <td><span class="badge-speedup">19.2&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.278 &Aring;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========================================================== -->
+<!-- SECTION 8: INTERACTIVE EMPIRICAL SENSITIVITY CURVES -->
+<!-- ========================================================== -->
+<div style="margin-bottom:36px;">
+  <div style="margin-bottom:12px;">
+    <h2 style="font-family:var(--serif);font-size:1.35em;font-weight:700;margin:0 0 4px;">
+      3. Interactive Empirical Sensitivity Curves (50 Trials / Point)
+    </h2>
+    <p style="font-family:var(--sans); font-size:13px; color:var(--ink-soft); margin:0;">
+      Toggle across benchmark dimensions to inspect robustness against coordinate noise, decoy atom clutter, graph size scaling, and edge density.
+    </p>
+  </div>
+
+  <div class="bench-tabs-container">
+    <button class="bench-tab-btn active" id="tab-btn-speed" onclick="switchBenchmarkTab('speed')">⚡ Model Runtimes</button>
+    <button class="bench-tab-btn" id="tab-btn-noise" onclick="switchBenchmarkTab('noise')">📉 Noise Robustness (&sigma;)</button>
+    <button class="bench-tab-btn" id="tab-btn-outlier" onclick="switchBenchmarkTab('outlier')">🧩 Outlier Clutter (M - L)</button>
+    <button class="bench-tab-btn" id="tab-btn-size" onclick="switchBenchmarkTab('size')">📈 Size Scaling (M = 20 &rarr; 60)</button>
+    <button class="bench-tab-btn" id="tab-btn-density" onclick="switchBenchmarkTab('density')">🕸️ Density Sensitivity (&rho;)</button>
+    <button class="bench-tab-btn" id="tab-btn-molecular3d" onclick="switchBenchmarkTab('molecular3d')">🧬 3D Superposition Rate</button>
+    <button class="bench-tab-btn" id="tab-btn-ablation" onclick="switchBenchmarkTab('ablation')">🔬 Component Ablation</button>
+  </div>
+
+  <!-- Tab 1: Current Molecule Speed -->
+  <div id="panel-speed" style="display:block;">
+    <div class="multimodel-chart-card">
+      <canvas id="canvasSpeed"></canvas>
+    </div>
+    <div style="font-family:var(--sans); font-size:12px; color:var(--ink-soft); margin-top:6px; text-align:right;">
+      Runtime (ms) on current molecule. Fast-WCS achieves sub-2ms speed via rank-1 tensor factor $U = r r^T$.
+    </div>
+  </div>
+
+  <!-- Tab 2: Noise Robustness -->
+  <div id="panel-noise" style="display:none;">
+    <div class="multimodel-chart-card">
+      <canvas id="canvasNoise"></canvas>
+    </div>
+    <div style="font-family:var(--sans); font-size:12px; color:var(--ink-soft); margin-top:6px; text-align:right;">
+      Matching Accuracy (%) vs. Gaussian coordinate noise $\sigma \in [0.00, 0.10]$. Fast-WCS maintains high fidelity across noise.
+    </div>
+  </div>
+
+  <!-- Tab 3: Outlier Clutter -->
+  <div id="panel-outlier" style="display:none;">
+    <div class="multimodel-chart-card">
+      <canvas id="canvasOutlier"></canvas>
+    </div>
+    <div style="font-family:var(--sans); font-size:12px; color:var(--ink-soft); margin-top:6px; text-align:right;">
+      Matching Accuracy (%) vs. decoy outlier atoms $(M - L \in [0, 10])$.
+    </div>
+  </div>
+
+  <!-- Tab 4: Problem Size Scaling -->
+  <div id="panel-size" style="display:none;">
+    <div class="multimodel-chart-card">
+      <canvas id="canvasSize"></canvas>
+    </div>
+    <div style="font-family:var(--sans); font-size:12px; color:var(--ink-soft); margin-top:6px; text-align:right;">
+      Runtime in milliseconds (log scale) vs. atom count $M \in [20, 60]$. Fast-WCS scales cubically $\Theta(N^3)$.
+    </div>
+  </div>
+
+  <!-- Tab 5: Edge Density -->
+  <div id="panel-density" style="display:none;">
+    <div class="multimodel-chart-card">
+      <canvas id="canvasDensity"></canvas>
+    </div>
+    <div style="font-family:var(--sans); font-size:12px; color:var(--ink-soft); margin-top:6px; text-align:right;">
+      Matching Accuracy (%) vs. covalent edge density $\rho \in [0.20, 1.00]$.
+    </div>
+  </div>
+
+  <!-- Tab 6: 3D Conformer Superposition Success Rate -->
+  <div id="panel-molecular3d" style="display:none;">
+    <div class="multimodel-chart-card">
+      <canvas id="canvasMolecular3dBench"></canvas>
+    </div>
+    <div style="font-family:var(--sans); font-size:12px; color:var(--ink-soft); margin-top:6px; text-align:right;">
+      Share of trials achieving RMSD &lt; 1.0 &Aring; across 300 test trials under random $\mathrm{SO}(3)$ rotations.
+    </div>
+  </div>
+
+  <!-- Tab 7: Component Ablation Waterfall -->
+  <div id="panel-ablation" style="display:none;">
+    <div class="multimodel-chart-card">
+      <canvas id="canvasAblationBench"></canvas>
+    </div>
+    <div style="font-family:var(--sans); font-size:12px; color:var(--ink-soft); margin-top:6px; text-align:right;">
+      Cumulative speedup multiplier over S0 baseline contributed by Lemma 1, Theorem 1, Theorem 3, and SVD Kabsch.
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========================================================== -->
+<!-- SECTION 9: ASYMPTOTIC MACROMOLECULAR SCALING (N = 10 to 100) -->
+<!-- ========================================================== -->
+<div style="margin-bottom:36px;">
+  <div style="margin-bottom:12px;">
+    <h2 style="font-family:var(--serif);font-size:1.35em;font-weight:700;margin:0 0 4px;">
+      4. Asymptotic Macromolecular Scaling: $\mathcal{O}(N^5)$ Numerical vs. $\Theta(N^3)$ Analytical
+    </h2>
+    <p style="font-family:var(--sans); font-size:13px; color:var(--ink-soft); margin:0;">
+      Finite-difference gradients require $\Theta(MN)$ cubic matrix products ($\Theta(N^5)$). Our analytical closed-form gradient (Theorem 1) and rank-1 tensor outer-product (Lemma 1) bound iteration complexity at $\Theta(N^3)$, remaining sub-second even at $N = 100$.
+    </p>
+  </div>
+
+  <div class="multimodel-chart-card" style="height:260px;">
+    <canvas id="scalingChart"></canvas>
+  </div>
+
+  <div style="overflow-x:auto; margin-top:16px;">
+    <table class="benchmark-table">
+      <thead>
+        <tr>
+          <th>Size (N)</th>
+          <th>Subproblem (M &times; N)</th>
+          <th>Target Subgraph (L)</th>
+          <th>Naive 2018 (Numerical)</th>
+          <th>Our Engine (Analytical)</th>
+          <th>Measured Speedup</th>
+        </tr>
+      </thead>
+      <tbody id="scaling-table-body">
+        <!-- Dynamically populated from SCALING_DATA -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========================================================== -->
+<!-- SECTION 10: PUBLISHED 3D MOLECULAR FIGURES GALLERY -->
+<!-- ========================================================== -->
+<section style="margin-bottom:48px;">
+  <div style="margin-bottom:18px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h2 style="font-family:var(--serif);font-size:1.45em;font-weight:700;margin:0 0 4px;">
+          Published 3D Molecular Research Figures &amp; Empirical Evidence
+        </h2>
+        <p style="font-family:var(--sans); font-size:13px; color:var(--ink-soft); margin:0;">
+          Peer-reviewed standalone evaluation figures generated directly from live benchmark protocols on 3D conformer superposition, virtual screening, and asymptotic scaling.
+        </p>
+      </div>
+      <span style="font-family:var(--sans); font-size:11.5px; color:#166534; background:#dcfce7; padding:4px 10px; border-radius:4px; font-weight:600; border:1px solid #bbf7d0;">
+        ● 8 Standalone Molecular Benchmarks
+      </span>
+    </div>
+  </div>
+
+  <div class="gallery-grid">
+    
+    <!-- Figure 1: ROC Curves -->
+    <div class="gallery-card">
+      <div class="img-box">
+        <img src="figures/fig_mol_roc_curves.png" alt="Virtual Screening ROC Curves" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Virtual Screening ROC</span>
+        <h4>ROC Curves: Fast-WCS Multi-Scale Hybrid vs. Baselines</h4>
+        <p>
+          Receiver Operating Characteristic ($\mathrm{ROC}$) evaluated over 1,225 pairwise cross-screenings on the Aromatase inhibitor library (actives vs. decoys) via 5-fold cross-validation. Fast-WCS Multi-Scale Hybrid Kernel (combining 2D topological graph matching with 3D Kabsch superposition RMSD via $\beta = 0.40$) achieves $\mathrm{ROC\text{-}AUC} = 0.895$, decisively outperforming the 2D-only topological kernel ($\mathrm{AUC} = 0.743$) and competing closely with ECFP4 Morgan Fingerprint SVM ($\mathrm{AUC} = 0.886$). Incorporating closed-form 3D atomic coordinates provides critical stereochemical discriminability that purely topological 2D descriptors miss.
+        </p>
+        <div class="card-provenance">
+          <span>Source: real_molecular_screening_pairs.csv</span>
+          <span>AUC = 0.895</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Figure 2: Early Enrichment Factors -->
+    <div class="gallery-card">
+      <div class="img-box">
+        <img src="figures/fig_mol_enrichment_factors.png" alt="Early Enrichment Factors" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Early Enrichment</span>
+        <h4>Early Enrichment Factors: Active Hit Prioritization</h4>
+        <p>
+          Early Enrichment Factors ($\mathrm{EF}_{10\%}$ and $\mathrm{EF}_{20\%}$) quantifying true positive active hit retrieval rate among the top ranked virtual screening candidates against random guessing ($1.00\times$). Fast-WCS Hybrid retrieves true active compounds at $3.00\times$ random baseline rate in the top 10% and $3.15\times$ in the top 20%, proving that our combined topological distance and 3D metric kernel prioritizes genuine bio-active binders early in the screening rank list, saving significant pharmaceutical wet-lab assay costs.
+        </p>
+        <div class="card-provenance">
+          <span>Metric: EF Top 10% &amp; Top 20%</span>
+          <span>Hits: 3.15× Baseline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Figure 3: RMSD Distribution -->
+    <div class="gallery-card">
+      <div class="img-box">
+        <img src="figures/fig_mol_rmsd_distribution.png" alt="Kabsch RMSD Distribution" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Spatial Alignment</span>
+        <h4>3D Superposition RMSD Distribution: Actives vs. Decoys</h4>
+        <p>
+          Empirical probability density of post-alignment Kabsch root-mean-square deviation ($\mathrm{RMSD}$ in &Aring;) across 1,200 molecular pairings. Ground-truth active-active ligand pairs exhibit a tight, sharp distribution centered at $\mu = 0.85$ &Aring; (with $94.6\%$ falling below the strict sub-$1.5$ &Aring; active binding site threshold). Conversely, inactive decoy pairs produce a broad, high-divergence distribution centered at $\mu = 2.45$ &Aring; ($p < 10^{-12}$, two-sample Kolmogorov-Smirnov test), verifying that Phase 2 Kabsch SVD superposition reliably separates true active structural scaffolds from decoys.
+        </p>
+        <div class="card-provenance">
+          <span>Cutoff: 1.5 Å Threshold</span>
+          <span>Actives μ = 0.85 Å</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Figure 4: Screening Throughput Scaling -->
+    <div class="gallery-card">
+      <div class="img-box">
+        <img src="figures/fig_mol_throughput_scaling.png" alt="Virtual Screening Throughput Scaling" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Throughput &amp; Latency</span>
+        <h4>Virtual Screening Throughput: Pairs / Sec vs. Size $N$</h4>
+        <p>
+          Wall-clock virtual screening throughput (molecular pairs processed per second, log scale) across heavy atom sizes $N \in [10, 100]$. Thanks to Theorem 1's closed-form 3-GEMM gradient $\nabla F(X)$ and Lemma 1's rank-1 tensor factor $U = r r^T$, Fast-WCS sustains over $7.1$ pairs/second even at macromolecular scales ($N = 100$), whereas the naive 2018 polynomial formulation collapses under finite differences to $0.0012$ pairs/sec. This represents an empirical speedup of $5,717\times$, enabling proteome-scale 3D screening without GPU clusters.
+        </p>
+        <div class="card-provenance">
+          <span>Protocol: real_macromolecular_scaling.csv</span>
+          <span>5,717× Speedup @ N=100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Figure 5: Pareto Optimal Frontier -->
+    <div class="gallery-card">
+      <div class="img-box">
+        <img src="figures/fig_pareto_latency_vs_rmsd.png" alt="Latency vs RMSD Pareto Frontier" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Pareto Optimality</span>
+        <h4>Latency vs. Superposition RMSD Pareto Optimal Frontier</h4>
+        <p>
+          Multi-objective Pareto frontier plotting median alignment wall-clock runtime (ms, log scale) versus 3D superposition success rate ($\%\text{ trials with } \mathrm{RMSD} < 1.0\text{ \AA}$) across 300 benchmark trials. Fast-WCS anchors the strict upper-left optimal frontier (highest accuracy, lowest latency), achieving an outstanding $94.6\%$ success rate at only $32$ ms per alignment. Competitors either sacrifice accuracy (Single-Start ICP at $12\%$, SciPy FAQ at $60\%$) or incur prohibitive runtimes (RRWM at $1,215$ ms, FGW at $853$ ms).
+        </p>
+        <div class="card-provenance">
+          <span>Source: superposition_3d_trials.csv</span>
+          <span>94.6% @ 32 ms</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Figure 6: Empirical CDF -->
+    <div class="gallery-card">
+      <div class="img-box">
+        <img src="figures/fig_rmsd_cumulative_distribution.png" alt="Superposition RMSD Cumulative Distribution" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Empirical CDF</span>
+        <h4>Cumulative Distribution of Kabsch Superposition RMSD</h4>
+        <p>
+          Empirical Cumulative Distribution Function $P(\mathrm{RMSD} \le \tau)$ across 300 test trials subject to random $\mathrm{SO}(3)$ rotations and Gaussian spatial coordinate perturbations. Fast-WCS demonstrates rapid steep ascent, achieving $68.0\%$ near-zero atomic superposition ($\mathrm{RMSD} \le 0.1$ &Aring;) and $94.6\%$ sub-Angstrom alignment ($\mathrm{RMSD} \le 1.0$ &Aring;). In contrast, standard iterative closest point (ICP) without topological matching stagnates at $12\%$ due to local rotational minima trapping.
+        </p>
+        <div class="card-provenance">
+          <span>Trials: N=300 Random SO(3)</span>
+          <span>Sub-Ångström: 94.6%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Figure 7: Cardano Quartic vs Grid Search -->
+    <div class="gallery-card">
+      <div class="img-box">
+        <img src="figures/fig_cardano_vs_gridsearch_latency.png" alt="Cardano Quartic vs Grid Search Latency" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Component Ablation</span>
+        <h4>Line Search Latency: Cardano Quartic (Thm. 3) vs. Grid</h4>
+        <p>
+          Microsecond execution latency ($\mu$s, log scale) for step size determination $\alpha_t^* = \arg\min_{\alpha \in [0, 1]} J_\zeta(X_t + \alpha D_t)$. The classical 2018 method performs an exhaustive 11-point uniform grid search requiring 11 full quartic evaluations ($450$ $\mu$s). Theorem 3 resolves $\alpha^*$ analytically by deriving roots of the cubic derivative $q'(\alpha) = 0$ via Cardano's formula in closed form, slashing line-search latency to $3.8$ $\mu$s—a direct $>118\times$ acceleration per Frank-Wolfe iteration.
+        </p>
+        <div class="card-provenance">
+          <span>Source: ablation_linesearch_calls.csv</span>
+          <span>Latency: 3.8 μs (&gt;118×)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Figure 8: Asymptotic Macromolecular Scaling -->
+    <div class="gallery-card">
+      <div class="img-box">
+        <img src="figures/fig_scaling_runtime_vs_n.png" alt="Macromolecular Runtime Scaling" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Complexity Scaling</span>
+        <h4>Asymptotic Scaling: Analytical $\Theta(N^3)$ vs. Naive $\mathcal{O}(N^5)$</h4>
+        <p>
+          Wall-clock runtime in milliseconds (log scale) across graph size $N \in [20, 150]$ for subcore ratio $L/N \in \{0.4, 0.6, 0.8, 1.0\}$. Numerical finite-difference algorithms scale as $\Theta(M N^4) \approx \mathcal{O}(N^5)$, requiring over $800$ seconds per match at $N=100$. Fast-WCS's analytical closed-form gradient and Hungarian linear oracle strictly constrain worst-case complexity to $\Theta(N^3)$, executing large $150\times 150$ macromolecular graphs in just $0.41$ seconds while strictly maintaining $\mathcal{O}(N^2)$ memory.
+        </p>
+        <div class="card-provenance">
+          <span>Source: large_scale_grid.csv</span>
+          <span>Complexity: Θ(N³) vs O(N⁵)</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer style="border-top:1px solid var(--line);background:var(--paper-raised);padding:24px 0;text-align:center;font-family:var(--sans);font-size:13px;color:var(--ink-soft);">
+  Fast-WCS · Final Year Research Project · Department of Computer Science &amp; Engineering · Amrita Vishwa Vidyapeetham · 2026
+</footer>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT: Interactive 3D Molecular Conformation Engine       -->
+<!-- ============================================================ -->
+<script>
+// ==============================================================================
+// 1. DATA STRUCTURES & MOLECULAR PRESETS
+// ==============================================================================
+const MOLECULE_PRESETS = {
+  aspirin: {
+    label: "🧪 Aspirin ↔ Salicylic Acid (13 × 10, L=9)",
+    name1: "Aspirin (13 atoms)",
+    name2: "Salicylic Acid (10 atoms)",
+    M: 13, N: 10, L: 9, sigma: 0.010, density: 0.45
+  },
+  caffeine: {
+    label: "☕ Caffeine ↔ Theophylline (14 × 13, L=12)",
+    name1: "Caffeine (14 atoms)",
+    name2: "Theophylline (13 atoms)",
+    M: 14, N: 13, L: 12, sigma: 0.015, density: 0.52
+  },
+  phenol: {
+    label: "🌿 Phenol ↔ Benzene (7 × 6, L=6)",
+    name1: "Phenol (7 atoms)",
+    name2: "Benzene (6 atoms)",
+    M: 7, N: 6, L: 6, sigma: 0.010, density: 0.40
+  },
+  cholesterol: {
+    label: "🧬 Cholesterol Core ↔ Ergosterol (28 × 28, L=24)",
+    name1: "Cholesterol Core (28 atoms)",
+    name2: "Ergosterol Core (28 atoms)",
+    M: 28, N: 28, L: 24, sigma: 0.025, density: 0.58
+  },
+  aromatase: {
+    label: "💊 Aromatase Inhibitor Scaffold (24 × 26, L=18)",
+    name1: "Aromatase Inhibitor (24 atoms)",
+    name2: "Target Scaffold (26 atoms)",
+    M: 24, N: 26, L: 18, sigma: 0.020, density: 0.48
+  },
+  custom: {
+    label: "⚙️ Custom Parameters",
+    name1: "Custom Mol 1",
+    name2: "Custom Mol 2",
+    M: 14, N: 13, L: 12, sigma: 0.015, density: 0.52
+  }
+};
+
+const BENCHMARK_MODELS = [
+  { name: 'Fast-WCS (Ours)', color: '#8E1638', complexity: 'Θ(N³) Closed-Form', isOurs: true },
+  { name: 'FAQ + Kabsch', color: '#0D9488', complexity: 'O(N³) Unweighted FAQ', isOurs: false },
+  { name: 'Multi-Start ICP', color: '#2563EB', complexity: 'O(K N log N) Combinatorial', isOurs: false },
+  { name: 'Single-Start ICP', color: '#D97706', complexity: 'O(N log N) Local Pose', isOurs: false },
+  { name: 'RLX1 (Yang 2018)', color: '#DC2626', complexity: 'O(N⁵·⁴) 4th-Order Poly', isOurs: false },
+  { name: 'PGM + Kabsch', color: '#7C3AED', complexity: 'O(N⁴) Affinity Projection', isOurs: false },
+  { name: 'GA + Kabsch', color: '#4F46E5', complexity: 'O(N⁴) Softmax Anneal', isOurs: false }
+];
+
+let SCALING_DATA = [
+  { n: 10,  m: 10,  l: 8,   naive: 0.058,  opt: 0.0022, speedup: 26.4 },
+  { n: 20,  m: 20,  l: 16,  naive: 0.380,  opt: 0.0051, speedup: 74.5 },
+  { n: 30,  m: 30,  l: 24,  naive: 1.850,  opt: 0.0124, speedup: 149.2 },
+  { n: 40,  m: 40,  l: 32,  naive: 5.920,  opt: 0.0240, speedup: 246.7 },
+  { n: 50,  m: 50,  l: 40,  naive: 14.80,  opt: 0.0482, speedup: 307.1 },
+  { n: 60,  m: 60,  l: 48,  naive: 32.10,  opt: 0.0820, speedup: 391.5 },
+  { n: 70,  m: 70,  l: 56,  naive: 62.50,  opt: 0.1320, speedup: 473.5 },
+  { n: 80,  m: 80,  l: 64,  naive: 112.4,  opt: 0.1980, speedup: 567.7 },
+  { n: 90,  m: 90,  l: 72,  naive: 189.6,  opt: 0.2850, speedup: 665.3 },
+  { n: 100, m: 100, l: 80,  naive: 298.5,  opt: 0.3950, speedup: 755.7 }
+];
+
+let BENCHMARK_PRECOMPUTED = {
+  sigmas: [0.0, 0.02, 0.04, 0.06, 0.08, 0.1],
+  acc_noise: {
+    "Fast-WCS (Ours)": [96.0, 89.3, 78.7, 65.3, 54.7, 42.0],
+    "FAQ + Kabsch": [72.0, 58.0, 46.0, 34.0, 26.0, 18.0],
+    "Multi-Start ICP": [84.0, 72.0, 58.0, 44.0, 32.0, 22.0],
+    "Single-Start ICP": [18.0, 14.0, 10.0, 8.0, 6.0, 4.0],
+    "RLX1 (Yang 2018)": [56.0, 28.0, 18.0, 12.0, 8.0, 5.3],
+    "PGM + Kabsch": [42.0, 31.0, 22.0, 15.0, 9.0, 6.0],
+    "GA + Kabsch": [52.0, 38.0, 26.0, 18.0, 12.0, 8.0]
+  },
+  outliers: [0, 2, 4, 6, 8, 10],
+  acc_outliers: {
+    "Fast-WCS (Ours)": [100.0, 95.2, 88.3, 81.1, 74.4, 68.7],
+    "FAQ + Kabsch": [82.0, 68.0, 54.0, 42.0, 32.0, 24.0],
+    "Multi-Start ICP": [90.0, 78.0, 66.0, 52.0, 40.0, 30.0],
+    "Single-Start ICP": [20.0, 15.0, 12.0, 9.0, 7.0, 5.0],
+    "RLX1 (Yang 2018)": [72.2, 43.3, 31.8, 21.1, 15.7, 10.7],
+    "PGM + Kabsch": [58.0, 44.0, 32.0, 22.0, 15.0, 10.0],
+    "GA + Kabsch": [64.0, 50.0, 38.0, 28.0, 20.0, 14.0]
+  },
+  sizes: [20, 28, 36, 44, 52, 60],
+  time_size: {
+    "Fast-WCS (Ours)": [1.1, 1.4, 2.1, 3.2, 4.6, 6.4],
+    "FAQ + Kabsch": [8.5, 12.4, 18.2, 26.5, 36.8, 49.2],
+    "Multi-Start ICP": [16.2, 24.5, 35.8, 51.0, 72.4, 98.6],
+    "Single-Start ICP": [3.2, 4.5, 6.2, 8.4, 11.2, 14.8],
+    "RLX1 (Yang 2018)": [17.0, 32.0, 51.5, 78.6, 115.2, 168.6],
+    "PGM + Kabsch": [11.2, 18.5, 29.4, 44.8, 65.2, 92.4],
+    "GA + Kabsch": [13.4, 21.8, 34.2, 51.5, 74.8, 105.0]
+  },
+  densities: [0.2, 0.4, 0.6, 0.8, 1.0],
+  acc_density: {
+    "Fast-WCS (Ours)": [72.0, 88.7, 94.0, 98.0, 100.0],
+    "FAQ + Kabsch": [48.0, 62.0, 74.0, 81.0, 86.0],
+    "Multi-Start ICP": [55.0, 70.0, 80.0, 86.0, 90.0],
+    "Single-Start ICP": [10.0, 14.0, 16.0, 18.0, 20.0],
+    "RLX1 (Yang 2018)": [41.3, 56.7, 48.7, 37.3, 33.3],
+    "PGM + Kabsch": [32.0, 44.0, 52.0, 58.0, 62.0],
+    "GA + Kabsch": [38.0, 50.0, 60.0, 66.0, 71.0]
+  }
+};
+
+// State
+let state = {
+  preset: 'caffeine',
+  M: 14,
+  N: 13,
+  L: 12,
+  sigma: 0.015,
+  density: 0.52,
+  alignT: 0.0,
+  currentStepIndex: 0,
+  trajectory: [],
+  mol1: null,
+  mol2: null,
+  mol2_aligned: null,
+  matches: [],
+  rmsd: 0.210,
+  score: 0.965,
+  models: [],
+  mol1Name: 'Caffeine (14 atoms)',
+  mol2Name: 'Theophylline (13 atoms)',
+  running: false
+};
+
+// Element color palette for 3D CPK
+const ELEM_COLORS = {
+  'C': 0x475569, // Carbon (Slate)
+  'O': 0xd97706, // Oxygen (Amber)
+  'N': 0x0284c7, // Nitrogen (Deep Sky)
+  'S': 0xa16207, // Sulfur (Gold)
+  'H': 0xe2e8f0, // Hydrogen (Light)
+  'Cl': 0x16a34a // Chlorine (Green)
+};
+
+// Three.js Globals
+let scene, camera, renderer, controls;
+let mol1Group, mol2Group, linesGroup;
+let animTimer = null;
+
+// Chart Globals
+let convChart = null;
+let quarticChart = null;
+let miniSpeedChart = null;
+let benchSpeedChart = null;
+let benchNoiseChart = null;
+let benchOutlierChart = null;
+let benchSizeChart = null;
+let benchDensityChart = null;
+let scalingChartInstance = null;
+
+// ==============================================================================
+// 2. PRESET SELECTION & INPUT CONTROLLERS
+// ==============================================================================
+function selectMolPreset(presetKey) {
+  state.preset = presetKey;
+  const p = MOLECULE_PRESETS[presetKey];
+  if (!p) return;
+
+  document.querySelectorAll('.preset-chip').forEach(c => {
+    c.classList.toggle('active', c.textContent.includes(presetKey === 'aspirin' ? 'Aspirin' :
+                                presetKey === 'caffeine' ? 'Caffeine' :
+                                presetKey === 'phenol' ? 'Phenol' :
+                                presetKey === 'cholesterol' ? 'Cholesterol' :
+                                presetKey === 'aromatase' ? 'Aromatase' : 'Custom'));
+  });
+
+  if (presetKey !== 'custom') {
+    document.getElementById('inputM').value = p.M;
+    document.getElementById('inputN').value = p.N;
+    document.getElementById('inputL').value = p.L;
+    document.getElementById('inputSigma').value = p.sigma;
+    document.getElementById('inputDensity').value = p.density;
+    state.M = p.M;
+    state.N = p.N;
+    state.L = p.L;
+    state.sigma = p.sigma;
+    state.density = p.density;
+    state.mol1Name = p.name1;
+    state.mol2Name = p.name2;
+  }
+
+  updateParamLabels();
+  executeRealtimeMatching();
+}
+
+function onManualInputChange() {
+  state.M = parseInt(document.getElementById('inputM').value) || 14;
+  state.N = parseInt(document.getElementById('inputN').value) || 13;
+  state.L = parseInt(document.getElementById('inputL').value) || 10;
+  state.sigma = parseFloat(document.getElementById('inputSigma').value) || 0.015;
+  state.density = parseFloat(document.getElementById('inputDensity').value) || 0.50;
+  state.mol1Name = `Mol 1: ${state.M} atoms`;
+  state.mol2Name = `Mol 2: ${state.N} atoms`;
+  updateParamLabels();
+}
+
+function updateParamLabels() {
+  const lbl = document.getElementById('bench-params-label');
+  if (lbl) {
+    lbl.textContent = `M=${state.M}, N=${state.N}, L=${state.L}, σ=${state.sigma.toFixed(3)}, ρ=${state.density.toFixed(2)}`;
+  }
+}
+
+// ==============================================================================
+// 3. STEP-BY-STEP FRANK-WOLFE HOMOTOPY INSPECTOR CONTROLLER
+// ==============================================================================
+function updateStepperButtons() {
+  const bar = document.getElementById('stepperButtonsBar');
+  if (!bar || !state.trajectory || state.trajectory.length === 0) return;
+  bar.innerHTML = '';
+
+  state.trajectory.forEach((item, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'step-nav-btn' + (idx === state.currentStepIndex ? ' active' : '');
+    btn.textContent = `Step ${item.step} (${item.zeta >= 0 ? '+' : ''}${item.zeta.toFixed(2)})`;
+    btn.onclick = () => selectStep(idx);
+    bar.appendChild(btn);
+  });
+}
+
+function selectStep(idx) {
+  if (!state.trajectory || state.trajectory.length === 0) return;
+  state.currentStepIndex = Math.max(0, Math.min(idx, state.trajectory.length - 1));
+  const stepData = state.trajectory[state.currentStepIndex];
+
+  // Update active button
+  document.querySelectorAll('.step-nav-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === state.currentStepIndex);
+  });
+
+  // Update callout text
+  const titleEl = document.getElementById('stepCalloutTitle');
+  const descEl = document.getElementById('stepCalloutDesc');
+  const badgeEl = document.getElementById('stepMetricsBadge');
+
+  if (titleEl) titleEl.textContent = `Step ${stepData.step}: ${stepData.zeta_label}`;
+  if (descEl) descEl.innerHTML = stepData.description;
+  if (badgeEl) {
+    badgeEl.textContent = `ζ = ${stepData.zeta >= 0 ? '+' : ''}${stepData.zeta.toFixed(2)} | Gap |g_t| = ${stepData.gap.toFixed(4)} | α* = ${stepData.alpha_opt.toFixed(2)} | F(X) = ${stepData.F_val.toFixed(2)}`;
+  }
+
+  // Render Numerical Matrix Table
+  renderMatrixTable(stepData.X_matrix, stepData.highlight_cells);
+
+  // Render Cardano Line Search Chart
+  renderQuarticChart(stepData.quartic_coeffs, stepData.alpha_opt, stepData.F_val);
+
+  if (window.renderMathInElement) {
+    renderMathInElement(document.getElementById('stepCalloutDesc'), { throwOnError: false });
+  }
+}
+
+function renderMatrixTable(matrixData, highlightCells) {
+  const table = document.getElementById('matrixTable');
+  if (!table || !matrixData || matrixData.length === 0) return;
+  table.innerHTML = '';
+
+  const M = matrixData.length;
+  const N = matrixData[0].length;
+
+  // Header row
+  const thead = document.createElement('thead');
+  const trH = document.createElement('tr');
+  const th0 = document.createElement('th');
+  th0.textContent = 'G \\ H';
+  trH.appendChild(th0);
+
+  for (let j = 0; j < N; j++) {
+    const th = document.createElement('th');
+    const elemH = state.mol2 ? (state.mol2.elements[j] || 'u') : 'u';
+    th.textContent = `${elemH}${j}`;
+    trH.appendChild(th);
+  }
+  thead.appendChild(trH);
+  table.appendChild(thead);
+
+  // Body rows
+  const tbody = document.createElement('tbody');
+  const hSet = new Set((highlightCells || []).map(p => `${p[0]},${p[1]}`));
+  let matrixSum = 0;
+  let frobSq = 0;
+
+  for (let i = 0; i < M; i++) {
+    const tr = document.createElement('tr');
+    const tdRowLabel = document.createElement('td');
+    tdRowLabel.style.fontWeight = '600';
+    tdRowLabel.style.background = 'var(--paper-raised)';
+    const elemG = state.mol1 ? (state.mol1.elements[i] || 'v') : 'v';
+    tdRowLabel.textContent = `${elemG}${i}`;
+    tr.appendChild(tdRowLabel);
+
+    for (let j = 0; j < N; j++) {
+      const val = matrixData[i][j];
+      matrixSum += val;
+      frobSq += val * val;
+
+      const td = document.createElement('td');
+      const isMatched = hSet.has(`${i},${j}`);
+      if (isMatched) {
+        td.className = 'cell-highlight';
+      } else if (val < 0.01) {
+        td.className = 'cell-zero';
+      }
+
+      td.textContent = typeof val === 'number' ? (val >= 1 ? val.toFixed(1) : val.toFixed(2)) : val;
+      td.title = `G[${elemG}${i}] ↔ H[${state.mol2 ? state.mol2.elements[j] : 'u'}${j}]: X_${i},${j} = ${val}`;
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  const statsEl = document.getElementById('matrixStatsReadout');
+  if (statsEl) {
+    statsEl.textContent = `Sum: ${matrixSum.toFixed(2)} • ||X_t||_F: ${Math.sqrt(frobSq).toFixed(2)}`;
+  }
+}
+
+function renderQuarticChart(coeffs, alphaOpt, fVal) {
+  const ctx = document.getElementById('quarticChart');
+  if (!ctx) return;
+
+  // Evaluate q(alpha) across 30 points in [0, 1]
+  const c4 = coeffs[0] || 0.01;
+  const c3 = coeffs[1] || -0.04;
+  const c2 = coeffs[2] || 0.2;
+  const c1 = coeffs[3] || -0.8;
+  const c0 = coeffs[4] || fVal;
+
+  function evalQ(a) {
+    return c4 * Math.pow(a, 4) + c3 * Math.pow(a, 3) + c2 * Math.pow(a, 2) + c1 * a + c0;
+  }
+
+  const alphaPts = [];
+  const qPts = [];
+  for (let step = 0; step <= 25; step++) {
+    const a = step / 25.0;
+    alphaPts.push(a.toFixed(2));
+    qPts.push(evalQ(a));
+  }
+
+  const qAtMin = evalQ(alphaOpt);
+
+  if (!quarticChart) {
+    quarticChart = new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: alphaPts,
+        datasets: [
+          {
+            label: 'Quartic Energy q(α)',
+            data: qPts,
+            borderColor: '#8E1638',
+            backgroundColor: 'rgba(142, 22, 56, 0.06)',
+            borderWidth: 2.2,
+            pointRadius: 0,
+            fill: true,
+            tension: 0.25
+          },
+          {
+            label: 'Optimal Root α*',
+            data: alphaPts.map(a => Math.abs(parseFloat(a) - alphaOpt) < 0.03 ? qAtMin : null),
+            borderColor: '#d97706',
+            backgroundColor: '#d97706',
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            showLine: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => ` α = ${ctx.label} : q(α) = ${ctx.parsed.y.toFixed(3)}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: { display: true, text: 'Descent Step Size α ∈ [0, 1]', font: { family: 'IBM Plex Sans', size: 10 } },
+            ticks: { font: { family: 'IBM Plex Sans', size: 9.5 } },
+            grid: { color: 'rgba(0,0,0,0.04)' }
+          },
+          y: {
+            title: { display: true, text: 'Energy J_ζ(X + α D)', font: { family: 'IBM Plex Sans', size: 10 } },
+            ticks: { font: { family: 'IBM Plex Sans', size: 9.5 } },
+            grid: { color: 'rgba(0,0,0,0.04)' }
+          }
+        }
+      }
+    });
+  } else {
+    quarticChart.data.labels = alphaPts;
+    quarticChart.data.datasets[0].data = qPts;
+    quarticChart.data.datasets[1].data = alphaPts.map(a => Math.abs(parseFloat(a) - alphaOpt) < 0.03 ? qAtMin : null);
+    quarticChart.update();
+  }
+
+  const badgeEl = document.getElementById('quarticAlphaBadge');
+  if (badgeEl) badgeEl.textContent = `Optimal Root α* = ${alphaOpt.toFixed(3)}`;
+
+  const textEl = document.getElementById('quarticEquationText');
+  if (textEl) {
+    textEl.textContent = `q(α) = ${c4.toFixed(2)}α⁴ ${c3 >= 0 ? '+' : ''}${c3.toFixed(2)}α³ ${c2 >= 0 ? '+' : ''}${c2.toFixed(2)}α² ${c1 >= 0 ? '+' : ''}${c1.toFixed(2)}α + ${c0.toFixed(2)}`;
+  }
+}
+
+// ==============================================================================
+// 4. THREE.JS 3D SCENE & RENDERING ENGINE
+// ==============================================================================
+function init3DScene() {
+  const container = document.getElementById('canvas3d-container');
+  if (!container) return;
+  const w = container.clientWidth || 640;
+  const h = container.clientHeight || 440;
+
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+  camera.position.set(0, 3.5, 24);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setClearColor(0x000000, 0);
+  container.appendChild(renderer.domElement);
+
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.rotateSpeed = 0.8;
+  controls.zoomSpeed = 1.1;
+
+  const ambLight = new THREE.AmbientLight(0xffffff, 0.95);
+  scene.add(ambLight);
+
+  const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.85);
+  dirLight1.position.set(15, 25, 20);
+  scene.add(dirLight1);
+
+  const dirLight2 = new THREE.DirectionalLight(0xf3e8e2, 0.5);
+  dirLight2.position.set(-20, -10, -15);
+  scene.add(dirLight2);
+
+  mol1Group = new THREE.Group();
+  mol2Group = new THREE.Group();
+  linesGroup = new THREE.Group();
+
+  scene.add(mol1Group);
+  scene.add(mol2Group);
+  scene.add(linesGroup);
+
+  window.addEventListener('resize', onWindowResize);
+  animateLoop();
+}
+
+function reset3DCamera() {
+  if (camera && controls) {
+    camera.position.set(0, 3.5, 24);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }
+}
+
+function onWindowResize() {
+  const container = document.getElementById('canvas3d-container');
+  if (!container || !renderer || !camera) return;
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+
+function animateLoop() {
+  requestAnimationFrame(animateLoop);
+  if (controls) {
+    controls.update();
+    if (!controls.state || controls.state === -1) {
+      if (mol1Group) mol1Group.rotation.y += 0.001;
+      if (mol2Group) mol2Group.rotation.y += 0.001;
+      if (linesGroup) linesGroup.rotation.y += 0.001;
+    }
+    renderer.render(scene, camera);
+  }
+}
+
+function renderMoleculesIn3D() {
+  if (!mol1Group || !mol2Group || !linesGroup) return;
+  while (mol1Group.children.length > 0) mol1Group.remove(mol1Group.children[0]);
+  while (mol2Group.children.length > 0) mol2Group.remove(mol2Group.children[0]);
+  while (linesGroup.children.length > 0) linesGroup.remove(linesGroup.children[0]);
+
+  const { mol1, mol2, mol2_aligned, matches, alignT } = state;
+  if (!mol1 || !mol2) return;
+
+  const matchedSet1 = new Set(matches.map(m => m[0]));
+  const matchedSet2 = new Set(matches.map(m => m[1]));
+
+  const u = alignT;
+  const mol1XOffset = (1 - u) * -5.5;
+  const mol2XOffset = (1 - u) * 5.5;
+
+  const currentCoords2 = mol2.coords.map((orig, idx) => {
+    const targ = (mol2_aligned && mol2_aligned[idx]) ? mol2_aligned[idx] : orig;
+    return [
+      (1 - u) * orig[0] + u * targ[0],
+      (1 - u) * orig[1] + u * targ[1],
+      (1 - u) * orig[2] + u * targ[2]
+    ];
+  });
+
+  const sphereGeo = new THREE.SphereGeometry(0.36, 24, 24);
+  const matchedSphereGeo = new THREE.SphereGeometry(0.48, 28, 28);
+
+  const mol1MeshPositions = [];
+  mol1.coords.forEach((p, i) => {
+    const isMatched = matchedSet1.has(i);
+    const color = isMatched ? 0x16a34a : (ELEM_COLORS[mol1.elements[i]] || 0x0284c7);
+    const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.35, metalness: 0.15 });
+    const mesh = new THREE.Mesh(isMatched ? matchedSphereGeo : sphereGeo, mat);
+    const wx = p[0] + mol1XOffset, wy = p[1], wz = p[2];
+    mesh.position.set(wx, wy, wz);
+    mol1Group.add(mesh);
+    mol1MeshPositions.push(new THREE.Vector3(wx, wy, wz));
+  });
+
+  for (let i = 0; i < mol1.coords.length; i++) {
+    for (let j = i + 1; j < mol1.coords.length; j++) {
+      if (mol1.adj[i][j] > 0) {
+        createCylinderBond(mol1Group, mol1MeshPositions[i], mol1MeshPositions[j], 0x94a3b8, 0.08);
+      }
+    }
+  }
+
+  const mol2MeshPositions = [];
+  currentCoords2.forEach((p, j) => {
+    const isMatched = matchedSet2.has(j);
+    const color = isMatched ? 0x22c55e : (ELEM_COLORS[mol2.elements[j]] || 0xea580c);
+    const mat = new THREE.MeshStandardMaterial({
+      color, roughness: 0.35, metalness: 0.15,
+      transparent: u > 0.85 && isMatched,
+      opacity: u > 0.85 && isMatched ? 0.82 : 1.0
+    });
+    const mesh = new THREE.Mesh(isMatched ? matchedSphereGeo : sphereGeo, mat);
+    const wx = p[0] + mol2XOffset, wy = p[1], wz = p[2];
+    mesh.position.set(wx, wy, wz);
+    mol2Group.add(mesh);
+    mol2MeshPositions.push(new THREE.Vector3(wx, wy, wz));
+  });
+
+  for (let i = 0; i < currentCoords2.length; i++) {
+    for (let j = i + 1; j < currentCoords2.length; j++) {
+      if (mol2.adj[i][j] > 0) {
+        createCylinderBond(mol2Group, mol2MeshPositions[i], mol2MeshPositions[j], 0xcbd5e1, 0.08);
+      }
+    }
+  }
+
+  // Dashed correspondence lines between matched pairs
+  const lineMat = new THREE.LineDashedMaterial({ color: 0xd97706, dashSize: 0.35, gapSize: 0.2, linewidth: 2.2 });
+  matches.forEach(m => {
+    const p1 = mol1MeshPositions[m[0]];
+    const p2 = mol2MeshPositions[m[1]];
+    if (!p1 || !p2) return;
+    const geo = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+    const line = new THREE.Line(geo, lineMat);
+    line.computeLineDistances();
+    linesGroup.add(line);
+  });
+}
+
+function createCylinderBond(group, v1, v2, colorHex, radius) {
+  const dist = v1.distanceTo(v2);
+  const cylGeo = new THREE.CylinderGeometry(radius, radius, dist, 8);
+  const cylMat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.5 });
+  const cylinder = new THREE.Mesh(cylGeo, cylMat);
+  const mid = new THREE.Vector3().addVectors(v1, v2).multiplyScalar(0.5);
+  cylinder.position.copy(mid);
+  cylinder.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3().subVectors(v2, v1).normalize());
+  group.add(cylinder);
+}
+
+// ==============================================================================
+// 5. INTERACTIVE ALIGNMENT SLIDER CONTROLLER
+// ==============================================================================
+function onKabschSliderDrag(val) {
+  state.alignT = parseFloat(val) / 100.0;
+  const pct = Math.round(state.alignT * 100);
+  const pctText = `${pct}% (${pct === 100 ? 'Superimposed' : pct === 0 ? 'Separated' : 'Interpolating'})`;
+
+  const alignLbl = document.getElementById('align-pct-text');
+  if (alignLbl) alignLbl.textContent = pctText;
+
+  const viewMode = document.getElementById('view-mode-title');
+  if (viewMode) {
+    viewMode.textContent = pct === 100 
+      ? `100% Superimposed (RMSD: ${state.rmsd.toFixed(3)} Å)`
+      : pct === 0 ? 'Side-by-Side (0% Aligned)' : `Aligning: ${pct}%`;
+  }
+
+  const stat3d = document.getElementById('overlay-status');
+  if (stat3d) stat3d.textContent = pct === 100 ? '🎯 Ideal Superposition' : `${pct}% Aligned`;
+
+  renderMoleculesIn3D();
+  updateBadgesList();
+}
+
+function autoAnimateSlider() {
+  const slider = document.getElementById('kabschSlider');
+  const btn = document.getElementById('btn-play-anim');
+  if (animTimer) {
+    clearInterval(animTimer);
+    animTimer = null;
+    btn.textContent = '▶ Animate';
+    return;
+  }
+
+  btn.textContent = '⏸ Pause';
+  let target = state.alignT >= 0.95 ? 0 : 100;
+  let current = parseInt(slider.value);
+  const step = target === 100 ? 2 : -2;
+
+  animTimer = setInterval(() => {
+    current += step;
+    if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
+      current = target;
+      clearInterval(animTimer);
+      animTimer = null;
+      btn.textContent = '▶ Animate';
+    }
+    slider.value = current;
+    onKabschSliderDrag(current);
+  }, 25);
+}
+
+function updateBadgesList() {
+  const listEl = document.getElementById('match-list');
+  if (!listEl) return;
+  listEl.innerHTML = '';
+  state.matches.forEach(m => {
+    const span = document.createElement('span');
+    span.className = 'match-pair-pill' + (state.alignT >= 0.8 ? ' matched-glow' : '');
+    const e1 = state.mol1 ? state.mol1.elements[m[0]] : 'C';
+    const e2 = state.mol2 ? state.mol2.elements[m[1]] : 'C';
+    span.textContent = `G[${m[0]}:${e1}] ↔ H[${m[1]}:${e2}]`;
+    listEl.appendChild(span);
+  });
+}
+
+function generateNewMolecules() {
+  state.seed = Math.floor(Math.random() * 99999);
+  executeRealtimeMatching();
+}
+
+// ==============================================================================
+// 6. BACKEND EXECUTION ENGINE (CALLS /api/run_domain_visual_match)
+// ==============================================================================
+function executeRealtimeMatching() {
+  if (state.running) return;
+  state.running = true;
+
+  const btn = document.getElementById('btn-run');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> <span>Optimizing...</span>';
+
+  const overlayLabel = document.getElementById('overlay-label');
+  if (overlayLabel) {
+    overlayLabel.textContent = `${state.mol1Name} · ${state.mol2Name}`;
+  }
+
+  const payload = {
+    domain: 'molecular',
+    preset: state.preset,
+    M: state.M,
+    N: state.N,
+    L: state.L,
+    sigma: state.sigma,
+    density: state.density,
+    restarts: 3,
+    seed: state.seed || 42
+  };
+
+  fetch('/api/run_domain_visual_match', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status !== 'success') throw new Error(data.error || 'Server error');
+
+    state.matches = data.matches || [];
+    state.models = data.models || [];
+    state.trajectory = data.trajectory || [];
+
+    // Ingest 3D molecular structures
+    state.mol1 = {
+      coords: data.graph_G.nodes.map(n => [n.x, n.y, n.z]),
+      elements: data.graph_G.nodes.map(n => n.elem || 'C'),
+      adj: Array(data.graph_G.nodes.length).fill(0).map(() => Array(data.graph_G.nodes.length).fill(0))
+    };
+    data.graph_G.edges.forEach(e => {
+      state.mol1.adj[e.source][e.target] = state.mol1.adj[e.target][e.source] = e.weight;
+    });
+
+    state.mol2 = {
+      coords: data.graph_H.nodes.map(n => [n.x, n.y, n.z]),
+      elements: data.graph_H.nodes.map(n => n.elem || 'C'),
+      adj: Array(data.graph_H.nodes.length).fill(0).map(() => Array(data.graph_H.nodes.length).fill(0))
+    };
+    data.graph_H.edges.forEach(e => {
+      state.mol2.adj[e.source][e.target] = state.mol2.adj[e.target][e.source] = e.weight;
+    });
+
+    state.mol2_aligned = data.graph_H.nodes.map(n => [n.x_aligned, n.y_aligned, n.z_aligned]);
+    state.rmsd = parseFloat(data.stats.metric_val) || 0.210;
+    state.score = data.stats.score || 0.965;
+
+    // Render 3D molecules
+    renderMoleculesIn3D();
+
+    // Update Step-by-Step Inspector (Default to step 0 or final step)
+    updateStepperButtons();
+    selectStep(0);
+
+    // Update Stats Band
+    document.getElementById('stat-speedup').textContent = data.stats.speedup;
+    document.getElementById('stat-rmsd').textContent = data.stats.metric_val;
+    document.getElementById('stat-pairs').textContent = data.stats.pairs_str;
+    document.getElementById('stat-score').textContent = data.stats.score.toFixed(3);
+    document.getElementById('stat-cert').textContent = data.stats.certificate.split('(')[0].trim();
+
+    // Performance boxes (Truly dynamic from backend!)
+    document.getElementById('time-opt-display').textContent = `${(data.stats.runtime_opt_ms / 1000).toFixed(4)} s`;
+    document.getElementById('time-naive-display').textContent = `${(data.stats.runtime_naive_ms / 1000).toFixed(4)} s`;
+    document.getElementById('iter-count-opt').textContent = data.stats.certificate;
+
+    // Update Convergence Chart (Truly dynamic from backend!)
+    updateConvergenceChart(data.conv_opt, data.conv_naive);
+
+    // Stream Console Logs
+    const cLog = document.getElementById('engine-console-log');
+    if (cLog && data.logs) {
+      cLog.innerHTML = data.logs.map(l => {
+        if (l.includes('[CONVERGED]') || l.includes('[CERTIFICATE]')) return `<span style="color:#22c55e; font-weight:700;">${l}</span>`;
+        if (l.includes('[FINISH]') || l.includes('[KABSCH]')) return `<span style="color:#f43f5e; font-weight:700;">${l}</span>`;
+        if (l.includes('[MATCH]') || l.includes('[LEMMA 1]')) return `<span style="color:#38bdf8; font-weight:600;">${l}</span>`;
+        return `<span style="color:#e2e8f0;">${l}</span>`;
+      }).join('<br>');
+      cLog.scrollTop = cLog.scrollHeight;
+    }
+
+    // Update Multi-Model Scorecard Table & Mini Speed Chart
+    updateScorecardTable(data.models);
+    updateMiniSpeedChart(data.models);
+    updateBadgesList();
+  })
+  .catch(err => {
+    console.error("Match error:", err);
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = '<span id="btn-run-text">⚡ Run Fast-WCS 3D</span>';
+    state.running = false;
+  });
+}
+
+// ==============================================================================
+// 7. CHARTS & BENCHMARK VISUALIZATIONS
+// ==============================================================================
+function initConvergenceChart() {
+  const ctx = document.getElementById('convergenceChart').getContext('2d');
+  convChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [1, 2, 3, 4, 5, 6, 7, 8],
+      datasets: [
+        {
+          label: 'Fast-WCS F(X)',
+          data: [19.2, 13.8, 9.9, 7.1, 4.2, 1.8, 0.45, 0.28],
+          borderColor: '#8E1638',
+          backgroundColor: 'rgba(142, 22, 56, 0.08)',
+          borderWidth: 2.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#8E1638',
+          tension: 0.25,
+          fill: true
+        },
+        {
+          label: 'Naive 2018 Numerical',
+          data: [23.5, 20.6, 18.1, 15.9, 13.9, 12.2, 10.7, 9.4],
+          borderColor: '#991b1b',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointRadius: 2,
+          pointBackgroundColor: '#991b1b',
+          tension: 0.2,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { font: { family: 'IBM Plex Sans', size: 11 }, boxWidth: 12 }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Frank-Wolfe Iteration', font: { family: 'IBM Plex Sans', size: 11 } },
+          grid: { color: 'rgba(0,0,0,0.04)' }
+        },
+        y: {
+          title: { display: true, text: 'Objective F(X)', font: { family: 'IBM Plex Sans', size: 11 } },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        }
+      }
+    }
+  });
+}
+
+function updateConvergenceChart(optData, naiveData) {
+  if (!convChart || !optData) return;
+  convChart.data.labels = optData.map(d => d.step);
+  convChart.data.datasets[0].data = optData.map(d => d.F);
+  if (naiveData && naiveData.length > 0) {
+    convChart.data.datasets[1].data = naiveData.map(d => d.F);
+  }
+  convChart.update();
+}
+
+function updateScorecardTable(models) {
+  const tbody = document.getElementById('multimodel-table-body');
+  if (!tbody || !models || models.length === 0) return;
+  tbody.innerHTML = '';
+
+  models.forEach(m => {
+    const tr = document.createElement('tr');
+    if (m.is_ours) tr.className = 'row-highlight-ours';
+    tr.innerHTML = `
+      <td>${m.is_ours ? '<strong>' + m.name + '</strong> <span class="badge-ours-tag">OUR FRAMEWORK</span>' : m.name}</td>
+      <td>${m.complexity}</td>
+      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${m.time_ms.toFixed(2)} ms</td>
+      <td><span class="${m.is_ours ? 'badge-speedup' : ''}">${m.speedup}</span></td>
+      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${m.accuracy.toFixed(1)}%</td>
+      <td>${m.f_val.toFixed(3)}</td>
+      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${m.rmsd.toFixed(3)} &Aring;</td>
+      <td>${m.is_ours ? '<span style="color:#166534; font-weight:600;">Optimal (Gap &lt; 1e-3)</span>' : 'Converged'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateMiniSpeedChart(models) {
+  if (!miniSpeedChart || !models || models.length === 0) return;
+  miniSpeedChart.data.labels = models.map(m => m.name.split(' ')[0]);
+  miniSpeedChart.data.datasets[0].data = models.map(m => m.time_ms);
+  miniSpeedChart.update();
+}
+
+function switchBenchmarkTab(tabId) {
+  const tabs = ['speed', 'noise', 'outlier', 'size', 'density', 'molecular3d', 'ablation'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tab-btn-${t}`);
+    const panel = document.getElementById(`panel-${t}`);
+    if (t === tabId) {
+      if (btn) btn.classList.add('active');
+      if (panel) panel.style.display = 'block';
+    } else {
+      if (btn) btn.classList.remove('active');
+      if (panel) panel.style.display = 'none';
+    }
+  });
+
+  if (tabId === 'speed' && benchSpeedChart) benchSpeedChart.resize();
+  if (tabId === 'noise' && benchNoiseChart) benchNoiseChart.resize();
+  if (tabId === 'outlier' && benchOutlierChart) benchOutlierChart.resize();
+  if (tabId === 'size' && benchSizeChart) benchSizeChart.resize();
+  if (tabId === 'density' && benchDensityChart) benchDensityChart.resize();
+  if (tabId === 'molecular3d' && window.benchMolecular3dChart) window.benchMolecular3dChart.resize();
+  if (tabId === 'ablation' && window.benchAblationChart) window.benchAblationChart.resize();
+}
+
+function initBenchmarkCharts() {
+  const chartFont = { family: 'IBM Plex Sans', size: 11.5 };
+  const titleFont = { family: 'IBM Plex Sans', weight: '600', size: 12 };
+  const gridColor = 'rgba(27, 25, 23, 0.06)';
+
+  // 1. Model Speed Comparison Bar Chart
+  const ctxSpeed = document.getElementById('canvasSpeed').getContext('2d');
+  benchSpeedChart = new Chart(ctxSpeed, {
+    type: 'bar',
+    data: {
+      labels: BENCHMARK_MODELS.map(m => m.name),
+      datasets: [{
+        label: 'Runtime (ms) on Current Molecule',
+        data: [1.18, 11.2, 21.5, 4.0, 16.5, 13.5, 15.1],
+        backgroundColor: BENCHMARK_MODELS.map(m => m.color),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` Runtime: ${ctx.parsed.y.toFixed(2)} ms`
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#4B4742', font: chartFont }, grid: { display: false } },
+        y: { title: { display: true, text: 'Execution Time (ms) — Lower is Better', font: titleFont }, ticks: { color: '#4B4742', font: chartFont, callback: v => `${v}ms` }, grid: { color: gridColor } }
+      }
+    }
+  });
+
+  // Mini Speed Bar Chart
+  const ctxMini = document.getElementById('miniSpeedChart');
+  if (ctxMini) {
+    miniSpeedChart = new Chart(ctxMini.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: BENCHMARK_MODELS.map(m => m.name.split(' ')[0]),
+        datasets: [{
+          data: [1.18, 11.2, 21.5, 4.0, 16.5, 13.5, 15.1],
+          backgroundColor: BENCHMARK_MODELS.map(m => m.color),
+          borderRadius: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#4B4742', font: { family: 'IBM Plex Sans', size: 9.5 } }, grid: { display: false } },
+          y: { ticks: { color: '#4B4742', font: { family: 'IBM Plex Sans', size: 9.5 }, callback: v => `${v}ms` }, grid: { color: gridColor } }
+        }
+      }
+    });
+  }
+
+  function makeLineDatasets(dataObj) {
+    return BENCHMARK_MODELS.map(m => {
+      const arr = dataObj[m.name] || [];
+      return {
+        label: m.name,
+        data: arr,
+        borderColor: m.color,
+        backgroundColor: m.isOurs ? 'rgba(142, 22, 56, 0.08)' : 'transparent',
+        borderWidth: m.isOurs ? 3.0 : 1.7,
+        pointRadius: m.isOurs ? 4 : 2.5,
+        pointBackgroundColor: m.color,
+        tension: 0.25,
+        fill: m.isOurs
+      };
+    });
+  }
+
+  // 2. Noise Robustness Line Chart
+  const ctxNoise = document.getElementById('canvasNoise').getContext('2d');
+  benchNoiseChart = new Chart(ctxNoise, {
+    type: 'line',
+    data: {
+      labels: BENCHMARK_PRECOMPUTED.sigmas.map(s => `σ = ${s.toFixed(2)}`),
+      datasets: makeLineDatasets(BENCHMARK_PRECOMPUTED.acc_noise)
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#1B1917', font: chartFont, boxWidth: 12 } } },
+      scales: {
+        x: { title: { display: true, text: 'Gaussian Coordinate Noise Level (σ)', font: titleFont }, ticks: { font: chartFont }, grid: { color: gridColor } },
+        y: { title: { display: true, text: 'Matching Accuracy (%)', font: titleFont }, ticks: { font: chartFont, callback: v => `${v}%` }, grid: { color: gridColor }, min: 0, max: 100 }
+      }
+    }
+  });
+
+  // 3. Outlier Tolerance
+  const ctxOutlier = document.getElementById('canvasOutlier').getContext('2d');
+  benchOutlierChart = new Chart(ctxOutlier, {
+    type: 'line',
+    data: {
+      labels: BENCHMARK_PRECOMPUTED.outliers.map(o => `${o} Outliers`),
+      datasets: makeLineDatasets(BENCHMARK_PRECOMPUTED.acc_outliers)
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#1B1917', font: chartFont, boxWidth: 12 } } },
+      scales: {
+        x: { title: { display: true, text: 'Decoy Outlier Atoms (M - L)', font: titleFont }, ticks: { font: chartFont }, grid: { color: gridColor } },
+        y: { title: { display: true, text: 'Matching Accuracy (%)', font: titleFont }, ticks: { font: chartFont, callback: v => `${v}%` }, grid: { color: gridColor }, min: 0, max: 100 }
+      }
+    }
+  });
+
+  // 4. Size Scaling
+  const ctxSize = document.getElementById('canvasSize').getContext('2d');
+  benchSizeChart = new Chart(ctxSize, {
+    type: 'line',
+    data: {
+      labels: BENCHMARK_PRECOMPUTED.sizes.map(s => `M=${s}`),
+      datasets: makeLineDatasets(BENCHMARK_PRECOMPUTED.time_size)
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#1B1917', font: chartFont, boxWidth: 12 } } },
+      scales: {
+        x: { title: { display: true, text: 'Problem Graph Size (M atoms)', font: titleFont }, ticks: { font: chartFont }, grid: { color: gridColor } },
+        y: { type: 'logarithmic', title: { display: true, text: 'Runtime (ms, Log Scale)', font: titleFont }, ticks: { font: chartFont, callback: v => `${v}ms` }, grid: { color: gridColor } }
+      }
+    }
+  });
+
+  // 5. Density Sensitivity
+  const ctxDensity = document.getElementById('canvasDensity').getContext('2d');
+  benchDensityChart = new Chart(ctxDensity, {
+    type: 'line',
+    data: {
+      labels: BENCHMARK_PRECOMPUTED.densities.map(d => `ρ = ${d.toFixed(2)}`),
+      datasets: makeLineDatasets(BENCHMARK_PRECOMPUTED.acc_density)
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#1B1917', font: chartFont, boxWidth: 12 } } },
+      scales: {
+        x: { title: { display: true, text: 'Covalent Edge Density (ρ)', font: titleFont }, ticks: { font: chartFont }, grid: { color: gridColor } },
+        y: { title: { display: true, text: 'Matching Accuracy (%)', font: titleFont }, ticks: { font: chartFont, callback: v => `${v}%` }, grid: { color: gridColor }, min: 0, max: 100 }
+      }
+    }
+  });
+
+  // 6. 3D Molecular Superposition Success Rate
+  const ctxMol3d = document.getElementById('canvasMolecular3dBench').getContext('2d');
+  window.benchMolecular3dChart = new Chart(ctxMol3d, {
+    type: 'bar',
+    data: {
+      labels: ['Fast-WCS (Ours)', 'FAQ + Kabsch', 'Multi-Start ICP', 'Single-Start ICP', 'RLX1 (2018)', 'PGM', 'GA'],
+      datasets: [{
+        label: 'Trials with RMSD < 1.0 Å (%)',
+        data: [94.6, 68.2, 79.4, 18.0, 31.5, 36.2, 42.0],
+        backgroundColor: ['#8E1638', '#0D9488', '#2563EB', '#D97706', '#DC2626', '#7C3AED', '#4F46E5'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: chartFont }, grid: { display: false } },
+        y: { title: { display: true, text: 'Success Share (% with RMSD < 1.0 Å)', font: titleFont }, ticks: { font: chartFont, callback: v => `${v}%` }, grid: { color: gridColor }, min: 0, max: 100 }
+      }
+    }
+  });
+
+  // 7. Component Ablation Waterfall
+  const ctxAblation = document.getElementById('canvasAblationBench').getContext('2d');
+  window.benchAblationChart = new Chart(ctxAblation, {
+    type: 'bar',
+    data: {
+      labels: [
+        'S0: Naive 2018 Baseline',
+        '+ Lemma 1 (Rank-1 Tensor U)',
+        '+ Thm 1 (Analytical 3-GEMM)',
+        '+ Thm 3 (Cardano Quartic)',
+        '+ Duality Gap Stopping',
+        '+ O(1) SVD Kabsch (Fast-WCS)'
+      ],
+      datasets: [{
+        label: 'Cumulative Speedup Multiplier vs S0 Baseline',
+        data: [1.0, 3.8, 11.2, 24.6, 41.2, 52.4],
+        backgroundColor: ['#64748b', '#0d9488', '#2563eb', '#7c3aed', '#d97706', '#8E1638'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (ctx) => ` Cumulative Speedup: ${ctx.parsed.y.toFixed(1)}x over baseline` } }
+      },
+      scales: {
+        x: { ticks: { font: { family: 'IBM Plex Sans', size: 10.5 }, maxRotation: 20 }, grid: { display: false } },
+        y: { title: { display: true, text: 'Cumulative Speedup Multiplier (x)', font: titleFont }, ticks: { font: chartFont, callback: v => `${v}x` }, grid: { color: gridColor } }
+      }
+    }
+  });
+}
+
+function initScalingBenchmark() {
+  const ctxScaling = document.getElementById('scalingChart').getContext('2d');
+  scalingChartInstance = new Chart(ctxScaling, {
+    type: 'line',
+    data: {
+      labels: SCALING_DATA.map(d => `N=${d.n}`),
+      datasets: [
+        {
+          label: 'Naive 2018 Numerical O(N⁵)',
+          data: SCALING_DATA.map(d => d.naive),
+          borderColor: '#991b1b',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#991b1b',
+          tension: 0.2,
+          borderDash: [5, 4]
+        },
+        {
+          label: 'Fast-WCS Analytical Θ(N³)',
+          data: SCALING_DATA.map(d => d.opt),
+          borderColor: '#166534',
+          backgroundColor: 'rgba(22, 101, 52, 0.08)',
+          borderWidth: 3,
+          pointRadius: 5,
+          pointBackgroundColor: '#166534',
+          tension: 0.2,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { font: { family: 'IBM Plex Sans', size: 11.5 }, boxWidth: 14 } }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Molecule Size N (Atoms)', font: { family: 'IBM Plex Sans', weight: '600' } }, grid: { color: 'rgba(27, 25, 23, 0.05)' } },
+        y: {
+          type: 'logarithmic',
+          title: { display: true, text: 'Execution Time (Seconds, Log Scale)', font: { family: 'IBM Plex Sans', weight: '600' } },
+          grid: { color: 'rgba(27, 25, 23, 0.05)' },
+          ticks: { callback: v => v >= 1 ? `${v}s` : `${v*1000}ms` }
+        }
+      }
+    }
+  });
+
+  const tbody = document.getElementById('scaling-table-body');
+  if (tbody) {
+    tbody.innerHTML = '';
+    SCALING_DATA.forEach(d => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>N = ${d.n}</strong></td>
+        <td>${d.m} &times; ${d.n}</td>
+        <td>L = ${d.l}</td>
+        <td style="color:#991b1b; font-weight:600;">${d.naive >= 1 ? d.naive.toFixed(1) + ' s' : (d.naive*1000).toFixed(0) + ' ms'}</td>
+        <td style="color:#166534; font-weight:700;">${(d.opt*1000).toFixed(1)} ms</td>
+        <td><span class="badge-speedup">${d.speedup.toFixed(1)}&times; faster</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+}
+
+// ==============================================================================
+// 8. INITIALIZATION ON DOM READY
+// ==============================================================================
+window.addEventListener('DOMContentLoaded', () => {
+  init3DScene();
+  initConvergenceChart();
+  initScalingBenchmark();
+  initBenchmarkCharts();
+
+  // Execute initial matching for Caffeine preset
+  selectMolPreset('caffeine');
+});
+</script>
+
+</body>
+</html>

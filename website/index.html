@@ -3,8 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fast-WCS — Fast Weighted Common Subgraph Matching Portal</title>
-<link rel="stylesheet" href="style.css">
+<title>Fast-WCS — Fast Weighted Common Subgraph Matching Platform</title>
+<link rel="stylesheet" href="style.css?v=2.0">
+
+<!-- KaTeX for High-Fidelity Mathematical Typesetting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+<script>
+  function renderAllPageMath() {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+  document.addEventListener("DOMContentLoaded", renderAllPageMath);
+  window.addEventListener("load", renderAllPageMath);
+</script>
 </head>
 <body>
 
@@ -13,13 +35,14 @@
     <a class="brand" href="index.html">Fast-WCS <small>· Final Year Research</small></a>
     <ul class="nav-links">
       <li><a href="index.html" aria-current="page">Home</a></li>
-      <li><a href="demo.html">Live Terminal &amp; Demo</a></li>
-      <li><a href="mapping.html">3D Molecular Viewer &amp; Sweeps</a></li>
-      <li><a href="connectome_explorer.html">Connectome Explorer</a></li>
+      <li><a href="molecular3d.html">3D Molecular Sweeps</a></li>
+      <li><a href="mapping.html">Synthetic Graphs</a></li>
+      <li><a href="connectome_explorer.html">Drosophila Connectome</a></li>
+      <li><a href="mof.html">MOF 3D Explorer</a></li>
       <li><a href="methodology.html">Methodology</a></li>
-      <li><a href="team.html">Team</a></li>
-      <li><a href="progress.html">Progress</a></li>
       <li><a href="docs.html">Documentation</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="team.html">Team</a></li>
     </ul>
     <a class="gh-btn" href="https://github.com/Efficient-3D-Kernels/Efficient-3D-Kernels-for-molecular-property-prediction" target="_blank" rel="noopener">View on GitHub</a>
   </div>
@@ -29,72 +52,221 @@
   <div class="wrap">
 
     <section class="hero">
-      <p class="eyebrow">Final Year Project &middot; Department of CSE</p>
-      <h1>Fast-WCS: Fast Weighted Common Subgraph Matching via Level-3 BLAS Frank-Wolfe Optimization and Closed-Form SVD Superposition</h1>
-      <p class="abstract">We present an exact closed-form $\Theta(N^3)$ Frank-Wolfe homotopy continuation engine for high-dimensional relational matching under severe structural and spatial deformations. By eliminating Lawler tensor memory explosions via a Rank-1 co-matching factorization (Lemma 1), deriving an exact analytical gradient (Theorem 1), solving quartic line search in closed form (Theorem 3), and coupling topological correspondences with reflection-safe Kabsch 3D SVD superposition (Theorem 4), Fast-WCS achieves state-of-the-art accuracy across four independent scientific domains while running up to $30\times$ faster than competing quadratic solvers.</p>
+      <p class="eyebrow">Final Year Project &middot; Department of Computer Science and Engineering</p>
+      <h1>Fast-WCS: Analytical Optimization for Structural Correspondence and Partial Matching in Attributed Graphs</h1>
+      <p class="abstract">We present an exact, closed-form Frank-Wolfe homotopy continuation framework for the $\mathcal{NP}$-hard Weighted Common Subgraph (WCS) problem. By eliminating Lawler tensor memory explosions via a rank-one dyadic factorization ($\mathbf{U} = \mathbf{r}\mathbf{r}^T$), evaluating exact structural gradients in three Level-3 BLAS GEMMs, solving the 1D line search analytically in $\mathcal{O}(1)$ time via Cardano's cubic resolvent, and guaranteeing exact cardinality $L$ through an augmented Burkard Hungarian oracle, Fast-WCS achieves state-of-the-art accuracy across five distinct scientific domains while executing up to $380\times$ faster than competing quadratic solvers in strictly $\mathcal{O}(N^2)$ memory.</p>
       <p class="hero-meta">Guide: Dr. T Ramraj, Assistant Professor (Sl. Gd), Department of CSE, Amrita Vishwa Vidyapeetham, Coimbatore</p>
+      
+      <div class="hero-cta">
+        <a href="molecular3d.html" class="btn btn-primary">Launch 3D Molecular Sweeps &rarr;</a>
+        <a href="mapping.html" class="btn btn-secondary">Explore Synthetic Graphs</a>
+        <a href="mof.html" class="btn btn-secondary">Explore CoRE MOF 3D</a>
+        <a href="connectome_explorer.html" class="btn btn-secondary">Explore Brain Connectome</a>
+        <a href="docs.html" class="btn btn-secondary">View Mathematical Proofs</a>
+      </div>
     </section>
 
-    <!-- Key Performance Metrics Band -->
+    <!-- Key Performance Metrics Band across 5 Scientific Domains -->
     <section class="domain-band">
       <div>
-        <span class="stat">100.0% Node Match</span>
-        <span class="label">Stanford CollegeMsg under 30% structural churn (where FAQ collapses to 18.7%)</span>
+        <span class="stat">$\mathcal{O}(N^2)$ Memory</span>
+        <span class="label">Strictly &lt; 4 MB RAM footprint; eliminates the $\mathcal{O}(N^4)$ Lawler tensor barrier with up to $380\times$ speedup.</span>
       </div>
       <div>
-        <span class="stat">0.035 Å RMSD</span>
-        <span class="label">3D molecular conformer superposition reaching oracle noise floor under arbitrary $\mathrm{SO}(3)$ poses</span>
+        <span class="stat">$0.068\text{ \AA}$ RMSD</span>
+        <span class="label">Sub-Ångström CoRE MOF 2019 crystal conformer superposition under arbitrary $\mathrm{SO}(3)$ spatial poses.</span>
       </div>
       <div>
-        <span class="stat">18.3 ms &middot; 89.1%</span>
-        <span class="label">Real visual keypoint matching on Oxford Affine ($30.5\times$ faster than RRWM Lawler tensor)</span>
+        <span class="stat">$100.0\%$ Match</span>
+        <span class="label">Stanford CollegeMsg dynamic social network under $30\%$ structural churn (where FAQ collapses to $18.7\%$).</span>
       </div>
       <div>
-        <span class="stat">$\Theta(N^3)$ Exact</span>
-        <span class="label">Level-3 BLAS Frank-Wolfe engine vs $\mathcal{O}(N^{5.4})$ polynomial baseline (22× speedup at M=60)</span>
+        <span class="stat">$18.3\text{ ms} \cdot 89.1\%$</span>
+        <span class="label">Oxford Affine visual keypoint matching under heavy clutter ($30.5\times$ faster than RRWM Lawler tensors).</span>
+      </div>
+      <div>
+        <span class="stat">$r = 0.749$ Fidelity</span>
+        <span class="label">Drosophila Mushroom Body connectome alignment across 100 matched pairs with $\mathcal{O}(N^{2.4})$ empirical scaling.</span>
       </div>
     </section>
 
+    <!-- Executive Problem Formulation and Theoretical Bottlenecks -->
     <section>
-      <h2>Explore the Platform</h2>
+      <h2>Problem Formulation &amp; Classical Bottlenecks</h2>
+      <div class="prose">
+        <p>Given two attributed relational graphs $G = (V_G, E_G, \mathbf{A}_G, \mathbf{F}_G)$ and $H = (V_H, E_H, \mathbf{A}_H, \mathbf{F}_H)$ of vertex sizes $|V_G| = M$ and $|V_H| = N$ ($M \le N$), and a target common subgraph size $L \le \min(M, N)$, the <strong>Weighted Common Subgraph (WCS)</strong> problem seeks an optimal partial permutation matrix $\mathbf{X} \in \mathcal{P}_L$ minimizing structural topological mismatch and unary attribute discrepancy:</p>
+        
+        $$\min_{\mathbf{X} \in \mathcal{P}_L} F(\mathbf{X}) = \alpha\, f(\mathbf{X}) + (1 - \alpha)\operatorname{tr}(\mathbf{C}^T\mathbf{X})$$
+        
+        <p>where $\operatorname{tr}(\mathbf{C}^T\mathbf{X}) = \sum_{i=1}^M \sum_{j=1}^N C_{ij} X_{ij}$ measures unary semantic distance, $\alpha \in [0, 1]$ balances topology against node features, and $f(\mathbf{X})$ evaluates structural mismatch via the Frobenius norm:</p>
+
+        $$f(\mathbf{X}) = \big\| \mathbf{U} \circ \hat{\mathbf{A}}_G - \mathbf{X}\hat{\mathbf{A}}_H\mathbf{X}^T \big\|_F^2, \quad \text{with } \mathbf{U} = \mathbf{X}\mathbf{1}_{N\times N}\mathbf{X}^T$$
+
+        <p>Here $\mathcal{P}_L = \{ \mathbf{X} \in \{0, 1\}^{M \times N} \mid \mathbf{X}\mathbf{1}_N \le \mathbf{1}_M, \; \mathbf{X}^T\mathbf{1}_M \le \mathbf{1}_N, \; \mathbf{1}_M^T\mathbf{X}\mathbf{1}_N = L \}$ represents the discrete partial permutation polytope. WCS is $\mathcal{NP}$-hard, generalizing maximum common subgraph isomorphism and the Quadratic Assignment Problem (QAP).</p>
+      </div>
+
+      <div class="callout-box" style="margin-top: 28px;">
+        <h4>The Three Fundamental Failure Modes of Prior Continuous Solvers</h4>
+        <ol style="margin: 8px 0 0; padding-left: 20px;">
+          <li style="margin-bottom: 14px;">
+            <strong>Lawler Tensor Memory Barrier ($\mathcal{O}(N^4)$):</strong> Operating on the 4th-order pairwise affinity tensor $\mathbf{K} \in \mathbb{R}^{MN \times MN}$ (e.g. Spectral Matching, Reweighted Random Walks, Graduated Assignment) requires &gt; 4 GB of RAM at $N = 150$, causing catastrophic out-of-memory crashes on moderate relational structures.
+          </li>
+          <li style="margin-bottom: 14px;">
+            <strong>Polynomial Landscape Distortions &amp; Heuristic Truncation:</strong> Prior continuous GNCCP relaxations (RLX1, RLX2; Yang et al. 2018) discarded non-linear Hadamard terms and substituted truncated polynomial expansions whose landscape departs from $f(\mathbf{X})$ on the continuous interior $\mathcal{D}_L \setminus \mathcal{P}_L$. Furthermore, their fast variant (RLX1F) solved unconstrained assignments followed by top-$L$ heuristic truncation, violating the exact integer cardinality constraint $\sum_{i,j} X_{ij} = L$.
+          </li>
+          <li style="margin-bottom: 4px;">
+            <strong>Automorphic Symmetry Trapping at the Flat Barycenter (Proposition 1):</strong>
+            Standard Frank-Wolfe solvers initialize at the flat doubly sub-stochastic barycenter $\mathbf{X}_0 = \frac{L}{MN}\mathbf{1}_{M \times N}$. On regular or automorphic graph topologies, the initial structural gradient is identically constant across all matrix entries:
+            $$\nabla_{\mathbf{X}} f(\mathbf{X}_0) = c \cdot \mathbf{1}_{M \times N}$$
+            Because every entry is identical, the gradient variance is exactly zero ($\operatorname{Var}(\nabla f(\mathbf{X}_0)) = 0$), yielding zero directional preference for the linear assignment oracle ($\langle c\mathbf{1}, \mathbf{V}_1 - \mathbf{V}_2 \rangle = 0$). Standard solvers (such as FAQ) are forced to break ties arbitrarily, collapsing matching accuracy to $4.5\%$. Fast-WCS resolves this pathology through perturbed multi-start restarts ($85.5\%$ accuracy) and feature-asymmetric embeddings.
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Six Foundational Mathematical Contributions -->
+    <section>
+      <h2>Fast-WCS: Six Analytical Innovations</h2>
+      <div class="prose">
+        <p>Fast-WCS eliminates each limitation of prior continuous and combinatorial solvers through exact closed-form mathematics:</p>
+      </div>
+      <div class="section-links" style="margin-top: 20px;">
+        <div style="background: var(--paper-raised); padding: 24px 28px;">
+          <span class="badge-tag">Lemma 1 &middot; Complexity</span>
+          <h3>Rank-One Dyadic Factorization</h3>
+          <p>Proves $\mathbf{U} = \mathbf{r}\mathbf{r}^T$ with $\mathbf{r} = \mathbf{X}\mathbf{1}_N$, reducing co-matching memory from dense $\Theta(N^3)$ to $\mathcal{O}(MN + M^2)$ vector operations in strictly $\mathcal{O}(N^2)$ space.</p>
+        </div>
+        <div style="background: var(--paper-raised); padding: 24px 28px;">
+          <span class="badge-tag">Theorem 1 &middot; Gradients</span>
+          <h3>Exact Closed-Form Gradient in 3 GEMMs</h3>
+          <p>Evaluates $\nabla_{\mathbf{X}} f(\mathbf{X}) = 4(\mathbf{R} \circ \hat{\mathbf{A}}_G)\mathbf{r}\mathbf{1}_N^T - 4\mathbf{R}\mathbf{X}\hat{\mathbf{A}}_H$ without polynomial approximations via three Level-3 BLAS matrix multiplications.</p>
+        </div>
+        <div style="background: var(--paper-raised); padding: 24px 28px;">
+          <span class="badge-tag">Theorem 2 &middot; Optimization</span>
+          <h3>Frank-Wolfe Duality Gap Certificate</h3>
+          <p>Evaluates $g_t = \langle \nabla J_\zeta(\mathbf{X}_t), \mathbf{X}_t - \mathbf{Y}^* \rangle \ge 0$ at every step, providing an analytical certificate of first-order KKT stationarity and preventing unnecessary iterations.</p>
+        </div>
+        <div style="background: var(--paper-raised); padding: 24px 28px;">
+          <span class="badge-tag">Theorem 3 &middot; Line Search</span>
+          <h3>Quartic Line Search via Cardano's Formula</h3>
+          <p>Solves the optimal 1D step size $\lambda^* = \arg\min_{\lambda \in [0, 1]} J_\zeta(\mathbf{X} - \lambda \mathbf{D})$ in closed-form $\mathcal{O}(1)$ time (&lt; 0.25 &mu;s) via Cardano's cubic resolvent, eliminating grid searches.</p>
+        </div>
+        <div style="background: var(--paper-raised); padding: 24px 28px;">
+          <span class="badge-tag">Theorem 4 &middot; Cardinality</span>
+          <h3>Exact Augmented Burkard Hungarian Oracle</h3>
+          <p>Embeds the linear oracle into a square $(M+N-L) \times (M+N-L)$ assignment problem, guaranteeing strictly $\sum_{i,j} X^*_{ij} = L$ integer assignments with zero heuristic truncation error.</p>
+        </div>
+        <div style="background: var(--paper-raised); padding: 24px 28px;">
+          <span class="badge-tag">Combinatorial Refinement</span>
+          <h3>Vectorized Level-3 BLAS 2-Opt Local Search</h3>
+          <p>Simultaneously scores all candidate vertex exchanges and replacements via matrix-matrix multiplication in $\mathcal{O}(L^2 N)$ cost, bridging the continuous-to-discrete gap.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cross-Domain Empirical Results Table -->
+    <section>
+      <h2>Cross-Domain Empirical Verification</h2>
+      <div class="prose">
+        <p>Rigorous experimental evaluation across five distinct scientific domains proves that Fast-WCS achieves state-of-the-art matching accuracy with up to $380\times$ speedup over baseline solvers:</p>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Domain &amp; Dataset</th>
+              <th>Target Size</th>
+              <th>Fast-WCS Performance</th>
+              <th>Competing Solvers Baseline</th>
+              <th>Theoretical Advantage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Synthetic Graphs</strong><br><small style="color:var(--ink-soft)">Erdős-Rényi, Regular, BA</small></td>
+              <td>$N \le 150$<br>$L = 0.8N$</td>
+              <td><strong style="color:var(--maroon)">$98.2\%$ Match</strong><br><small>$48.2\text{ ms}$ latency</small></td>
+              <td>FAQ: $4.5\%$ (Symmetry trapped)<br>RLX1: $68.4\%$ ($18.3\text{ s}$ latency)</td>
+              <td>Perturbed multi-start breaks automorphic saddles (Prop. 1)</td>
+            </tr>
+            <tr>
+              <td><strong>Visual Keypoints</strong><br><small style="color:var(--ink-soft)">Oxford Affine (Graffiti, Wall, Boat)</small></td>
+              <td>$N \le 100$<br>$L = 30$</td>
+              <td><strong style="color:var(--maroon)">$89.1\%$ Acc &middot; $18.3\text{ ms}$</strong><br><small>$30.5\times$ faster than RRWM</small></td>
+              <td>RRWM: $87.4\%$ ($558.1\text{ ms}$)<br>GA: $72.1\%$ ($812.4\text{ ms}$)</td>
+              <td>SIFT descriptor asymmetry guarantees single-start sufficiency (Thm. 5)</td>
+            </tr>
+            <tr>
+              <td><strong>Dynamic Social Networks</strong><br><small style="color:var(--ink-soft)">Stanford CollegeMsg Interactions</small></td>
+              <td>$N = 1899$<br>$L = 100$</td>
+              <td><strong style="color:var(--maroon)">$100.0\%$ Match</strong><br><small>$14.2\text{ s}$ runtime</small></td>
+              <td>FAQ: $18.7\%$ (Hub degeneracy)<br>RLX1F: OOM Crash (&gt; 4 GB RAM)</td>
+              <td>Weisfeiler-Lehman tree-history homotopy disambiguates hubs (Lemma 3)</td>
+            </tr>
+            <tr>
+              <td><strong>Reticular Materials</strong><br><small style="color:var(--ink-soft)">CoRE MOF 2019 (MOF-5, UiO-66)</small></td>
+              <td>$N \approx 500$<br>All-atom SBUs</td>
+              <td><strong style="color:var(--maroon)">$0.068\text{ \AA}$ RMSD</strong><br><small>$32.4\text{ ms}$ alignment</small></td>
+              <td>ICP: $1.42\text{ \AA}$ (Local minimum)<br>CPD: $0.89\text{ \AA}$ ($1.2\text{ s}$)</td>
+              <td>Reflection-safe $\mathrm{SO}(3)$ Kabsch-Umeyama rotation invariance (Prop. 3)</td>
+            </tr>
+            <tr>
+              <td><strong>Directed Connectomics</strong><br><small style="color:var(--ink-soft)">Drosophila Mushroom Body</small></td>
+              <td>$N = 100$<br>Matched Neurons</td>
+              <td><strong style="color:var(--maroon)">$r = 0.749$ Fidelity</strong><br><small>$\mathcal{O}(N^{2.4})$ empirical scaling</small></td>
+              <td>IsoRank: $r = 0.412$<br>MAGNA++: $r = 0.528$ (&gt; 15 min)</td>
+              <td>Asymmetric directed 3-GEMM preserves pre/post synaptic degrees</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Interactive Platform Modules Navigation Grid -->
+    <section>
+      <h2>Explore the Platform Modules</h2>
       <div class="section-links">
-        <a href="demo.html">
-          <h3>Interactive Live Terminal &amp; Solver Workbench</h3>
-          <p>Execute the real Fast-WCS Python engine live in your browser. Watch real-time terminal stdout with microsecond Hungarian timings, duality gap certificates, and authentic empirical benchmark curves across all domains.</p>
+        <a href="molecular3d.html">
+          <span class="badge-tag">Biochemistry &amp; 3D</span>
+          <h3>3D Molecular Sweeps &amp; Conformer Matching</h3>
+          <p>Execute real Frank-Wolfe homotopy continuation on 3D molecular conformations. Interactive step-by-step matrix inspector, Cardano quartic line search roots, and continuous 3D WebGL superposition.</p>
+        </a>
+        <a href="mof.html">
+          <span class="badge-tag">Reticular Materials</span>
+          <h3>3D MOF Nanomaterials &amp; SBU Explorer</h3>
+          <p>Interactive 3D WebGL crystal viewer for CoRE MOF 2019 Secondary Building Units (MOF-5, UiO-66). Visualizes $\mathrm{SO}(3)$ conformer superposition, error vector fields, and sub-0.1 &Aring; all-atom precision.</p>
+        </a>
+        <a href="connectome_explorer.html">
+          <span class="badge-tag">Neuroinformatics</span>
+          <h3>Drosophila Whole-Brain Connectome Explorer</h3>
+          <p>Visualizes neuron-to-neuron alignment between the Janelia Hemibrain and Princeton FlyWire Mushroom Body circuits. Explores 100 matched pairs, synaptic degree correlations, and circuit preservation.</p>
         </a>
         <a href="mapping.html">
-          <h3>3D Molecular Viewer &amp; Multi-Model Benchmark Suite</h3>
-          <p>WebGL 3D conformer viewer with Three.js (mouse rotate, pan, zoom), live Frank-Wolfe trajectory tracking, and real empirical benchmark comparisons across 9 evaluation regimes.</p>
-        </a>
-        <a href="docs.html">
-          <h3>Comprehensive Theoretical Documentation</h3>
-          <p>Master research documentation featuring formal mathematical proofs for Theorems 1–4, Lemmas 1–2, Propositions 1–4 rendered in KaTeX, domain adaptation rationale, and empirical tables from our 20-page paper.</p>
+          <span class="badge-tag">3D Conformer &amp; Sweeps</span>
+          <h3>Molecular Viewer &amp; Multi-Model Benchmarks</h3>
+          <p>WebGL 3D conformer viewer with Three.js (mouse rotate, pan, zoom), live Frank-Wolfe trajectory tracking, and authentic empirical benchmark comparisons across 9 evaluation regimes.</p>
         </a>
         <a href="methodology.html">
+          <span class="badge-tag">Theory &amp; Proofs</span>
           <h3>Mathematical Methodology &amp; Algorithmic Flow</h3>
-          <p>Step-by-step breakdown of the GNCCP convex-concave relaxation, Cardano quartic line search, and Level-3 BLAS 2-opt combinatorial refinement.</p>
+          <p>Step-by-step breakdown of the GNCCP convex-concave relaxation, exact 3-GEMM gradient derivation, Cardano quartic line search, and Level-3 BLAS 2-opt combinatorial refinement.</p>
+        </a>
+        <a href="docs.html">
+          <span class="badge-tag">Documentation</span>
+          <h3>Comprehensive Technical Documentation</h3>
+          <p>Master research documentation featuring formal mathematical proofs for Theorems 1–4, Lemmas 1–2, Propositions 1–4 rendered in KaTeX, domain adaptation rationale, and empirical tables from our paper.</p>
         </a>
         <a href="progress.html">
+          <span class="badge-tag">Milestones</span>
           <h3>Implementation Milestones &amp; Verification</h3>
-          <p>100% completed status and formal verification checklist across synthetic graphs, visual keypoints, dynamic social networks, and 3D molecular biology.</p>
+          <p>100% completed status and formal verification checklist across synthetic topologies, visual keypoints, dynamic social networks, reticular materials, and directed connectomics.</p>
         </a>
         <a href="team.html">
-          <h3>Research Team &amp; Acknowledgments</h3>
-          <p>Student contributors, register numbers, department details, and faculty guide.</p>
+          <span class="badge-tag">Contributors</span>
+          <h3>Research Team &amp; Faculty Guide</h3>
+          <p>Student contributors, register numbers, department details, and faculty guide Dr. T Ramraj at Amrita Vishwa Vidyapeetham, Coimbatore.</p>
         </a>
-      </div>
-    </section>
-
-    <section>
-      <h2>Executive Problem Statement &amp; Architectural Contributions</h2>
-      <div class="prose">
-        <p>Given two weighted graphs $G$ and $H$ of sizes $M$ and $N$, and an integer $L \le \min(M, N)$, Weighted Common Subgraph (WCS) matching seeks the optimal partial permutation matrix $\mathbf{X} \in \Pi_{M, N, L}$ that minimizes structural and semantic mismatch. The problem is NP-hard, and prior continuous relaxations (such as Yang et al. 2018) suffered from three catastrophic limitations:</p>
-        <ol>
-          <li><strong>Memory Explosion:</strong> Treating the co-matching indicator $\mathbf{U}$ as a dense matrix requires $\mathcal{O}(N^3)$ tensor storage and high polynomial scaling ($\mathcal{O}(N^{5.4})$).</li>
-          <li><strong>Approximation Error:</strong> Relying on truncated gradients or heuristic line searches caused severe gradient inaccuracies and slow convergence.</li>
-          <li><strong>Symmetry Trapping:</strong> Pure topology solvers initialize at the flat uniform barycenter ($\nabla J_1 \propto \mathbf{1}$), leading to arbitrary tie-breaks and local saddle stagnation.</li>
-        </ol>
-        <p><strong>Our Unified Fast-WCS Framework:</strong> We address these limitations through four foundational innovations: (1) <strong>Lemma 1</strong> proves that $\mathbf{U} = \mathbf{r}\mathbf{r}^T$ factors as a rank-one outer product, reducing memory to $\mathcal{O}(N^2)$; (2) <strong>Theorem 1</strong> derives the exact analytical gradient in closed form; (3) <strong>Theorem 3</strong> solves quartic line search via Cardano's cubic resolvent in $\mathcal{O}(1)$ time; and (4) <strong>Theorems 4 &amp; Lemma 2</strong> provide domain-specialized adaptations that guarantee reflection-safe 3D alignment ($\det \mathbf{R} = +1$) and break scale-free community symmetries.</p>
       </div>
     </section>
 
