@@ -5,6 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Project Progress &amp; Milestone Verification — Fast-WCS</title>
 <link rel="stylesheet" href="style.css">
+<!-- KaTeX for High-Fidelity Mathematical Typesetting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+<script>
+  function renderAllPageMath() {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+  document.addEventListener("DOMContentLoaded", renderAllPageMath);
+  window.addEventListener("load", renderAllPageMath);
+  setTimeout(renderAllPageMath, 250);
+</script>
 <style>
 .module-table-wrap {
   overflow-x: auto;
@@ -35,7 +57,7 @@
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
   vertical-align: middle;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .module-table tr:last-child td {
   border-bottom: none;
@@ -45,6 +67,29 @@
 }
 .module-table tr:hover {
   background: var(--maroon-wash);
+}
+.theory-basis-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.basis-badge {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--maroon);
+  background: var(--maroon-wash);
+  border: 1px solid rgba(142, 22, 56, 0.2);
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.basis-math {
+  font-size: 13.5px;
 }
 .status-badge {
   display: inline-flex;
@@ -149,88 +194,143 @@
         <table class="module-table">
           <thead>
             <tr>
-              <th>Module / Component</th>
-              <th>Domain Scope</th>
-              <th>Theoretical Basis</th>
-              <th>Current State &amp; Verification</th>
-              <th>Status</th>
+              <th style="width:24%;">Module / Component</th>
+              <th style="width:16%;">Domain Scope</th>
+              <th style="width:18%;">Theoretical Basis</th>
+              <th style="width:28%;">Current State &amp; Verification</th>
+              <th style="width:14%;">Status</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td style="font-weight:600;">Rank-1 Co-Matching Factorization</td>
               <td><span class="domain-tag">Core Engine</span> All Domains</td>
-              <td>Lemma 1 ($\mathbf{U} = \mathbf{r}\mathbf{r}^T$)</td>
-              <td>Eliminates $\mathcal{O}(N^3)$ tensor bottleneck; $\mathcal{O}(N^2)$ memory verified</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Lemma 1</span>
+                  <span class="basis-math">$\mathbf{U} = \mathbf{r}\mathbf{r}^T$</span>
+                </div>
+              </td>
+              <td>Eliminates $\mathcal{O}(N^3)$ tensor bottleneck; $\mathcal{O}(N^2)$ memory footprint verified</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Closed-Form Structural Gradient</td>
               <td><span class="domain-tag">Optimization</span> 3-GEMM Matrix</td>
-              <td>Theorem 1 ($\nabla F(\mathbf{X})$)</td>
-              <td>Exact analytical gradient audited vs finite differences ($&lt; 10^{-3}$ error)</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Theorem 1</span>
+                  <span class="basis-math">$\nabla F(\mathbf{X})$</span>
+                </div>
+              </td>
+              <td>Exact analytical gradient audited vs finite differences ($< 10^{-3}$ error)</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Cardano Quartic Line Search</td>
               <td><span class="domain-tag">Optimization</span> Analytical Solver</td>
-              <td>Theorem 3 ($\lambda_{\text{opt}}$)</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Theorem 3</span>
+                  <span class="basis-math">$\lambda_{\text{opt}} \in [0, 1]$</span>
+                </div>
+              </td>
               <td>Analytical cubic resolvent replacing 11-point grid search ($6.8\times$ faster)</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Duality Gap Stopping Certificate</td>
               <td><span class="domain-tag">Convergence</span> Early Stopping</td>
-              <td>Theorem 2 ($g_t &lt; 10^{-3}$)</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Theorem 2</span>
+                  <span class="basis-math">$g_t < 10^{-3}$</span>
+                </div>
+              </td>
               <td>Reduces Hungarian calls by $45\text{--}58\%$ with zero accuracy drop</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Reflection-Safe Kabsch 3D SVD</td>
               <td><span class="domain-tag">Molecular 3D</span> Spatial Pose</td>
-              <td>Theorem 4 / Prop 4 ($\det \mathbf{R} = +1$)</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Theorem 4</span>
+                  <span class="basis-math">$\det(\mathbf{R}) = +1$</span>
+                </div>
+              </td>
               <td>Closed-form $\mathcal{O}(L)$ SVD superposition; reaches $0.035\text{ \AA}$ oracle floor</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Weisfeiler-Lehman Tree Homotopy</td>
               <td><span class="domain-tag">Social / SNAP</span> Topology</td>
-              <td>Lemma 2 ($C_{\text{WL}}$ prior)</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Lemma 2</span>
+                  <span class="basis-math">$\mathbf{C}_{\text{WL}}$ prior</span>
+                </div>
+              </td>
               <td>Breaks scale-free community automorphisms under $30\%$ structural noise</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Multi-Start Homotopy Continuation</td>
               <td><span class="domain-tag">Synthetic Graphs</span> Regular Cores</td>
-              <td>Proposition 3 ($K=10$ restarts)</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Prop 3</span>
+                  <span class="basis-math">$K=10$ restarts</span>
+                </div>
+              </td>
               <td>Breaks flat-barycenter stagnation; achieves $85.5\%$ on regular graphs</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Level-3 BLAS 2-Opt Refinement</td>
               <td><span class="domain-tag">Refinement</span> Vectorized Swaps</td>
-              <td>Proposition 2 (vectorized swaps)</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Prop 2</span>
+                  <span class="basis-math">2-Opt GEMM</span>
+                </div>
+              </td>
               <td>Evaluates all $\mathcal{O}(L(N-L))$ node exchanges via GEMM in $1.4\text{ ms}$</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Periodic Lattice Tiling Homotopy</td>
               <td><span class="domain-tag">MOF 3D</span> Crystallography</td>
-              <td>Fractional Unit-Cell Adjacency</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Space Group</span>
+                  <span class="basis-math">$\mathbf{A}_{\text{periodic}}$</span>
+                </div>
+              </td>
               <td>Translates supercells into periodic Euclidean graphs; $N=1,000$ in $420\text{ ms}$ ($0.28\text{ \AA}$)</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Bilateral Brain Subcircuit Homotopy</td>
               <td><span class="domain-tag">Neuroscience</span> Connectome</td>
-              <td>Spectral Projection Warm-Start</td>
-              <td>Degree-preserving barycentric warm-start for $N&gt;25,000$ synapses; $96.4\%$ accuracy</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Spectral</span>
+                  <span class="basis-math">$\mathbf{X}_0 \propto \mathbf{v}_1\mathbf{u}_1^T$</span>
+                </div>
+              </td>
+              <td>Degree-preserving barycentric warm-start for $N > 25,000$ synapses; $96.4\%$ accuracy</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
             <tr>
               <td style="font-weight:600;">Hierarchical Macromolecular Scaling</td>
               <td><span class="domain-tag">Bio-Complexes</span> Large Scale</td>
-              <td>Core-Periphery Partitioning</td>
+              <td>
+                <div class="theory-basis-cell">
+                  <span class="basis-badge">Partition</span>
+                  <span class="basis-math">$\mathcal{O}(N \log N)$</span>
+                </div>
+              </td>
               <td>Enables sub-second matching for massive biological complexes up to $N=10,000$</td>
               <td><span class="status-badge">Verified &amp; Production-Ready</span></td>
             </tr>
@@ -309,7 +409,7 @@
             <div class="lbl">End-to-End Latency</div>
           </div>
           <div class="result-stat-item">
-            <div class="num">H = 3</div>
+            <div class="num">$H = 3$</div>
             <div class="lbl">WL Tree-History Subtree Depth</div>
           </div>
         </div>
@@ -346,7 +446,7 @@
         <div class="result-stat-grid">
           <div class="result-stat-item">
             <div class="num">0.089 Å</div>
-            <div class="lbl">RMSD at N=1,008 (ZIF-8 Cage)</div>
+            <div class="lbl">RMSD at $N=1,008$ (ZIF-8 Cage)</div>
           </div>
           <div class="result-stat-item">
             <div class="num">99.1%</div>
@@ -366,7 +466,7 @@
       <!-- Domain 6: Drosophila Connectome -->
       <div class="progress-card">
         <h3 style="margin-top:0; font-family:var(--sans); font-size:1.15rem; color:var(--maroon);">Domain 6: Drosophila Brain Connectome (Janelia Hemibrain v1.2.1)</h3>
-        <p style="font-family:var(--sans); font-size:13.5px; color:var(--ink-soft); margin-top:0;">Evaluated on bilateral neural subcircuits across Antennal Lobe, Mushroom Body, Central Complex, and Optic Lobe spanning dense synaptic graphs ($N &gt; 25,000$ synapses).</p>
+        <p style="font-family:var(--sans); font-size:13.5px; color:var(--ink-soft); margin-top:0;">Evaluated on bilateral neural subcircuits across Antennal Lobe, Mushroom Body, Central Complex, and Optic Lobe spanning dense synaptic graphs ($N > 25,000$ synapses).</p>
         <div class="result-stat-grid">
           <div class="result-stat-item">
             <div class="num">96.4%</div>
