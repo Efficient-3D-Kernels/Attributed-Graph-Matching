@@ -45,7 +45,7 @@ from fastwcs_social_network import WLTreeEngine, solve_wl_oa_hungarian
 
 # Target directories for report figures
 FIGURES_DIR = os.path.join(REPO_ROOT, "benchmarks", "final_report_figures")
-DESKTOP_DIR = r"C:\Users\abdus\Desktop\AURA-Net_Poster_Assets\Final_Report_Figures"
+DESKTOP_DIR = r"C:\Users\abdus\Desktop\Fast-WCS_Poster_Assets\Final_Report_Figures"
 for d in [FIGURES_DIR, DESKTOP_DIR]:
     os.makedirs(d, exist_ok=True)
 
@@ -59,7 +59,7 @@ plt.rcParams['grid.linestyle'] = '--'
 plt.rcParams['grid.alpha'] = 0.65
 
 # Academic modern color palette
-C_AURA = '#1e88e5'     # Deep vibrant blue
+C_FASTWCS = '#1e88e5'     # Deep vibrant blue
 C_RLX1 = '#fb8c00'     # Amber / Orange
 C_RLX2 = '#e53935'     # Crimson Red
 C_HUNG = '#78909c'     # Slate Grey
@@ -151,7 +151,7 @@ sizes_n = [10, 20, 30, 40, 50, 75, 100]
 n_trials_scalability = 5
 
 timing_data = {
-    'AURA-Net': {'mean': [], 'std': []},
+    'Fast-WCS': {'mean': [], 'std': []},
     'Baseline RLX1F': {'mean': [], 'std': []},
     'Baseline RLX2F': {'mean': [], 'std': []},
     'Unary Hungarian': {'mean': [], 'std': []},
@@ -168,7 +168,7 @@ for N in sizes_n:
         seed = 1000 + trial * 41 + N
         A_G, A_H, C, gt = generate_attributed_instance(M, N, L, noise_sigma=0.04, seed=seed)
 
-        # 1. AURA-Net (Our method)
+        # 1. Fast-WCS (Our method)
         aura = AdvancedGNCCP(alpha=0.6, max_iter=8, fw_max_iter=4, local_refinement=True)
         t0 = time.perf_counter()
         res_aura = aura.solve(A_G=A_G, A_H=A_H, C=C, L=L)
@@ -200,8 +200,8 @@ for N in sizes_n:
     m_hung = float(np.mean(t_hung))
     s_hung = float(np.std(t_hung))
 
-    timing_data['AURA-Net']['mean'].append(m_aura)
-    timing_data['AURA-Net']['std'].append(s_aura)
+    timing_data['Fast-WCS']['mean'].append(m_aura)
+    timing_data['Fast-WCS']['std'].append(s_aura)
     timing_data['Baseline RLX1F']['mean'].append(m_rlx1)
     timing_data['Baseline RLX1F']['std'].append(s_rlx1)
     timing_data['Baseline RLX2F']['mean'].append(m_rlx2)
@@ -214,12 +214,12 @@ for N in sizes_n:
     timing_data['Speedup_RLX1F'].append(sp1)
     timing_data['Speedup_RLX2F'].append(sp2)
 
-    print(f"  N={N:3d} (L={L:2d}) -> AURA-Net: {m_aura:6.2f} ms | RLX1F: {m_rlx1:6.2f} ms ({sp1:4.1f}x) | RLX2F: {m_rlx2:6.2f} ms ({sp2:4.1f}x)")
+    print(f"  N={N:3d} (L={L:2d}) -> Fast-WCS: {m_aura:6.2f} ms | RLX1F: {m_rlx1:6.2f} ms ({sp1:4.1f}x) | RLX2F: {m_rlx2:6.2f} ms ({sp2:4.1f}x)")
 
 # Plot Figure 1: Scalability & Speedup
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.5, 4.5), dpi=300)
 
-ax1.plot(sizes_n, timing_data['AURA-Net']['mean'], 'o-', color=C_AURA, linewidth=2.6, markersize=7, label='AURA-Net (Analytical FW + Cardano)')
+ax1.plot(sizes_n, timing_data['Fast-WCS']['mean'], 'o-', color=C_FASTWCS, linewidth=2.6, markersize=7, label='Fast-WCS (Analytical FW + Cardano)')
 ax1.plot(sizes_n, timing_data['Baseline RLX1F']['mean'], 's--', color=C_RLX1, linewidth=2.0, markersize=6, label='Baseline GNCCP RLX1F (Yang et al.)')
 ax1.plot(sizes_n, timing_data['Baseline RLX2F']['mean'], '^-.', color=C_RLX2, linewidth=2.0, markersize=6, label='Baseline GNCCP RLX2F (Yang et al.)')
 ax1.plot(sizes_n, timing_data['Unary Hungarian']['mean'], 'x:', color=C_HUNG, linewidth=1.5, markersize=5, label='Unary Hungarian (No Topology)')
@@ -264,7 +264,7 @@ N_fixed, M_fixed, L_fixed = 40, 40, 32
 n_trials_noise = 5
 
 noise_data = {
-    'AURA-Net': {'acc': [], 'std': []},
+    'Fast-WCS': {'acc': [], 'std': []},
     'Baseline RLX1F': {'acc': [], 'std': []},
     'Baseline RLX2F': {'acc': [], 'std': []},
     'Unary Hungarian': {'acc': [], 'std': []}
@@ -277,7 +277,7 @@ for sigma in noise_sigmas:
         seed = 2000 + trial * 47 + int(sigma * 100)
         A_G, A_H, C, gt = generate_attributed_instance(M_fixed, N_fixed, L_fixed, noise_sigma=sigma, seed=seed)
 
-        # 1. AURA-Net
+        # 1. Fast-WCS
         aura = AdvancedGNCCP(alpha=0.7, max_iter=10, fw_max_iter=4, local_refinement=True)
         res_aura = aura.solve(A_G=A_G, A_H=A_H, C=C, L=L_fixed)
         a_aura.append(compute_accuracy(res_aura.matches, gt, L_fixed) * 100.0)
@@ -297,24 +297,24 @@ for sigma in noise_sigmas:
         h_pairs = list(zip(r_idx[:L_fixed], c_idx[:L_fixed]))
         a_hung.append(compute_accuracy(h_pairs, gt, L_fixed) * 100.0)
 
-    for name, arr in [('AURA-Net', a_aura), ('Baseline RLX1F', a_rlx1), ('Baseline RLX2F', a_rlx2), ('Unary Hungarian', a_hung)]:
+    for name, arr in [('Fast-WCS', a_aura), ('Baseline RLX1F', a_rlx1), ('Baseline RLX2F', a_rlx2), ('Unary Hungarian', a_hung)]:
         noise_data[name]['acc'].append(float(np.mean(arr)))
         noise_data[name]['std'].append(float(np.std(arr)))
 
-    print(f"  sigma={sigma:.2f} -> AURA-Net: {noise_data['AURA-Net']['acc'][-1]:5.1f}% | RLX1F: {noise_data['Baseline RLX1F']['acc'][-1]:5.1f}% | Hungarian: {noise_data['Unary Hungarian']['acc'][-1]:5.1f}%")
+    print(f"  sigma={sigma:.2f} -> Fast-WCS: {noise_data['Fast-WCS']['acc'][-1]:5.1f}% | RLX1F: {noise_data['Baseline RLX1F']['acc'][-1]:5.1f}% | Hungarian: {noise_data['Unary Hungarian']['acc'][-1]:5.1f}%")
 
 # Plot Figure 2: Noise Robustness
 fig, ax = plt.subplots(figsize=(7.0, 4.4), dpi=300)
 for name, col, mark, ls in [
-    ('AURA-Net', C_AURA, 'o', '-'),
+    ('Fast-WCS', C_FASTWCS, 'o', '-'),
     ('Baseline RLX1F', C_RLX1, 's', '--'),
     ('Baseline RLX2F', C_RLX2, '^', '-.'),
     ('Unary Hungarian', C_HUNG, 'x', ':')
 ]:
     means = np.array(noise_data[name]['acc'])
     stds = np.array(noise_data[name]['std'])
-    ax.plot(noise_sigmas, means, f'{mark}{ls}', color=col, linewidth=2.4 if name == 'AURA-Net' else 1.8,
-            markersize=7 if name == 'AURA-Net' else 6, label=name)
+    ax.plot(noise_sigmas, means, f'{mark}{ls}', color=col, linewidth=2.4 if name == 'Fast-WCS' else 1.8,
+            markersize=7 if name == 'Fast-WCS' else 6, label=name)
     ax.fill_between(noise_sigmas, np.clip(means - stds, 0, 100), np.clip(means + stds, 0, 100), color=col, alpha=0.12)
 
 ax.set_xlabel(r'Edge Weight Perturbation Noise Level ($\sigma$)', fontsize=11, fontweight='bold', labelpad=6)
@@ -326,11 +326,11 @@ ax.legend(loc='lower left', framealpha=0.92, fontsize=9.2)
 
 # Callout annotation
 idx_10 = noise_sigmas.index(0.10)
-diff_10 = noise_data['AURA-Net']['acc'][idx_10] - noise_data['Baseline RLX1F']['acc'][idx_10]
+diff_10 = noise_data['Fast-WCS']['acc'][idx_10] - noise_data['Baseline RLX1F']['acc'][idx_10]
 ax.annotate(f"+{diff_10:.1f}% Accuracy Margin\nOver Classical GNCCP",
-            xy=(0.10, noise_data['AURA-Net']['acc'][idx_10]),
+            xy=(0.10, noise_data['Fast-WCS']['acc'][idx_10]),
             xytext=(0.12, 60),
-            arrowprops=dict(facecolor=C_AURA, shrink=0.08, width=1.5, headwidth=6),
+            arrowprops=dict(facecolor=C_FASTWCS, shrink=0.08, width=1.5, headwidth=6),
             fontsize=9.2, fontweight='bold', color='#0d47a1')
 
 plt.tight_layout()
@@ -353,7 +353,7 @@ core_L = 25
 n_trials_outliers = 5
 
 outlier_data = {
-    'AURA-Net': {'prec': [], 'card_err': []},
+    'Fast-WCS': {'prec': [], 'card_err': []},
     'Baseline RLX1F': {'prec': [], 'card_err': []},
     'Baseline RLX2F': {'prec': [], 'card_err': []}
 }
@@ -367,7 +367,7 @@ for pct in outlier_pcts:
         seed = 3000 + trial * 53 + pct
         A_G, A_H, C, gt = generate_attributed_instance(core_L, core_L, core_L, noise_sigma=0.03, n_outliers=n_out, seed=seed)
 
-        # 1. AURA-Net
+        # 1. Fast-WCS
         aura = AdvancedGNCCP(alpha=0.7, max_iter=10, fw_max_iter=4, local_refinement=True)
         res_aura = aura.solve(A_G=A_G, A_H=A_H, C=C, L=core_L)
         p_aura.append(compute_accuracy(res_aura.matches, gt, core_L) * 100.0)
@@ -386,18 +386,18 @@ for pct in outlier_pcts:
         c_rlx2.append(abs(len(res_base2.matches) - core_L))
 
     for name, p_arr, c_arr in [
-        ('AURA-Net', p_aura, c_aura),
+        ('Fast-WCS', p_aura, c_aura),
         ('Baseline RLX1F', p_rlx1, c_rlx1),
         ('Baseline RLX2F', p_rlx2, c_rlx2)
     ]:
         outlier_data[name]['prec'].append(float(np.mean(p_arr)))
         outlier_data[name]['card_err'].append(float(np.mean(c_arr)))
 
-    print(f"  Outliers={pct:2d}% (+{n_out} spurious) -> AURA-Net Prec: {outlier_data['AURA-Net']['prec'][-1]:5.1f}% | RLX1F Prec: {outlier_data['Baseline RLX1F']['prec'][-1]:5.1f}% | Card. Error: {outlier_data['AURA-Net']['card_err'][-1]}")
+    print(f"  Outliers={pct:2d}% (+{n_out} spurious) -> Fast-WCS Prec: {outlier_data['Fast-WCS']['prec'][-1]:5.1f}% | RLX1F Prec: {outlier_data['Baseline RLX1F']['prec'][-1]:5.1f}% | Card. Error: {outlier_data['Fast-WCS']['card_err'][-1]}")
 
 # Plot Figure 3: Outlier Robustness
 fig, ax = plt.subplots(figsize=(7.0, 4.4), dpi=300)
-ax.plot(outlier_pcts, outlier_data['AURA-Net']['prec'], 'o-', color=C_AURA, linewidth=2.8, markersize=7, label='AURA-Net (Augmented Jonker-Volgenant Oracle)')
+ax.plot(outlier_pcts, outlier_data['Fast-WCS']['prec'], 'o-', color=C_FASTWCS, linewidth=2.8, markersize=7, label='Fast-WCS (Augmented Jonker-Volgenant Oracle)')
 ax.plot(outlier_pcts, outlier_data['Baseline RLX1F']['prec'], 's--', color=C_RLX1, linewidth=2.0, markersize=6, label='Baseline GNCCP RLX1F (Heuristic Truncation)')
 ax.plot(outlier_pcts, outlier_data['Baseline RLX2F']['prec'], '^-.', color=C_RLX2, linewidth=2.0, markersize=6, label='Baseline GNCCP RLX2F (Heuristic Truncation)')
 
@@ -408,9 +408,9 @@ ax.set_ylim(0, 105)
 ax.grid(True)
 ax.legend(loc='lower left', framealpha=0.92, fontsize=9.2)
 
-ax.annotate("Guaranteed Exact-L\nCardinality (0 Card. Error)", xy=(outlier_pcts[-1], outlier_data['AURA-Net']['prec'][-1]),
+ax.annotate("Guaranteed Exact-L\nCardinality (0 Card. Error)", xy=(outlier_pcts[-1], outlier_data['Fast-WCS']['prec'][-1]),
             xytext=(outlier_pcts[-3], 50),
-            arrowprops=dict(facecolor=C_AURA, shrink=0.08, width=1.5, headwidth=6),
+            arrowprops=dict(facecolor=C_FASTWCS, shrink=0.08, width=1.5, headwidth=6),
             fontsize=9.2, fontweight='bold', color='#0d47a1')
 
 plt.tight_layout()
@@ -628,11 +628,11 @@ domain_latencies = [domain_results[d]['Latency_ms'] for d in domain_names]
 domain_scores = [domain_results[d]['Accuracy'] for d in domain_names]
 
 x_pos = np.arange(len(domain_names))
-bars = ax.bar(x_pos, domain_scores, width=0.45, color=[C_AURA, C_CARD, C_PURP], edgecolor='#1a202c', linewidth=1.2)
+bars = ax.bar(x_pos, domain_scores, width=0.45, color=[C_FASTWCS, C_CARD, C_PURP], edgecolor='#1a202c', linewidth=1.2)
 ax.set_xticks(x_pos)
 ax.set_xticklabels(domain_names, fontsize=10.5, fontweight='bold')
 ax.set_ylabel('Domain Matching Accuracy / Similarity (%)', fontsize=11, fontweight='bold')
-ax.set_title('Cross-Domain Generalization of AURA-Net Framework', fontsize=12, fontweight='bold', pad=8)
+ax.set_title('Cross-Domain Generalization of Fast-WCS Framework', fontsize=12, fontweight='bold', pad=8)
 ax.set_ylim(0, 115)
 ax.grid(axis='y', linestyle='--', alpha=0.7)
 
@@ -663,10 +663,10 @@ print("\n[6/6] Generating Benchmark 6: Pareto Optimal Space-Time Frontier...")
 fig, ax = plt.subplots(figsize=(7.4, 4.6), dpi=300)
 
 pareto_solvers = {
-    'AURA-Net (Ours)': {
-        'time': float(np.mean(timing_data['AURA-Net']['mean'][:4])),
-        'acc': float(np.mean(noise_data['AURA-Net']['acc'][:4])),
-        'color': C_AURA, 'marker': 'o', 'size': 140
+    'Fast-WCS (Ours)': {
+        'time': float(np.mean(timing_data['Fast-WCS']['mean'][:4])),
+        'acc': float(np.mean(noise_data['Fast-WCS']['acc'][:4])),
+        'color': C_FASTWCS, 'marker': 'o', 'size': 140
     },
     'Baseline RLX1F': {
         'time': float(np.mean(timing_data['Baseline RLX1F']['mean'][:4])),
@@ -720,18 +720,18 @@ print("\nSynthesizing Comprehensive Report Tables & Document Fill-Ins...")
 report_content = f"""# Final Report Benchmark Results & Experimental Fill-Ins
 
 **Generated Date:** {time.strftime('%Y-%m-%d %H:%M:%S')}  
-**Target Project:** Efficient 3D Kernels for Molecular Property Prediction / AURA-Net Framework  
+**Target Project:** Efficient 3D Kernels for Molecular Property Prediction / Fast-WCS Framework  
 **Validation Suite:** 5 Trials per condition, seed-controlled deterministic reproducibility basis.
 
 ---
 
 ## 1. Executive Summary of Benchmark Findings
 
-| Evaluation Metric | Baseline GNCCP (2018) | Unary Baseline | AURA-Net (Our Framework) | Demonstrated Improvement |
+| Evaluation Metric | Baseline GNCCP (2018) | Unary Baseline | Fast-WCS (Our Framework) | Demonstrated Improvement |
 | :--- | :---: | :---: | :---: | :---: |
-| **Max Problem Scalability (N=100)** | {timing_data['Baseline RLX1F']['mean'][-1]:.2f} ms | {timing_data['Unary Hungarian']['mean'][-1]:.2f} ms | **{timing_data['AURA-Net']['mean'][-1]:.2f} ms** | **{timing_data['Speedup_RLX1F'][-1]:.1f}x Acceleration** |
-| **Noise Tolerance (σ = 0.15)** | {noise_data['Baseline RLX1F']['acc'][3]:.1f}% | {noise_data['Unary Hungarian']['acc'][3]:.1f}% | **{noise_data['AURA-Net']['acc'][3]:.1f}%** | **+{noise_data['AURA-Net']['acc'][3] - noise_data['Baseline RLX1F']['acc'][3]:.1f}% Margin** |
-| **Outlier Robustness (50% Clutter)** | {outlier_data['Baseline RLX1F']['prec'][-1]:.1f}% | N/A | **{outlier_data['AURA-Net']['prec'][-1]:.1f}%** | **Zero Cardinality Error** |
+| **Max Problem Scalability (N=100)** | {timing_data['Baseline RLX1F']['mean'][-1]:.2f} ms | {timing_data['Unary Hungarian']['mean'][-1]:.2f} ms | **{timing_data['Fast-WCS']['mean'][-1]:.2f} ms** | **{timing_data['Speedup_RLX1F'][-1]:.1f}x Acceleration** |
+| **Noise Tolerance (σ = 0.15)** | {noise_data['Baseline RLX1F']['acc'][3]:.1f}% | {noise_data['Unary Hungarian']['acc'][3]:.1f}% | **{noise_data['Fast-WCS']['acc'][3]:.1f}%** | **+{noise_data['Fast-WCS']['acc'][3] - noise_data['Baseline RLX1F']['acc'][3]:.1f}% Margin** |
+| **Outlier Robustness (50% Clutter)** | {outlier_data['Baseline RLX1F']['prec'][-1]:.1f}% | N/A | **{outlier_data['Fast-WCS']['prec'][-1]:.1f}%** | **Zero Cardinality Error** |
 | **Line Search Speed (Microseconds)** | {time_grid100[2]:.1f} μs | N/A | **{time_cardano[2]:.1f} μs** | **{mean_card_speedup:.1f}x Faster** |
 | **Line Search Truncation Error** | {error_grid100[2]:.2e} | N/A | **0.00 (Machine Precision)** | **100% Exact Global Minimum** |
 | **3D Molecular RMSD (SO(3))** | Fails (>5.0 Å) | Fails | **{mol_res.rmsd:.3f} Å** | **Sub-0.1 Å Kabsch Resolution** |
@@ -742,12 +742,12 @@ report_content = f"""# Final Report Benchmark Results & Experimental Fill-Ins
 
 ### Markdown Table (For Direct Copying into Word / Google Docs):
 
-| Graph Size ($N$) | Core Size ($L$) | AURA-Net (Ours) [ms] | Baseline RLX1F [ms] | Baseline RLX2F [ms] | Unary Hungarian [ms] | Speedup vs RLX1F |
+| Graph Size ($N$) | Core Size ($L$) | Fast-WCS (Ours) [ms] | Baseline RLX1F [ms] | Baseline RLX2F [ms] | Unary Hungarian [ms] | Speedup vs RLX1F |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 """
 
 for i, N in enumerate(sizes_n):
-    t_a = timing_data['AURA-Net']['mean'][i]
+    t_a = timing_data['Fast-WCS']['mean'][i]
     t_b1 = timing_data['Baseline RLX1F']['mean'][i]
     t_b2 = timing_data['Baseline RLX2F']['mean'][i]
     t_h = timing_data['Unary Hungarian']['mean'][i]
@@ -764,12 +764,12 @@ report_content += """
 \\label{tab:scalability_benchmarks}
 \\begin{tabular}{ccccccc}
 \\toprule
-\\textbf{Nodes ($N$)} & \\textbf{Core ($L$)} & \\textbf{AURA-Net (Ours)} & \\textbf{GNCCP RLX1F} & \\textbf{GNCCP RLX2F} & \\textbf{Hungarian} & \\textbf{Speedup} \\\\
+\\textbf{Nodes ($N$)} & \\textbf{Core ($L$)} & \\textbf{Fast-WCS (Ours)} & \\textbf{GNCCP RLX1F} & \\textbf{GNCCP RLX2F} & \\textbf{Hungarian} & \\textbf{Speedup} \\\\
 \\midrule
 """
 
 for i, N in enumerate(sizes_n):
-    t_a = timing_data['AURA-Net']['mean'][i]
+    t_a = timing_data['Fast-WCS']['mean'][i]
     t_b1 = timing_data['Baseline RLX1F']['mean'][i]
     t_b2 = timing_data['Baseline RLX2F']['mean'][i]
     t_h = timing_data['Unary Hungarian']['mean'][i]
@@ -787,12 +787,12 @@ report_content += f"""\\bottomrule
 
 ### Markdown Table:
 
-| Noise Level ($\sigma$) | AURA-Net (Ours) [%] | Baseline RLX1F [%] | Baseline RLX2F [%] | Unary Hungarian [%] | Relative Improvement |
+| Noise Level ($\sigma$) | Fast-WCS (Ours) [%] | Baseline RLX1F [%] | Baseline RLX2F [%] | Unary Hungarian [%] | Relative Improvement |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 """
 
 for i, sigma in enumerate(noise_sigmas):
-    acc_a = noise_data['AURA-Net']['acc'][i]
+    acc_a = noise_data['Fast-WCS']['acc'][i]
     acc_b1 = noise_data['Baseline RLX1F']['acc'][i]
     acc_b2 = noise_data['Baseline RLX2F']['acc'][i]
     acc_h = noise_data['Unary Hungarian']['acc'][i]
@@ -809,12 +809,12 @@ report_content += """
 \\label{tab:noise_robustness}
 \\begin{tabular}{cccccc}
 \\toprule
-\\textbf{Noise ($\\sigma$)} & \\textbf{AURA-Net (Ours)} & \\textbf{GNCCP RLX1F} & \\textbf{GNCCP RLX2F} & \\textbf{Hungarian} & \\textbf{Margin} \\\\
+\\textbf{Noise ($\\sigma$)} & \\textbf{Fast-WCS (Ours)} & \\textbf{GNCCP RLX1F} & \\textbf{GNCCP RLX2F} & \\textbf{Hungarian} & \\textbf{Margin} \\\\
 \\midrule
 """
 
 for i, sigma in enumerate(noise_sigmas):
-    acc_a = noise_data['AURA-Net']['acc'][i]
+    acc_a = noise_data['Fast-WCS']['acc'][i]
     acc_b1 = noise_data['Baseline RLX1F']['acc'][i]
     acc_b2 = noise_data['Baseline RLX2F']['acc'][i]
     acc_h = noise_data['Unary Hungarian']['acc'][i]
@@ -832,12 +832,12 @@ report_content += f"""\\bottomrule
 
 ### Markdown Table:
 
-| Outlier Ratio (%) | Spurious Nodes Added | AURA-Net Precision [%] | Baseline RLX1F [%] | Baseline RLX2F [%] | Cardinality Error |
+| Outlier Ratio (%) | Spurious Nodes Added | Fast-WCS Precision [%] | Baseline RLX1F [%] | Baseline RLX2F [%] | Cardinality Error |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 """
 
 for i, pct in enumerate(outlier_pcts):
-    p_a = outlier_data['AURA-Net']['prec'][i]
+    p_a = outlier_data['Fast-WCS']['prec'][i]
     p_b1 = outlier_data['Baseline RLX1F']['prec'][i]
     p_b2 = outlier_data['Baseline RLX2F']['prec'][i]
     n_out = int(core_L * (pct / 100.0))
@@ -853,12 +853,12 @@ report_content += """
 \\label{tab:outlier_resilience}
 \\begin{tabular}{ccccc}
 \\toprule
-\\textbf{Outlier Ratio} & \\textbf{Spurious Nodes} & \\textbf{AURA-Net Precision} & \\textbf{GNCCP RLX1F} & \\textbf{Cardinality Violation} \\\\
+\\textbf{Outlier Ratio} & \\textbf{Spurious Nodes} & \\textbf{Fast-WCS Precision} & \\textbf{GNCCP RLX1F} & \\textbf{Cardinality Violation} \\\\
 \\midrule
 """
 
 for i, pct in enumerate(outlier_pcts):
-    p_a = outlier_data['AURA-Net']['prec'][i]
+    p_a = outlier_data['Fast-WCS']['prec'][i]
     p_b1 = outlier_data['Baseline RLX1F']['prec'][i]
     n_out = int(core_L * (pct / 100.0))
     report_content += f"{pct}\\% & +{n_out} & \\textbf{{{p_a:.1f}\\%}} & {p_b1:.1f}\\% & \\textbf{{0.0}} \\\\\n"
@@ -889,13 +889,13 @@ report_content += f"""
 ## 6. Report Fill-In Paragraphs (Ready to Paste Directly into Thesis / Report)
 
 ### Section: Scalability and Computational Complexity
-> *"As detailed in Table~\\ref{{tab:scalability_benchmarks}} and illustrated in Figure~1, the proposed AURA-Net optimization framework demonstrates pronounced computational acceleration over classical graduated non-convex graph matching baselines. For problem instances scaling from $N=10$ to $N=100$, AURA-Net maintains near-linear execution overhead, resolving a 100-node graph matching instance in {timing_data['AURA-Net']['mean'][-1]:.2f}~ms compared to {timing_data['Baseline RLX1F']['mean'][-1]:.2f}~ms for the baseline GNCCP RLX1F implementation. This reflects an empirical runtime acceleration of up to \\textbf{{{timing_data['Speedup_RLX1F'][-1]:.1f}$\\times$}}, driven primarily by the elimination of repeated Sinkhorn projections and the adoption of rank-one factorized gradient evaluations."*
+> *"As detailed in Table~\\ref{{tab:scalability_benchmarks}} and illustrated in Figure~1, the proposed Fast-WCS optimization framework demonstrates pronounced computational acceleration over classical graduated non-convex graph matching baselines. For problem instances scaling from $N=10$ to $N=100$, Fast-WCS maintains near-linear execution overhead, resolving a 100-node graph matching instance in {timing_data['Fast-WCS']['mean'][-1]:.2f}~ms compared to {timing_data['Baseline RLX1F']['mean'][-1]:.2f}~ms for the baseline GNCCP RLX1F implementation. This reflects an empirical runtime acceleration of up to \\textbf{{{timing_data['Speedup_RLX1F'][-1]:.1f}$\\times$}}, driven primarily by the elimination of repeated Sinkhorn projections and the adoption of rank-one factorized gradient evaluations."*
 
 ### Section: Topological Noise and Outlier Robustness
-> *"Figure~2 and Table~\\ref{{tab:noise_robustness}} depict matching fidelity under varying degrees of structural edge perturbation noise. In attributed graphs with discrete semantic categories, topology-free Hungarian matching achieves only {noise_data['Unary Hungarian']['acc'][0]:.1f}\\% accuracy as it cannot resolve intra-class permutation ambiguities. Classical GNCCP heuristic baselines saturate at {noise_data['Baseline RLX1F']['acc'][0]:.1f}\\%. In contrast, AURA-Net recovers \\textbf{{{noise_data['AURA-Net']['acc'][0]:.1f}\\%}} accuracy at baseline noise, and sustains an accuracy of \\textbf{{{noise_data['AURA-Net']['acc'][3]:.1f}\\%}} under substantial topological noise ($\\sigma = 0.15$), maintaining a \\textbf{{{noise_data['AURA-Net']['acc'][3] - noise_data['Baseline RLX1F']['acc'][3]:.1f}\\%}} margin over classical GNCCP. Furthermore, as shown in Table~\\ref{{tab:outlier_resilience}}, the introduction of our augmented Jonker-Volgenant linear oracle guarantees strict mathematical satisfaction of the exact-$L$ partial bijection constraint, completely eliminating cardinality truncation leakage across all outlier clutter regimes (0\\% to 50\\%)."*
+> *"Figure~2 and Table~\\ref{{tab:noise_robustness}} depict matching fidelity under varying degrees of structural edge perturbation noise. In attributed graphs with discrete semantic categories, topology-free Hungarian matching achieves only {noise_data['Unary Hungarian']['acc'][0]:.1f}\\% accuracy as it cannot resolve intra-class permutation ambiguities. Classical GNCCP heuristic baselines saturate at {noise_data['Baseline RLX1F']['acc'][0]:.1f}\\%. In contrast, Fast-WCS recovers \\textbf{{{noise_data['Fast-WCS']['acc'][0]:.1f}\\%}} accuracy at baseline noise, and sustains an accuracy of \\textbf{{{noise_data['Fast-WCS']['acc'][3]:.1f}\\%}} under substantial topological noise ($\\sigma = 0.15$), maintaining a \\textbf{{{noise_data['Fast-WCS']['acc'][3] - noise_data['Baseline RLX1F']['acc'][3]:.1f}\\%}} margin over classical GNCCP. Furthermore, as shown in Table~\\ref{{tab:outlier_resilience}}, the introduction of our augmented Jonker-Volgenant linear oracle guarantees strict mathematical satisfaction of the exact-$L$ partial bijection constraint, completely eliminating cardinality truncation leakage across all outlier clutter regimes (0\\% to 50\\%)."*
 
 ### Section: Analytical Step-Size Optimization via Cardano's Method
-> *"Classical graduated non-convex algorithms approximate the non-convex step size $\\lambda \\in [0, 1]$ using empirical 11-point to 100-point uniform grid discretizations, incurring substantial evaluation latency and introducing persistent gradient truncation errors. In contrast, AURA-Net computes the global minimizer of the quartic line-search subproblem $J(\\lambda)$ in closed form using Cardano's cubic root formula. As quantified in Table~IV and Figure~4, the closed-form evaluation executes in {time_cardano[2]:.1f}~$\\mu$s (an empirical acceleration of \\textbf{{{mean_card_speedup:.1f}$\\times$}} over a 100-point grid) while reducing the discretization suboptimality to machine precision ($0.00$ error)."*
+> *"Classical graduated non-convex algorithms approximate the non-convex step size $\\lambda \\in [0, 1]$ using empirical 11-point to 100-point uniform grid discretizations, incurring substantial evaluation latency and introducing persistent gradient truncation errors. In contrast, Fast-WCS computes the global minimizer of the quartic line-search subproblem $J(\\lambda)$ in closed form using Cardano's cubic root formula. As quantified in Table~IV and Figure~4, the closed-form evaluation executes in {time_cardano[2]:.1f}~$\\mu$s (an empirical acceleration of \\textbf{{{mean_card_speedup:.1f}$\\times$}} over a 100-point grid) while reducing the discretization suboptimality to machine precision ($0.00$ error)."*
 
 ---
 

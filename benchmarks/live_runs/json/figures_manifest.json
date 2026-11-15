@@ -10,7 +10,21 @@
     "paper\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
     "paper\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf",
     "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
-    "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf"
+    "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf",
+    "els-cas-templates\\figures/fig_matching_accuracy_vs_noise.png",
+    "els-cas-templates\\figures/fig_matching_accuracy_vs_noise.pdf",
+    "els-cas-templates\\figs/fig_matching_accuracy_vs_noise.png",
+    "els-cas-templates\\figs/fig_matching_accuracy_vs_noise.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_matching_accuracy_vs_noise.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_matching_accuracy_vs_noise.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf",
+    "paper_materials\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
+    "paper_materials\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf",
+    "paper_materials\\figures/fig_matching_accuracy_vs_noise.png",
+    "paper_materials\\figures/fig_matching_accuracy_vs_noise.pdf",
+    "website\\figures/fig_matching_accuracy_vs_noise.png",
+    "website\\figures/fig_matching_accuracy_vs_noise.pdf"
    ]
   },
   "fig_matching_accuracy_vs_outliers": {
@@ -23,7 +37,21 @@
     "paper\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
     "paper\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf",
     "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
-    "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf"
+    "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\figures/fig_matching_accuracy_vs_outliers.png",
+    "els-cas-templates\\figures/fig_matching_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\figs/fig_matching_accuracy_vs_outliers.png",
+    "els-cas-templates\\figs/fig_matching_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_matching_accuracy_vs_outliers.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_matching_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf",
+    "paper_materials\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
+    "paper_materials\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf",
+    "paper_materials\\figures/fig_matching_accuracy_vs_outliers.png",
+    "paper_materials\\figures/fig_matching_accuracy_vs_outliers.pdf",
+    "website\\figures/fig_matching_accuracy_vs_outliers.png",
+    "website\\figures/fig_matching_accuracy_vs_outliers.pdf"
    ]
   },
   "fig_synthetic_accuracy_vs_size": {
@@ -36,7 +64,21 @@
     "paper\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
     "paper\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf",
     "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
-    "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf"
+    "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf",
+    "els-cas-templates\\figures/fig_synthetic_accuracy_vs_size.png",
+    "els-cas-templates\\figures/fig_synthetic_accuracy_vs_size.pdf",
+    "els-cas-templates\\figs/fig_synthetic_accuracy_vs_size.png",
+    "els-cas-templates\\figs/fig_synthetic_accuracy_vs_size.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_synthetic_accuracy_vs_size.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_synthetic_accuracy_vs_size.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf",
+    "paper_materials\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
+    "paper_materials\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf",
+    "paper_materials\\figures/fig_synthetic_accuracy_vs_size.png",
+    "paper_materials\\figures/fig_synthetic_accuracy_vs_size.pdf",
+    "website\\figures/fig_synthetic_accuracy_vs_size.png",
+    "website\\figures/fig_synthetic_accuracy_vs_size.pdf"
    ]
   },
   "fig_synthetic_accuracy_vs_density": {
@@ -49,7 +91,21 @@
     "paper\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
     "paper\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf",
     "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
-    "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf"
+    "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf",
+    "els-cas-templates\\figures/fig_synthetic_accuracy_vs_density.png",
+    "els-cas-templates\\figures/fig_synthetic_accuracy_vs_density.pdf",
+    "els-cas-templates\\figs/fig_synthetic_accuracy_vs_density.png",
+    "els-cas-templates\\figs/fig_synthetic_accuracy_vs_density.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_synthetic_accuracy_vs_density.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_synthetic_accuracy_vs_density.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf",
+    "paper_materials\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
+    "paper_materials\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf",
+    "paper_materials\\figures/fig_synthetic_accuracy_vs_density.png",
+    "paper_materials\\figures/fig_synthetic_accuracy_vs_density.pdf",
+    "website\\figures/fig_synthetic_accuracy_vs_density.png",
+    "website\\figures/fig_synthetic_accuracy_vs_density.pdf"
    ]
   },
   "fig_image_accuracy_vs_outliers": {
@@ -62,7 +118,21 @@
     "paper\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
     "paper\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf",
     "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
-    "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf"
+    "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\figures/fig_image_accuracy_vs_outliers.png",
+    "els-cas-templates\\figures/fig_image_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\figs/fig_image_accuracy_vs_outliers.png",
+    "els-cas-templates\\figs/fig_image_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_image_accuracy_vs_outliers.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_image_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf",
+    "paper_materials\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
+    "paper_materials\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf",
+    "paper_materials\\figures/fig_image_accuracy_vs_outliers.png",
+    "paper_materials\\figures/fig_image_accuracy_vs_outliers.pdf",
+    "website\\figures/fig_image_accuracy_vs_outliers.png",
+    "website\\figures/fig_image_accuracy_vs_outliers.pdf"
    ]
   },
   "fig_image_accuracy_vs_size": {
@@ -75,7 +145,21 @@
     "paper\\figures\\standalone/fig_image_accuracy_vs_size.png",
     "paper\\figures\\standalone/fig_image_accuracy_vs_size.pdf",
     "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_size.png",
-    "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_size.pdf"
+    "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_size.pdf",
+    "els-cas-templates\\figures/fig_image_accuracy_vs_size.png",
+    "els-cas-templates\\figures/fig_image_accuracy_vs_size.pdf",
+    "els-cas-templates\\figs/fig_image_accuracy_vs_size.png",
+    "els-cas-templates\\figs/fig_image_accuracy_vs_size.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_image_accuracy_vs_size.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_image_accuracy_vs_size.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_image_accuracy_vs_size.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_image_accuracy_vs_size.pdf",
+    "paper_materials\\figures\\standalone/fig_image_accuracy_vs_size.png",
+    "paper_materials\\figures\\standalone/fig_image_accuracy_vs_size.pdf",
+    "paper_materials\\figures/fig_image_accuracy_vs_size.png",
+    "paper_materials\\figures/fig_image_accuracy_vs_size.pdf",
+    "website\\figures/fig_image_accuracy_vs_size.png",
+    "website\\figures/fig_image_accuracy_vs_size.pdf"
    ]
   },
   "fig_scaling_runtime_vs_n": {
@@ -88,7 +172,21 @@
     "paper\\figures\\standalone/fig_scaling_runtime_vs_n.png",
     "paper\\figures\\standalone/fig_scaling_runtime_vs_n.pdf",
     "els-cas-templates\\figures\\standalone/fig_scaling_runtime_vs_n.png",
-    "els-cas-templates\\figures\\standalone/fig_scaling_runtime_vs_n.pdf"
+    "els-cas-templates\\figures\\standalone/fig_scaling_runtime_vs_n.pdf",
+    "els-cas-templates\\figures/fig_scaling_runtime_vs_n.png",
+    "els-cas-templates\\figures/fig_scaling_runtime_vs_n.pdf",
+    "els-cas-templates\\figs/fig_scaling_runtime_vs_n.png",
+    "els-cas-templates\\figs/fig_scaling_runtime_vs_n.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_scaling_runtime_vs_n.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_scaling_runtime_vs_n.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_scaling_runtime_vs_n.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_scaling_runtime_vs_n.pdf",
+    "paper_materials\\figures\\standalone/fig_scaling_runtime_vs_n.png",
+    "paper_materials\\figures\\standalone/fig_scaling_runtime_vs_n.pdf",
+    "paper_materials\\figures/fig_scaling_runtime_vs_n.png",
+    "paper_materials\\figures/fig_scaling_runtime_vs_n.pdf",
+    "website\\figures/fig_scaling_runtime_vs_n.png",
+    "website\\figures/fig_scaling_runtime_vs_n.pdf"
    ]
   },
   "fig_speedup_factor_vs_baseline": {
@@ -101,7 +199,21 @@
     "paper\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
     "paper\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf",
     "els-cas-templates\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
-    "els-cas-templates\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf"
+    "els-cas-templates\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf",
+    "els-cas-templates\\figures/fig_speedup_factor_vs_baseline.png",
+    "els-cas-templates\\figures/fig_speedup_factor_vs_baseline.pdf",
+    "els-cas-templates\\figs/fig_speedup_factor_vs_baseline.png",
+    "els-cas-templates\\figs/fig_speedup_factor_vs_baseline.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_speedup_factor_vs_baseline.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_speedup_factor_vs_baseline.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf",
+    "paper_materials\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
+    "paper_materials\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf",
+    "paper_materials\\figures/fig_speedup_factor_vs_baseline.png",
+    "paper_materials\\figures/fig_speedup_factor_vs_baseline.pdf",
+    "website\\figures/fig_speedup_factor_vs_baseline.png",
+    "website\\figures/fig_speedup_factor_vs_baseline.pdf"
    ]
   },
   "fig_empirical_complexity_slopes": {
@@ -114,7 +226,21 @@
     "paper\\figures\\standalone/fig_empirical_complexity_slopes.png",
     "paper\\figures\\standalone/fig_empirical_complexity_slopes.pdf",
     "els-cas-templates\\figures\\standalone/fig_empirical_complexity_slopes.png",
-    "els-cas-templates\\figures\\standalone/fig_empirical_complexity_slopes.pdf"
+    "els-cas-templates\\figures\\standalone/fig_empirical_complexity_slopes.pdf",
+    "els-cas-templates\\figures/fig_empirical_complexity_slopes.png",
+    "els-cas-templates\\figures/fig_empirical_complexity_slopes.pdf",
+    "els-cas-templates\\figs/fig_empirical_complexity_slopes.png",
+    "els-cas-templates\\figs/fig_empirical_complexity_slopes.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_empirical_complexity_slopes.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_empirical_complexity_slopes.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_empirical_complexity_slopes.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_empirical_complexity_slopes.pdf",
+    "paper_materials\\figures\\standalone/fig_empirical_complexity_slopes.png",
+    "paper_materials\\figures\\standalone/fig_empirical_complexity_slopes.pdf",
+    "paper_materials\\figures/fig_empirical_complexity_slopes.png",
+    "paper_materials\\figures/fig_empirical_complexity_slopes.pdf",
+    "website\\figures/fig_empirical_complexity_slopes.png",
+    "website\\figures/fig_empirical_complexity_slopes.pdf"
    ]
   },
   "fig_cardano_vs_gridsearch_latency": {
@@ -127,7 +253,21 @@
     "paper\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
     "paper\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf",
     "els-cas-templates\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
-    "els-cas-templates\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf"
+    "els-cas-templates\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf",
+    "els-cas-templates\\figures/fig_cardano_vs_gridsearch_latency.png",
+    "els-cas-templates\\figures/fig_cardano_vs_gridsearch_latency.pdf",
+    "els-cas-templates\\figs/fig_cardano_vs_gridsearch_latency.png",
+    "els-cas-templates\\figs/fig_cardano_vs_gridsearch_latency.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_cardano_vs_gridsearch_latency.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_cardano_vs_gridsearch_latency.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf",
+    "paper_materials\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
+    "paper_materials\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf",
+    "paper_materials\\figures/fig_cardano_vs_gridsearch_latency.png",
+    "paper_materials\\figures/fig_cardano_vs_gridsearch_latency.pdf",
+    "website\\figures/fig_cardano_vs_gridsearch_latency.png",
+    "website\\figures/fig_cardano_vs_gridsearch_latency.pdf"
    ]
   },
   "fig_2opt_refinement_objective_drop": {
@@ -140,7 +280,21 @@
     "paper\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
     "paper\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf",
     "els-cas-templates\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
-    "els-cas-templates\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf"
+    "els-cas-templates\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf",
+    "els-cas-templates\\figures/fig_2opt_refinement_objective_drop.png",
+    "els-cas-templates\\figures/fig_2opt_refinement_objective_drop.pdf",
+    "els-cas-templates\\figs/fig_2opt_refinement_objective_drop.png",
+    "els-cas-templates\\figs/fig_2opt_refinement_objective_drop.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_2opt_refinement_objective_drop.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_2opt_refinement_objective_drop.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf",
+    "paper_materials\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
+    "paper_materials\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf",
+    "paper_materials\\figures/fig_2opt_refinement_objective_drop.png",
+    "paper_materials\\figures/fig_2opt_refinement_objective_drop.pdf",
+    "website\\figures/fig_2opt_refinement_objective_drop.png",
+    "website\\figures/fig_2opt_refinement_objective_drop.pdf"
    ]
   },
   "fig_rmsd_cumulative_distribution": {
@@ -153,7 +307,21 @@
     "paper\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
     "paper\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf",
     "els-cas-templates\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
-    "els-cas-templates\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf"
+    "els-cas-templates\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf",
+    "els-cas-templates\\figures/fig_rmsd_cumulative_distribution.png",
+    "els-cas-templates\\figures/fig_rmsd_cumulative_distribution.pdf",
+    "els-cas-templates\\figs/fig_rmsd_cumulative_distribution.png",
+    "els-cas-templates\\figs/fig_rmsd_cumulative_distribution.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_rmsd_cumulative_distribution.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_rmsd_cumulative_distribution.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf",
+    "paper_materials\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
+    "paper_materials\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf",
+    "paper_materials\\figures/fig_rmsd_cumulative_distribution.png",
+    "paper_materials\\figures/fig_rmsd_cumulative_distribution.pdf",
+    "website\\figures/fig_rmsd_cumulative_distribution.png",
+    "website\\figures/fig_rmsd_cumulative_distribution.pdf"
    ]
   },
   "fig_pareto_latency_vs_rmsd": {
@@ -167,12 +335,26 @@
     "paper\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
     "paper\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf",
     "els-cas-templates\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
-    "els-cas-templates\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf"
+    "els-cas-templates\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf",
+    "els-cas-templates\\figures/fig_pareto_latency_vs_rmsd.png",
+    "els-cas-templates\\figures/fig_pareto_latency_vs_rmsd.pdf",
+    "els-cas-templates\\figs/fig_pareto_latency_vs_rmsd.png",
+    "els-cas-templates\\figs/fig_pareto_latency_vs_rmsd.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_pareto_latency_vs_rmsd.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures/fig_pareto_latency_vs_rmsd.pdf",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
+    "els-cas-templates\\fastwcs_jocs_paper_package\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf",
+    "paper_materials\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
+    "paper_materials\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf",
+    "paper_materials\\figures/fig_pareto_latency_vs_rmsd.png",
+    "paper_materials\\figures/fig_pareto_latency_vs_rmsd.pdf",
+    "website\\figures/fig_pareto_latency_vs_rmsd.png",
+    "website\\figures/fig_pareto_latency_vs_rmsd.pdf"
    ]
   }
  },
  "provenance": {
-  "generated_at": "2026-11-14T23:44:59",
+  "generated_at": "2026-11-16T02:27:15",
   "python": "3.13.5",
   "platform": "Windows-11-10.0.26200-SP0",
   "cpu": "Intel64 Family 6 Model 186 Stepping 3, GenuineIntel",
@@ -203,7 +385,7 @@
    }
   ],
   "sha256": {
-   "benchmarks\\scripts\\make_standalone_figures_live.py": "f8d5ffd06866fcef5419d296a116af762806ec6bc34a5c83843799e723117344",
+   "benchmarks\\scripts\\make_standalone_figures_live.py": "bf840812613a299fe98b83947c8fac4e7f017b90979c671afebf9beaf1e88649",
    "gnccp_advanced_v3.py": "3faf0f107e955c2883c96eb9ef52778126e0a654c24a885c41e9044e23740e5c",
    "gnccp_baseline_2018.py": "966775d6809f8f47e912e88612b523e97fd416944836cc100df961c0616214a8",
    "benchmarks\\scripts\\live_common.py": "926deb2fb196c34511da0ca7329816845f20948b273e7834cff43da37eeea3c7"

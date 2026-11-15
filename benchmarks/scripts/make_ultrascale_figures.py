@@ -24,6 +24,13 @@ FIG_DIRS = [
     lc.FIG_PAPER,
     lc.FIG_BENCH,
     ROOT / "els-cas-templates" / "figures" / "standalone",
+    ROOT / "els-cas-templates" / "figures",
+    ROOT / "els-cas-templates" / "figs",
+    ROOT / "els-cas-templates" / "fastwcs_jocs_paper_package" / "figures",
+    ROOT / "els-cas-templates" / "fastwcs_jocs_paper_package" / "figures" / "standalone",
+    ROOT / "paper_materials" / "figures" / "standalone",
+    ROOT / "paper_materials" / "figures",
+    ROOT / "website" / "figures",
 ]
 for d in FIG_DIRS:
     d.mkdir(parents=True, exist_ok=True)

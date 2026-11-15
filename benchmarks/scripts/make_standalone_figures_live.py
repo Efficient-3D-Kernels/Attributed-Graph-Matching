@@ -43,7 +43,18 @@ MANIFEST = {}
 
 
 def save(fig, name, sources):
-    target_dirs = [lc.FIG_BENCH, lc.FIG_PAPER, lc.ROOT / "els-cas-templates" / "figures" / "standalone"]
+    target_dirs = [
+        lc.FIG_BENCH,
+        lc.FIG_PAPER,
+        lc.ROOT / "els-cas-templates" / "figures" / "standalone",
+        lc.ROOT / "els-cas-templates" / "figures",
+        lc.ROOT / "els-cas-templates" / "figs",
+        lc.ROOT / "els-cas-templates" / "fastwcs_jocs_paper_package" / "figures",
+        lc.ROOT / "els-cas-templates" / "fastwcs_jocs_paper_package" / "figures" / "standalone",
+        lc.ROOT / "paper_materials" / "figures" / "standalone",
+        lc.ROOT / "paper_materials" / "figures",
+        lc.ROOT / "website" / "figures",
+    ]
     for d in target_dirs:
         d.mkdir(parents=True, exist_ok=True)
         fig.savefig(d / f"{name}.png", dpi=300)
@@ -98,7 +109,7 @@ def fig_image():
     _acc_plot(df, "size", r"Graph size $M$ (real images, $N=M+5$, $L=M-5$)", "fig_image_accuracy_vs_size", src)
 
 
-GRID_METHODS = [("fast", "Fast-WCS v3 (default)"), ("rlx1f", "RLX1F (Yang 2018)"), ("rlx1", "RLX1 exact-LP (Yang 2018)")]
+GRID_METHODS = [("fast", "Fast-WCS (Ours)"), ("rlx1f", "RLX1F (Yang 2018)"), ("rlx1", "RLX1 exact-LP (Yang 2018)")]
 GRID_COL = {"fast": "#b2182b", "rlx1f": "#053061", "rlx1": "#4393c3"}
 RATIO_MK = {0.4: "o", 0.6: "s", 0.8: "^", 1.0: "D"}
 RATIO_LS = {0.4: ":", 0.6: "-.", 0.8: "--", 1.0: "-"}
@@ -117,7 +128,7 @@ def fig_grid():
             ax.plot(g.N, g[f"{key}_ms_median"], color=GRID_COL[key], marker=RATIO_MK[r], ls=RATIO_LS[r], lw=1.1, ms=3.2)
             ax.fill_between(g.N, g[f"{key}_ms_q25"], g[f"{key}_ms_q75"], color=GRID_COL[key], alpha=0.08, lw=0)
     ax.set_yscale("log"); ax.set_xlabel(r"Graph size $N$ ($M=N$)"); ax.set_ylabel("Wall-clock runtime (ms)")
-    h1 = [plt.Line2D([], [], color=GRID_COL[k], lw=1.6, label=l.replace(" (Yang 2018)", "")) for k, l in GRID_METHODS]
+    h1 = [plt.Line2D([], [], color=GRID_COL[k], lw=1.6, label=l.replace(" (Yang 2018)", "")) for key, l in GRID_METHODS for k in [key]]
     h2 = [plt.Line2D([], [], color="0.3", marker=RATIO_MK[r], ls=RATIO_LS[r], lw=1, label=f"$L/N={r:.1f}$") for r in sorted(RATIO_MK)]
     l1 = ax.legend(handles=h1, loc="upper left", frameon=False)
     ax.add_artist(l1)
@@ -130,7 +141,7 @@ def fig_grid():
         ax.plot(g.N, g.speedup_vs_rlx1f_median, color="#053061", marker=RATIO_MK[r], ls=RATIO_LS[r], ms=3.2, lw=1.1)
         ax.plot(g.N, g.speedup_vs_rlx1_median, color="#4393c3", marker=RATIO_MK[r], ls=RATIO_LS[r], ms=3.2, lw=1.1)
     ax.axhline(1.0, color="0.4", lw=0.7)
-    ax.set_yscale("log"); ax.set_xlabel(r"Graph size $N$ ($M=N$)"); ax.set_ylabel("Speed-up of Fast-WCS v3 (median, ×)")
+    ax.set_yscale("log"); ax.set_xlabel(r"Graph size $N$ ($M=N$)"); ax.set_ylabel("Speed-up of Fast-WCS (median, ×)")
     h1 = [plt.Line2D([], [], color="#053061", lw=1.6, label="vs. RLX1F"), plt.Line2D([], [], color="#4393c3", lw=1.6, label="vs. RLX1 (exact LP)")]
     l1 = ax.legend(handles=h1, loc="upper left", frameon=False); ax.add_artist(l1)
     ax.legend(handles=h2, loc="lower right", frameon=False, ncol=2)
@@ -191,7 +202,7 @@ def fig_ablation():
 
 
 STYLE3D = {
-    "Fast-WCS v3 hierarchical": ("#d62728", "-", 2.4, "Fast-WCS v3 (Hierarchical, Ours)"),
+    "Fast-WCS v3 hierarchical": ("#d62728", "-", 2.4, "Fast-WCS (Hierarchical, Ours)"),
     "IPFP + Kabsch": ("#8c564b", "--", 1.3, "IPFP + Kabsch"),
     "RRWM + Kabsch": ("#9467bd", ":", 1.4, "RRWM + Kabsch"),
     "FGW (eps=1e-2) + Kabsch": ("#ff7f0e", "-.", 1.3, "FGW (eps=1e-2) + Kabsch"),

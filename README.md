@@ -27,7 +27,7 @@ The final camera-ready 20-page manuscript, complete LaTeX source, and publicatio
 
 Below is the complete index of all core mathematical solvers, domain-specific engines, benchmarking suites, and interactive web tools:
 
-### 1. Core Fast-WCS / AURA-Net Optimization Engines
+### 1. Core Fast-WCS / Fast-WCS Optimization Engines
 | File Name | File Path | Core Responsibility |
 | :--- | :--- | :--- |
 | `fastwcs_solver.py` | [`fastwcs_solver.py`](fastwcs_solver.py) | **Master Solver Factory:** Unified entrypoint `get_solver(domain)` exposing plug-and-play interfaces for synthetic, vision, social, and molecular domains. |
@@ -118,7 +118,7 @@ Or import the repository directly via the [Vercel Dashboard](https://vercel.com/
 
 ## 📊 Summary of Theoretical & Algorithmic Results
 
-| Metric / Innovation | Classical GNCCP (2018) | Fast-WCS / AURA-Net (Ours) | Advantage |
+| Metric / Innovation | Classical GNCCP (2018) | Fast-WCS / Fast-WCS (Ours) | Advantage |
 | :--- | :--- | :--- | :--- |
 | **Tensor Space Complexity** | $\mathcal{O}(N^4)$ Kronecker tensor | $\mathcal{O}(N^2)$ Rank-one factorization | **Eliminates memory bottleneck** ($<4$ MB footprint) |
 | **Gradient Computation** | $\mathcal{O}(N^4)$ tensor contraction | $\Theta(N^3)$ via 3 Level-3 BLAS GEMMs | **Machine precision exactness** ($\epsilon_{\text{mach}} \approx 10^{-16}$) |
