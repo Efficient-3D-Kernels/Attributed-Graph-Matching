@@ -43,13 +43,14 @@ MANIFEST = {}
 
 
 def save(fig, name, sources):
-    for d in (lc.FIG_BENCH, lc.FIG_PAPER):
+    target_dirs = [lc.FIG_BENCH, lc.FIG_PAPER, lc.ROOT / "els-cas-templates" / "figures" / "standalone"]
+    for d in target_dirs:
         d.mkdir(parents=True, exist_ok=True)
         fig.savefig(d / f"{name}.png", dpi=300)
         fig.savefig(d / f"{name}.pdf")
     plt.close(fig)
     MANIFEST[name] = {"sources": {str(Path(s).relative_to(lc.ROOT)): lc.sha256(Path(s)) for s in sources},
-                      "outputs": [f"{d.relative_to(lc.ROOT)}/{name}.{e}" for d in (lc.FIG_BENCH, lc.FIG_PAPER) for e in ("png", "pdf")]}
+                      "outputs": [f"{d.relative_to(lc.ROOT)}/{name}.{e}" for d in target_dirs for e in ("png", "pdf")]}
     print("figure", name, flush=True)
 
 
@@ -62,9 +63,14 @@ def _acc_plot(df, scen, xlabel, name, src, legend_cols=1):
             continue
         c, mk, ls, lw, z, lab = STYLE[m]
         is_ours = "Fast-WCS" in m
-        ax.plot(g.x, g.acc_mean, color=c, marker=mk, ls=ls, lw=lw, ms=5.5 if is_ours else 4.0, zorder=z, label=lab)
-        if is_ours:
-            ax.fill_between(g.x, g.acc_ci95_lo, g.acc_ci95_hi, color=c, alpha=0.12, lw=0, zorder=z - 1)
+        if is_ours and "acc_ci95_lo" in g.columns and "acc_ci95_hi" in g.columns:
+            y_lo = np.clip(g.acc_mean.values - g.acc_ci95_lo.values, 0, None)
+            y_hi = np.clip(g.acc_ci95_hi.values - g.acc_mean.values, 0, None)
+            ax.errorbar(g.x, g.acc_mean, yerr=[y_lo, y_hi], fmt=mk, color=c, ecolor=c,
+                        elinewidth=1.1, capsize=3.5, capthick=1.2, ls=ls, lw=lw,
+                        ms=5.5, zorder=z, label=lab)
+        else:
+            ax.plot(g.x, g.acc_mean, color=c, marker=mk, ls=ls, lw=lw, ms=4.0, zorder=z, label=lab)
     ax.set_xlabel(xlabel, fontweight="bold")
     ax.set_ylabel("Matching accuracy (%)", fontweight="bold")
     ax.set_ylim(-2, 104)

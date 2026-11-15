@@ -22,7 +22,7 @@ import make_paper_tables_live as T  # noqa: E402  (naming maps and number format
 
 ROOT = Path(__file__).resolve().parents[2]
 CSV = ROOT / "benchmarks" / "live_runs" / "csv"
-PAPER = ROOT / "paper"
+PAPER = ROOT / "paper_materials" if (ROOT / "paper_materials").exists() else ROOT / "paper"
 
 
 for _name in ("f_acc", "f_ms", "f_x", "f_rmsd"):

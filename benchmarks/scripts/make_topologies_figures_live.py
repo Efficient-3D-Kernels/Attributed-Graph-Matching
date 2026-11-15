@@ -23,8 +23,13 @@ sys.path.insert(0, str(ROOT))
 import live_common as lc
 
 CSV_RESULTS = lc.LIVE / "csv" / "topologies_results.csv"
-FIG_DIR = lc.FIG_PAPER
-FIG_DIR.mkdir(parents=True, exist_ok=True)
+FIG_DIRS = [
+    lc.FIG_PAPER,
+    lc.FIG_BENCH,
+    ROOT / "els-cas-templates" / "figures" / "standalone",
+]
+for d in FIG_DIRS:
+    d.mkdir(parents=True, exist_ok=True)
 TABLE_DIR = ROOT / "paper" / "live"
 TABLE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -61,12 +66,15 @@ def plot_sweep(df: pd.DataFrame, scenario: str, x_col: str, xlabel: str, out_nam
                 continue
             xs = m_sub[x_col].values
             ys = m_sub["acc_mean"].values
-            y_err_lo = ys - m_sub["acc_ci95_lo"].values
-            y_err_hi = m_sub["acc_ci95_hi"].values - ys
-            ax.plot(xs, ys, color=st["color"], marker=st["marker"], lw=st["lw"], ms=st["ms"],
-                    ls=st["ls"], label=st["label"], zorder=st["zorder"])
-            ax.fill_between(xs, m_sub["acc_ci95_lo"].values, m_sub["acc_ci95_hi"].values,
-                            color=st["color"], alpha=0.1, zorder=st["zorder"]-1)
+            y_err_lo = np.clip(ys - m_sub["acc_ci95_lo"].values, 0, None)
+            y_err_hi = np.clip(m_sub["acc_ci95_hi"].values - ys, 0, None)
+            ax.errorbar(
+                xs, ys, yerr=[y_err_lo, y_err_hi],
+                fmt=st["marker"], color=st["color"], ecolor=st["color"],
+                elinewidth=1.1, capsize=3.5, capthick=1.2,
+                ls=st["ls"], lw=st["lw"], ms=st["ms"],
+                label=st["label"], zorder=st["zorder"],
+            )
             
         ax.set_title(TOPO_TITLES[topo], fontsize=11, fontweight="bold", pad=8)
         ax.set_xlabel(xlabel, fontsize=10)
@@ -83,12 +91,13 @@ def plot_sweep(df: pd.DataFrame, scenario: str, x_col: str, xlabel: str, out_nam
     plt.tight_layout()
     fig.subplots_adjust(bottom=0.22)
     
-    pdf_path = FIG_DIR / f"{out_name}.pdf"
-    png_path = FIG_DIR / f"{out_name}.png"
-    fig.savefig(pdf_path, dpi=300, bbox_inches="tight")
-    fig.savefig(png_path, dpi=300, bbox_inches="tight")
+    for d in FIG_DIRS:
+        pdf_path = d / f"{out_name}.pdf"
+        png_path = d / f"{out_name}.png"
+        fig.savefig(pdf_path, dpi=300, bbox_inches="tight")
+        fig.savefig(png_path, dpi=300, bbox_inches="tight")
+        print(f"Saved figure to {pdf_path} and {png_path}", flush=True)
     plt.close(fig)
-    print(f"Saved figure to {pdf_path} and {png_path}", flush=True)
 
 
 def make_latex_table(df: pd.DataFrame):

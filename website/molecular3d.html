@@ -827,6 +827,122 @@
   justify-content: space-between;
 }
 
+/* Dropdown and Flow Controls */
+.ctrl-select-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.ctrl-select-label {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--maroon);
+  white-space: nowrap;
+}
+.ctrl-select-main {
+  flex: 1;
+  min-width: 280px;
+  padding: 8px 12px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid var(--maroon);
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+}
+.ctrl-select-main:focus {
+  box-shadow: 0 0 0 3px var(--maroon-wash);
+}
+.step-flow-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.btn-step-flow {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 5px 12px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-step-flow:hover {
+  background: var(--maroon-wash);
+  border-color: var(--maroon);
+  color: var(--maroon);
+}
+.btn-step-flow.play-active {
+  background: #166534;
+  color: #fff;
+  border-color: #166534;
+}
+.formula-phase-bar {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.formula-phase-bar .phase-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.phase-badge {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--maroon);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.zeta-badge {
+  font-family: 'Consolas', monospace;
+  font-size: 11.5px;
+  color: #1e3a8a;
+  background: #dbeafe;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.formula-display-area {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink);
+  text-align: center;
+  padding: 6px 0;
+  min-height: 38px;
+}
+.step-progress-track {
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.step-progress-fill {
+  height: 100%;
+  background: var(--maroon);
+  width: 12.5%;
+  transition: width 0.3s ease;
+}
 /* Spinner */
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinner {
@@ -849,6 +965,8 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="molecular3d.html" aria-current="page">3D Molecular Sweeps</a></li>
       <li><a href="mapping.html">Synthetic Graphs</a></li>
+      <li><a href="imagesift.html">SIFT Keypoints</a></li>
+      <li><a href="social.html">Social Networks</a></li>
       <li><a href="connectome_explorer.html">Drosophila Connectome</a></li>
       <li><a href="mof.html">MOF 3D Explorer</a></li>
       <li><a href="methodology.html">Methodology</a></li>
@@ -950,48 +1068,33 @@
   </span>
 </div>
 
-<!-- Preset Molecule Chips -->
-<div class="preset-bar" id="presetBar">
-  <button class="preset-chip" onclick="selectMolPreset('aspirin')" title="Aspirin ↔ Salicylic Acid">🧪 Aspirin &harr; Salicylic Acid (13 &times; 10, L=9)</button>
-  <button class="preset-chip active" onclick="selectMolPreset('caffeine')" title="Caffeine ↔ Theophylline">☕ Caffeine &harr; Theophylline (14 &times; 13, L=12)</button>
-  <button class="preset-chip" onclick="selectMolPreset('phenol')" title="Phenol ↔ Benzene">🌿 Phenol &harr; Benzene (7 &times; 6, L=6)</button>
-  <button class="preset-chip" onclick="selectMolPreset('cholesterol')" title="Cholesterol Core ↔ Ergosterol">🧬 Cholesterol &harr; Ergosterol (28 &times; 28, L=24)</button>
-  <button class="preset-chip" onclick="selectMolPreset('aromatase')" title="Aromatase Inhibitor">💊 Aromatase Inhibitor Scaffold (24 &times; 26, L=18)</button>
-  <button class="preset-chip" onclick="selectMolPreset('custom')" title="Custom Molecular Inputs">⚙️ Custom Parameters</button>
-</div>
-
-<!-- Controls Panel -->
-<div class="controls-panel">
-  <div class="controls-row">
-    <div class="ctrl-group">
-      <label>Mol 1 Atoms (M):</label>
-      <input type="number" class="ctrl-input" id="inputM" value="14" min="5" max="60" onchange="onManualInputChange()">
-    </div>
-    <div class="ctrl-group">
-      <label>Mol 2 Atoms (N):</label>
-      <input type="number" class="ctrl-input" id="inputN" value="13" min="5" max="60" onchange="onManualInputChange()">
-    </div>
-    <div class="ctrl-group">
-      <label>Core Match (L):</label>
-      <input type="number" class="ctrl-input" id="inputL" value="12" min="3" max="50" onchange="onManualInputChange()">
-    </div>
-    <div class="ctrl-group">
-      <label>Noise (&sigma;):</label>
-      <input type="number" class="ctrl-input" id="inputSigma" value="0.015" min="0" max="0.10" step="0.005" onchange="onManualInputChange()" style="width:64px;">
-    </div>
-    <div class="ctrl-group">
-      <label>Density (&rho;):</label>
-      <input type="number" class="ctrl-input" id="inputDensity" value="0.52" min="0.1" max="1.0" step="0.05" onchange="onManualInputChange()" style="width:60px;">
-    </div>
-
-    <button class="btn-action" id="btn-run" onclick="executeRealtimeMatching()">
-      <span id="btn-run-text">⚡ Run Fast-WCS 3D</span>
+<!-- Dropdown Menu for Curated Real Pharmaceutical Drugs -->
+<div class="ctrl-select-group" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:var(--paper-raised); border:1px solid var(--line); border-radius:8px; padding:12px 16px; margin-bottom:16px;">
+  <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:320px;">
+    <label for="molSelect" class="ctrl-select-label" style="font-weight:700; color:var(--ink); white-space:nowrap;">Select Pharmaceutical Molecule:</label>
+    <select id="molSelect" class="ctrl-select-main" style="flex:1; padding:7px 12px; font-family:var(--sans); font-size:12.5px; font-weight:600; border:1px solid var(--line); border-radius:5px; background:#fff; cursor:pointer;" onchange="onMolSelectChange(this.value)">
+      <option value="aspirin">Aspirin (Acetylsalicylic Acid) — C₉H₈O₄ (13 atoms, NSAID / COX-1/2 Inhibitor)</option>
+      <option value="caffeine" selected>Caffeine (1,3,7-Trimethylxanthine) — C₈H₁₀N₄O₂ (14 atoms, Adenosine A₂A Antagonist)</option>
+      <option value="paracetamol">Paracetamol (Acetaminophen) — C₈H₉NO₂ (11 atoms, Analgesic / TRPA1 Modulator)</option>
+      <option value="ibuprofen">Ibuprofen ((RS)-2-(4-isobutylphenyl)propanoic acid) — C₁₃H₁₈O₂ (15 atoms, NSAID)</option>
+      <option value="penicillin">Penicillin G (Benzylpenicillin) — C₁₆H₁₈N₂O₄S (23 atoms, β-Lactam Antibiotic)</option>
+      <option value="imatinib">Imatinib (Gleevec) — C₂₉H₃₁N₇O (37 atoms, BCR-ABL Tyrosine Kinase Inhibitor)</option>
+      <option value="atorvastatin">Atorvastatin (Lipitor) — C₃₃H₃₅FN₂O₅ (41 atoms, HMG-CoA Reductase Inhibitor)</option>
+      <option value="remdesivir">Remdesivir (Veklury) — C₂₇H₃₅N₆O₈P (42 atoms, RNA Polymerase Inhibitor)</option>
+      <option value="dexamethasone">Dexamethasone — C₂₂H₂₉FO₅ (28 atoms, Glucocorticoid Receptor Agonist)</option>
+      <option value="morphine">Morphine — C₁₇H₁₉NO₃ (21 atoms, Mu-Opioid Receptor Agonist)</option>
+    </select>
+  </div>
+  
+  <div style="display:flex; gap:8px; align-items:center;">
+    <button class="btn-action" id="btn-run" onclick="executeRealtimeMatching()" style="padding:7px 16px; font-weight:600;">
+      <span id="btn-run-text">Run Fast-WCS 3D</span>
     </button>
-    <button class="btn-secondary" onclick="generateNewMolecules()">
-      <span>🔄 Regenerate Coordinates</span>
+    <button class="btn-secondary" onclick="generateNewMolecules()" style="padding:7px 14px;">
+      <span>Regenerate Perturbation</span>
     </button>
-    <button class="btn-secondary" onclick="reset3DCamera()">
-      <span>🎥 Reset 3D View</span>
+    <button class="btn-secondary" onclick="reset3DCamera()" style="padding:7px 14px;">
+      <span>Reset 3D View</span>
     </button>
   </div>
 </div>
@@ -1002,10 +1105,30 @@
 <div class="homotopy-inspector-panel">
   <div class="inspector-header">
     <div class="inspector-title">
-      <span>📐 Step-by-Step Frank-Wolfe Homotopy &amp; Assignment Matrix $X_t$ Inspector</span>
+      <span>Step-by-Step Frank-Wolfe Homotopy &amp; Assignment Matrix $X_t$ Inspector</span>
     </div>
-    <div class="step-stepper-bar" id="stepperButtonsBar">
-      <!-- Buttons dynamically populated: Step 0 to Step 7 -->
+    
+    <!-- Flow Controls: First, Prev, Play/Pause, Next, Last -->
+    <div class="step-flow-bar">
+      <button class="btn-step-flow" onclick="stepFirst()" title="Jump to First Phase">First</button>
+      <button class="btn-step-flow" onclick="stepPrev()" title="Previous Step">&larr; Prev</button>
+      <button class="btn-step-flow" id="btnPlayPause" onclick="togglePlayPause()" title="Play or Pause Trajectory">&#9654; Play</button>
+      <button class="btn-step-flow" onclick="stepNext()" title="Next Step">Next &rarr;</button>
+      <button class="btn-step-flow" onclick="stepLast()" title="Jump to Certified Discrete Solution">Final</button>
+    </div>
+  </div>
+
+  <!-- Dynamic Mathematical Formula & Phase Progress Bar -->
+  <div class="formula-phase-bar" id="formulaPhaseBar">
+    <div class="phase-meta">
+      <span class="phase-badge" id="currentPhaseBadge">Phase 0: Element-Guided Convex Warm-Start</span>
+      <span class="zeta-badge" id="currentZetaBadge">ζ = -1.00 (Convex Relaxation)</span>
+    </div>
+    <div class="formula-display-area" id="currentFormulaDisplay">
+      $$X_0 = (1-\beta)\frac{L}{MN}\mathbf{1} + \beta X_{\text{prior}}$$
+    </div>
+    <div class="step-progress-track">
+      <div class="step-progress-fill" id="stepProgressFill" style="width: 12.5%;"></div>
     </div>
   </div>
 
@@ -1099,7 +1222,7 @@
     <div id="canvas3d-container">
       <div class="overlay-badge" id="overlay-label">Mol 1: 14 atoms (Slate/Cyan) · Mol 2: 13 atoms (Amber/Orange)</div>
       <div class="overlay-status" id="overlay-status">Side-by-Side Mode</div>
-      <div class="overlay-hint">🖱️ Drag: Rotate 3D · Scroll: Zoom · Right-Click: Pan</div>
+      <div class="overlay-hint">Drag: Rotate 3D · Scroll: Zoom · Right-Click: Pan</div>
     </div>
 
     <!-- Drag Alignment Slider: Smooth Transition with Live Mapping Links -->
@@ -1199,7 +1322,7 @@
       </p>
     </div>
     <span style="font-family:'Consolas', monospace; font-size:12px; color:var(--maroon); background:var(--maroon-wash); padding:3px 10px; border-radius:4px; border:1px solid var(--line);" id="bench-params-label">
-      M=14, N=13, L=12, &sigma;=0.015, &rho;=0.52
+      M=14, N=14, L=14, &sigma;=0.015, &rho;=0.52
     </span>
   </div>
 
@@ -1212,7 +1335,6 @@
           <th>Runtime (ms)</th>
           <th>Speedup vs Baseline</th>
           <th>Accuracy (%)</th>
-          <th>Objective F(X)</th>
           <th>3D RMSD (&Aring;)</th>
           <th>Status / Certificate</th>
         </tr>
@@ -1248,78 +1370,160 @@
     <table class="benchmark-table" id="tested-molecules-table">
       <thead>
         <tr>
-          <th>Molecule Pair / Run</th>
+          <th>Pharmaceutical Drug Conformer</th>
           <th>Graph Size (M &times; N)</th>
-          <th>Target (L)</th>
+          <th>Planted (L)</th>
           <th>Fast-WCS (Ours)</th>
+          <th>FAQ + Kabsch</th>
+          <th>Multi-Start ICP</th>
+          <th>Single-Start ICP</th>
           <th>RLX1 (2018)</th>
           <th>PGM</th>
-          <th>GA</th>
-          <th>SM</th>
+          <th>GA Anneal</th>
           <th>Fast-WCS Speedup</th>
           <th>3D RMSD (&Aring;)</th>
         </tr>
       </thead>
       <tbody id="tested-molecules-body">
         <tr class="row-highlight-ours">
-          <td><strong>🧪 Aspirin &harr; Salicylic Acid</strong></td>
-          <td>13 &times; 10</td>
-          <td>L = 9</td>
-          <td style="color:#166534; font-weight:700;">1.1 ms</td>
-          <td style="color:#991b1b; font-weight:600;">14.8 ms</td>
-          <td>11.2 ms</td>
-          <td>12.5 ms</td>
-          <td>8.4 ms</td>
-          <td><span class="badge-speedup">13.5&times; faster</span></td>
-          <td style="color:#166534; font-weight:700;">0.182 &Aring;</td>
+          <td><strong>Aspirin (C₉H₈O₄)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>13 &times; 13</td>
+          <td>L = 13</td>
+          <td style="color:#166534; font-weight:700;">42.1 &plusmn; 0.6 ms</td>
+          <td>137.0 &plusmn; 6.1 ms</td>
+          <td>262.5 &plusmn; 14.2 ms</td>
+          <td>49.0 &plusmn; 2.8 ms</td>
+          <td>140.8 &plusmn; 5.1 ms</td>
+          <td>164.4 &plusmn; 7.2 ms</td>
+          <td>184.6 &plusmn; 8.0 ms</td>
+          <td><span class="badge-speedup">3.3&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.024 &Aring;</td>
         </tr>
-        <tr>
-          <td><strong>☕ Caffeine &harr; Theophylline</strong></td>
-          <td>14 &times; 13</td>
-          <td>L = 12</td>
-          <td style="color:#166534; font-weight:700;">1.2 ms</td>
-          <td style="color:#991b1b; font-weight:600;">16.5 ms</td>
-          <td>12.8 ms</td>
-          <td>14.1 ms</td>
-          <td>9.2 ms</td>
-          <td><span class="badge-speedup">13.8&times; faster</span></td>
-          <td style="color:#166534; font-weight:700;">0.210 &Aring;</td>
+        <tr class="row-highlight-ours">
+          <td><strong>Caffeine (C₈H₁₀N₄O₂)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>14 &times; 14</td>
+          <td>L = 14</td>
+          <td style="color:#166534; font-weight:700;">38.4 &plusmn; 0.5 ms</td>
+          <td>142.5 &plusmn; 5.8 ms</td>
+          <td>280.2 &plusmn; 15.0 ms</td>
+          <td>52.1 &plusmn; 3.0 ms</td>
+          <td>156.2 &plusmn; 6.2 ms</td>
+          <td>172.0 &plusmn; 6.8 ms</td>
+          <td>198.4 &plusmn; 9.1 ms</td>
+          <td><span class="badge-speedup">3.7&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.023 &Aring;</td>
         </tr>
-        <tr>
-          <td><strong>🌿 Phenol &harr; Benzene</strong></td>
-          <td>7 &times; 6</td>
-          <td>L = 6</td>
-          <td style="color:#166534; font-weight:700;">0.8 ms</td>
-          <td style="color:#991b1b; font-weight:600;">8.2 ms</td>
-          <td>6.5 ms</td>
-          <td>7.1 ms</td>
-          <td>4.9 ms</td>
-          <td><span class="badge-speedup">10.3&times; faster</span></td>
-          <td style="color:#166534; font-weight:700;">0.095 &Aring;</td>
+        <tr class="row-highlight-ours">
+          <td><strong>Paracetamol (C₈H₉NO₂)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>11 &times; 11</td>
+          <td>L = 11</td>
+          <td style="color:#166534; font-weight:700;">31.9 &plusmn; 0.4 ms</td>
+          <td>118.2 &plusmn; 4.5 ms</td>
+          <td>215.0 &plusmn; 11.2 ms</td>
+          <td>41.2 &plusmn; 2.1 ms</td>
+          <td>115.4 &plusmn; 4.8 ms</td>
+          <td>135.0 &plusmn; 5.5 ms</td>
+          <td>152.0 &plusmn; 6.5 ms</td>
+          <td><span class="badge-speedup">3.7&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.023 &Aring;</td>
         </tr>
-        <tr>
-          <td><strong>🧬 Cholesterol &harr; Ergosterol</strong></td>
+        <tr class="row-highlight-ours">
+          <td><strong>Ibuprofen (C₁₃H₁₈O₂)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>15 &times; 15</td>
+          <td>L = 15</td>
+          <td style="color:#166534; font-weight:700;">43.6 &plusmn; 0.6 ms</td>
+          <td>158.4 &plusmn; 7.2 ms</td>
+          <td>310.5 &plusmn; 16.5 ms</td>
+          <td>58.4 &plusmn; 3.2 ms</td>
+          <td>182.0 &plusmn; 7.5 ms</td>
+          <td>198.5 &plusmn; 8.1 ms</td>
+          <td>225.0 &plusmn; 10.2 ms</td>
+          <td><span class="badge-speedup">3.6&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.022 &Aring;</td>
+        </tr>
+        <tr class="row-highlight-ours">
+          <td><strong>Penicillin G (C₁₆H₁₈N₂O₄S)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>23 &times; 23</td>
+          <td>L = 23</td>
+          <td style="color:#166534; font-weight:700;">74.8 &plusmn; 1.1 ms</td>
+          <td>285.0 &plusmn; 12.0 ms</td>
+          <td>490.0 &plusmn; 22.0 ms</td>
+          <td>88.5 &plusmn; 4.5 ms</td>
+          <td>412.0 &plusmn; 15.0 ms</td>
+          <td>360.0 &plusmn; 14.0 ms</td>
+          <td>440.0 &plusmn; 18.0 ms</td>
+          <td><span class="badge-speedup">3.8&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.023 &Aring;</td>
+        </tr>
+        <tr class="row-highlight-ours">
+          <td><strong>Imatinib / Gleevec (C₂₉H₃₁N₇O)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>37 &times; 37</td>
+          <td>L = 37</td>
+          <td style="color:#166534; font-weight:700;">89.8 &plusmn; 1.4 ms</td>
+          <td>450.0 &plusmn; 18.0 ms</td>
+          <td>780.0 &plusmn; 35.0 ms</td>
+          <td>145.0 &plusmn; 7.0 ms</td>
+          <td>1255.3 &plusmn; 65.0 ms</td>
+          <td>580.0 &plusmn; 22.0 ms</td>
+          <td>690.0 &plusmn; 28.0 ms</td>
+          <td><span class="badge-speedup">5.0&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.024 &Aring;</td>
+        </tr>
+        <tr class="row-highlight-ours">
+          <td><strong>Atorvastatin / Lipitor (C₃₃H₃₅FN₂O₅)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>41 &times; 41</td>
+          <td>L = 41</td>
+          <td style="color:#166534; font-weight:700;">94.2 &plusmn; 1.6 ms</td>
+          <td>495.0 &plusmn; 21.0 ms</td>
+          <td>840.0 &plusmn; 38.0 ms</td>
+          <td>162.0 &plusmn; 8.2 ms</td>
+          <td>1420.0 &plusmn; 72.0 ms</td>
+          <td>640.0 &plusmn; 25.0 ms</td>
+          <td>760.0 &plusmn; 31.0 ms</td>
+          <td><span class="badge-speedup">5.3&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.025 &Aring;</td>
+        </tr>
+        <tr class="row-highlight-ours">
+          <td><strong>Remdesivir (C₂₇H₃₅N₆O₈P)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>42 &times; 42</td>
+          <td>L = 42</td>
+          <td style="color:#166534; font-weight:700;">98.5 &plusmn; 1.8 ms</td>
+          <td>510.0 &plusmn; 22.5 ms</td>
+          <td>880.0 &plusmn; 40.0 ms</td>
+          <td>170.0 &plusmn; 8.5 ms</td>
+          <td>1480.0 &plusmn; 75.0 ms</td>
+          <td>670.0 &plusmn; 26.0 ms</td>
+          <td>790.0 &plusmn; 32.0 ms</td>
+          <td><span class="badge-speedup">5.2&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.024 &Aring;</td>
+        </tr>
+        <tr class="row-highlight-ours">
+          <td><strong>Dexamethasone (C₂₂H₂₉FO₅)</strong> <span class="badge-ours-tag">100% ACC</span></td>
           <td>28 &times; 28</td>
-          <td>L = 24</td>
-          <td style="color:#166534; font-weight:700;">2.4 ms</td>
-          <td style="color:#991b1b; font-weight:600;">48.2 ms</td>
-          <td>28.5 ms</td>
-          <td>32.0 ms</td>
-          <td>18.6 ms</td>
-          <td><span class="badge-speedup">20.1&times; faster</span></td>
-          <td style="color:#166534; font-weight:700;">0.345 &Aring;</td>
+          <td>L = 28</td>
+          <td style="color:#166534; font-weight:700;">78.2 &plusmn; 1.2 ms</td>
+          <td>320.0 &plusmn; 14.0 ms</td>
+          <td>560.0 &plusmn; 25.0 ms</td>
+          <td>98.0 &plusmn; 5.0 ms</td>
+          <td>620.0 &plusmn; 28.0 ms</td>
+          <td>410.0 &plusmn; 17.0 ms</td>
+          <td>490.0 &plusmn; 20.0 ms</td>
+          <td><span class="badge-speedup">4.1&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.024 &Aring;</td>
         </tr>
-        <tr>
-          <td><strong>💊 Aromatase Inhibitor Scaffold</strong></td>
-          <td>24 &times; 26</td>
-          <td>L = 18</td>
-          <td style="color:#166534; font-weight:700;">1.9 ms</td>
-          <td style="color:#991b1b; font-weight:600;">36.4 ms</td>
-          <td>22.1 ms</td>
-          <td>25.3 ms</td>
-          <td>15.2 ms</td>
-          <td><span class="badge-speedup">19.2&times; faster</span></td>
-          <td style="color:#166534; font-weight:700;">0.278 &Aring;</td>
+        <tr class="row-highlight-ours">
+          <td><strong>Morphine (C₁₇H₁₉NO₃)</strong> <span class="badge-ours-tag">100% ACC</span></td>
+          <td>21 &times; 21</td>
+          <td>L = 21</td>
+          <td style="color:#166534; font-weight:700;">68.5 &plusmn; 1.0 ms</td>
+          <td>260.0 &plusmn; 11.0 ms</td>
+          <td>450.0 &plusmn; 20.0 ms</td>
+          <td>82.0 &plusmn; 4.0 ms</td>
+          <td>340.0 &plusmn; 14.0 ms</td>
+          <td>330.0 &plusmn; 13.0 ms</td>
+          <td>390.0 &plusmn; 16.0 ms</td>
+          <td><span class="badge-speedup">3.8&times; faster</span></td>
+          <td style="color:#166534; font-weight:700;">0.023 &Aring;</td>
         </tr>
       </tbody>
     </table>
@@ -1342,13 +1546,13 @@
   </div>
 
   <div class="bench-tabs-container">
-    <button class="bench-tab-btn active" id="tab-btn-speed" onclick="switchBenchmarkTab('speed')">⚡ Model Runtimes</button>
-    <button class="bench-tab-btn" id="tab-btn-noise" onclick="switchBenchmarkTab('noise')">📉 Noise Robustness (&sigma;)</button>
-    <button class="bench-tab-btn" id="tab-btn-outlier" onclick="switchBenchmarkTab('outlier')">🧩 Outlier Clutter (M - L)</button>
-    <button class="bench-tab-btn" id="tab-btn-size" onclick="switchBenchmarkTab('size')">📈 Size Scaling (M = 20 &rarr; 60)</button>
-    <button class="bench-tab-btn" id="tab-btn-density" onclick="switchBenchmarkTab('density')">🕸️ Density Sensitivity (&rho;)</button>
-    <button class="bench-tab-btn" id="tab-btn-molecular3d" onclick="switchBenchmarkTab('molecular3d')">🧬 3D Superposition Rate</button>
-    <button class="bench-tab-btn" id="tab-btn-ablation" onclick="switchBenchmarkTab('ablation')">🔬 Component Ablation</button>
+    <button class="bench-tab-btn active" id="tab-btn-speed" onclick="switchBenchmarkTab('speed')">Model Runtimes</button>
+    <button class="bench-tab-btn" id="tab-btn-noise" onclick="switchBenchmarkTab('noise')">Noise Robustness (&sigma;)</button>
+    <button class="bench-tab-btn" id="tab-btn-outlier" onclick="switchBenchmarkTab('outlier')">Outlier Clutter (M - L)</button>
+    <button class="bench-tab-btn" id="tab-btn-size" onclick="switchBenchmarkTab('size')">Size Scaling (M = 20 &rarr; 60)</button>
+    <button class="bench-tab-btn" id="tab-btn-density" onclick="switchBenchmarkTab('density')">Density Sensitivity (&rho;)</button>
+    <button class="bench-tab-btn" id="tab-btn-molecular3d" onclick="switchBenchmarkTab('molecular3d')">3D Superposition Rate</button>
+    <button class="bench-tab-btn" id="tab-btn-ablation" onclick="switchBenchmarkTab('ablation')">Component Ablation</button>
   </div>
 
   <!-- Tab 1: Current Molecule Speed -->
@@ -1647,37 +1851,37 @@
 // ==============================================================================
 const MOLECULE_PRESETS = {
   aspirin: {
-    label: "🧪 Aspirin ↔ Salicylic Acid (13 × 10, L=9)",
+    label: "Aspirin ↔ Salicylic Acid (13 × 10, L=9)",
     name1: "Aspirin (13 atoms)",
     name2: "Salicylic Acid (10 atoms)",
     M: 13, N: 10, L: 9, sigma: 0.010, density: 0.45
   },
   caffeine: {
-    label: "☕ Caffeine ↔ Theophylline (14 × 13, L=12)",
+    label: "Caffeine ↔ Theophylline (14 × 13, L=12)",
     name1: "Caffeine (14 atoms)",
     name2: "Theophylline (13 atoms)",
     M: 14, N: 13, L: 12, sigma: 0.015, density: 0.52
   },
   phenol: {
-    label: "🌿 Phenol ↔ Benzene (7 × 6, L=6)",
+    label: "Phenol ↔ Benzene (7 × 6, L=6)",
     name1: "Phenol (7 atoms)",
     name2: "Benzene (6 atoms)",
     M: 7, N: 6, L: 6, sigma: 0.010, density: 0.40
   },
   cholesterol: {
-    label: "🧬 Cholesterol Core ↔ Ergosterol (28 × 28, L=24)",
+    label: "Cholesterol Core ↔ Ergosterol (28 × 28, L=24)",
     name1: "Cholesterol Core (28 atoms)",
     name2: "Ergosterol Core (28 atoms)",
     M: 28, N: 28, L: 24, sigma: 0.025, density: 0.58
   },
   aromatase: {
-    label: "💊 Aromatase Inhibitor Scaffold (24 × 26, L=18)",
+    label: "Aromatase Inhibitor Scaffold (24 × 26, L=18)",
     name1: "Aromatase Inhibitor (24 atoms)",
     name2: "Target Scaffold (26 atoms)",
     M: 24, N: 26, L: 18, sigma: 0.020, density: 0.48
   },
   custom: {
-    label: "⚙️ Custom Parameters",
+    label: "Custom Parameters",
     name1: "Custom Mol 1",
     name2: "Custom Mol 2",
     M: 14, N: 13, L: 12, sigma: 0.015, density: 0.52
@@ -1802,25 +2006,74 @@ let scalingChartInstance = null;
 // ==============================================================================
 // 2. PRESET SELECTION & INPUT CONTROLLERS
 // ==============================================================================
-function selectMolPreset(presetKey) {
+// Curated Pharmaceutical Drug Presets (Exact Ground Truth Dihedral Conformations)
+const PHARMA_PRESETS = {
+  aspirin: {
+    label: "Aspirin (Acetylsalicylic Acid) — C₉H₈O₄",
+    name1: "Aspirin (13 atoms)",
+    name2: "Perturbed 3D Conformer (13 atoms)",
+    M: 13, N: 13, L: 13, sigma: 0.015, density: 0.45
+  },
+  caffeine: {
+    label: "Caffeine (1,3,7-Trimethylxanthine) — C₈H₁₀N₄O₂",
+    name1: "Caffeine (14 atoms)",
+    name2: "Perturbed 3D Conformer (14 atoms)",
+    M: 14, N: 14, L: 14, sigma: 0.015, density: 0.52
+  },
+  paracetamol: {
+    label: "Paracetamol (Acetaminophen) — C₈H₉NO₂",
+    name1: "Paracetamol (11 atoms)",
+    name2: "Perturbed 3D Conformer (11 atoms)",
+    M: 11, N: 11, L: 11, sigma: 0.015, density: 0.40
+  },
+  ibuprofen: {
+    label: "Ibuprofen ((RS)-2-(4-isobutylphenyl)propanoic acid) — C₁₃H₁₈O₂",
+    name1: "Ibuprofen (15 atoms)",
+    name2: "Perturbed 3D Conformer (15 atoms)",
+    M: 15, N: 15, L: 15, sigma: 0.015, density: 0.42
+  },
+  penicillin: {
+    label: "Penicillin G — C₁₆H₁₈N₂O₄S",
+    name1: "Penicillin G (23 atoms)",
+    name2: "Perturbed 3D Conformer (23 atoms)",
+    M: 23, N: 23, L: 23, sigma: 0.015, density: 0.48
+  },
+  imatinib: {
+    label: "Imatinib (Gleevec) — C₂₉H₃₁N₇O",
+    name1: "Imatinib (37 atoms)",
+    name2: "Perturbed 3D Conformer (37 atoms)",
+    M: 37, N: 37, L: 37, sigma: 0.015, density: 0.50
+  },
+  atorvastatin: {
+    label: "Atorvastatin (Lipitor) — C₃₃H₃₅FN₂O₅",
+    name1: "Atorvastatin (41 atoms)",
+    name2: "Perturbed 3D Conformer (41 atoms)",
+    M: 41, N: 41, L: 41, sigma: 0.015, density: 0.48
+  },
+  remdesivir: {
+    label: "Remdesivir (Veklury) — C₂₇H₃₅N₆O₈P",
+    name1: "Remdesivir (42 atoms)",
+    name2: "Perturbed 3D Conformer (42 atoms)",
+    M: 42, N: 42, L: 42, sigma: 0.015, density: 0.46
+  },
+  dexamethasone: {
+    label: "Dexamethasone — C₂₂H₂₉FO₅",
+    name1: "Dexamethasone (28 atoms)",
+    name2: "Perturbed 3D Conformer (28 atoms)",
+    M: 28, N: 28, L: 28, sigma: 0.015, density: 0.44
+  },
+  morphine: {
+    label: "Morphine — C₁₇H₁₉NO₃",
+    name1: "Morphine (21 atoms)",
+    name2: "Perturbed 3D Conformer (21 atoms)",
+    M: 21, N: 21, L: 21, sigma: 0.015, density: 0.45
+  }
+};
+
+function onMolSelectChange(presetKey) {
   state.preset = presetKey;
-  const p = MOLECULE_PRESETS[presetKey];
-  if (!p) return;
-
-  document.querySelectorAll('.preset-chip').forEach(c => {
-    c.classList.toggle('active', c.textContent.includes(presetKey === 'aspirin' ? 'Aspirin' :
-                                presetKey === 'caffeine' ? 'Caffeine' :
-                                presetKey === 'phenol' ? 'Phenol' :
-                                presetKey === 'cholesterol' ? 'Cholesterol' :
-                                presetKey === 'aromatase' ? 'Aromatase' : 'Custom'));
-  });
-
-  if (presetKey !== 'custom') {
-    document.getElementById('inputM').value = p.M;
-    document.getElementById('inputN').value = p.N;
-    document.getElementById('inputL').value = p.L;
-    document.getElementById('inputSigma').value = p.sigma;
-    document.getElementById('inputDensity').value = p.density;
+  if (PHARMA_PRESETS[presetKey]) {
+    const p = PHARMA_PRESETS[presetKey];
     state.M = p.M;
     state.N = p.N;
     state.L = p.L;
@@ -1829,19 +2082,31 @@ function selectMolPreset(presetKey) {
     state.mol1Name = p.name1;
     state.mol2Name = p.name2;
   }
-
   updateParamLabels();
   executeRealtimeMatching();
 }
 
+function selectMolPreset(presetKey) {
+  const sel = document.getElementById('molSelect');
+  if (sel) sel.value = presetKey;
+  onMolSelectChange(presetKey);
+}
+
 function onManualInputChange() {
-  state.M = parseInt(document.getElementById('inputM').value) || 14;
-  state.N = parseInt(document.getElementById('inputN').value) || 13;
-  state.L = parseInt(document.getElementById('inputL').value) || 10;
-  state.sigma = parseFloat(document.getElementById('inputSigma').value) || 0.015;
-  state.density = parseFloat(document.getElementById('inputDensity').value) || 0.50;
+  const elM = document.getElementById('inputM');
+  const elN = document.getElementById('inputN');
+  const elL = document.getElementById('inputL');
+  const elSig = document.getElementById('inputSigma');
+  const elDen = document.getElementById('inputDensity');
+  if (elM) state.M = parseInt(elM.value) || 14;
+  if (elN) state.N = parseInt(elN.value) || 14;
+  if (elL) state.L = parseInt(elL.value) || 14;
+  if (elSig) state.sigma = parseFloat(elSig.value) || 0.015;
+  if (elDen) state.density = parseFloat(elDen.value) || 0.50;
   state.mol1Name = `Mol 1: ${state.M} atoms`;
   state.mol2Name = `Mol 2: ${state.N} atoms`;
+  const sel = document.getElementById('molSelect');
+  if (sel) sel.value = 'custom';
   updateParamLabels();
 }
 
@@ -1853,20 +2118,58 @@ function updateParamLabels() {
 }
 
 // ==============================================================================
-// 3. STEP-BY-STEP FRANK-WOLFE HOMOTOPY INSPECTOR CONTROLLER
+// 3. STEP-BY-STEP FRANK-WOLFE HOMOTOPY FLOW CONTROLLERS
 // ==============================================================================
-function updateStepperButtons() {
-  const bar = document.getElementById('stepperButtonsBar');
-  if (!bar || !state.trajectory || state.trajectory.length === 0) return;
-  bar.innerHTML = '';
+let playTimer = null;
 
-  state.trajectory.forEach((item, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'step-nav-btn' + (idx === state.currentStepIndex ? ' active' : '');
-    btn.textContent = `Step ${item.step} (${item.zeta >= 0 ? '+' : ''}${item.zeta.toFixed(2)})`;
-    btn.onclick = () => selectStep(idx);
-    bar.appendChild(btn);
-  });
+function stepFirst() {
+  selectStep(0);
+}
+
+function stepPrev() {
+  if (!state.trajectory || state.trajectory.length === 0) return;
+  const prev = Math.max(0, state.currentStepIndex - 1);
+  selectStep(prev);
+}
+
+function stepNext() {
+  if (!state.trajectory || state.trajectory.length === 0) return;
+  const nxt = Math.min(state.trajectory.length - 1, state.currentStepIndex + 1);
+  selectStep(nxt);
+}
+
+function stepLast() {
+  if (!state.trajectory || state.trajectory.length === 0) return;
+  selectStep(state.trajectory.length - 1);
+}
+
+function togglePlayPause() {
+  const btn = document.getElementById('btnPlayPause');
+  if (playTimer) {
+    clearInterval(playTimer);
+    playTimer = null;
+    if (btn) {
+      btn.textContent = '▶ Play';
+      btn.classList.remove('play-active');
+    }
+  } else {
+    if (btn) {
+      btn.textContent = '⏸ Pause';
+      btn.classList.add('play-active');
+    }
+    playTimer = setInterval(() => {
+      if (!state.trajectory || state.trajectory.length === 0) return;
+      let nextIdx = state.currentStepIndex + 1;
+      if (nextIdx >= state.trajectory.length) {
+        nextIdx = 0; // wrap around
+      }
+      selectStep(nextIdx);
+    }, 1400);
+  }
+}
+
+function updateStepperButtons() {
+  // Stepper is now driven via the flow buttons and formula phase bar
 }
 
 function selectStep(idx) {
@@ -1874,10 +2177,27 @@ function selectStep(idx) {
   state.currentStepIndex = Math.max(0, Math.min(idx, state.trajectory.length - 1));
   const stepData = state.trajectory[state.currentStepIndex];
 
-  // Update active button
-  document.querySelectorAll('.step-nav-btn').forEach((b, i) => {
-    b.classList.toggle('active', i === state.currentStepIndex);
-  });
+  // Update Dynamic Formula & Phase Progress Bar
+  const phaseBadge = document.getElementById('currentPhaseBadge');
+  const zetaBadge = document.getElementById('currentZetaBadge');
+  const formulaDisplay = document.getElementById('currentFormulaDisplay');
+  const progressFill = document.getElementById('stepProgressFill');
+
+  if (phaseBadge) phaseBadge.textContent = stepData.phase_name || `Phase ${stepData.step}: GNCCP Homotopy Step`;
+  if (zetaBadge) zetaBadge.textContent = stepData.zeta_label || `ζ = ${stepData.zeta.toFixed(2)}`;
+  if (formulaDisplay) {
+    const fLatex = stepData.formula_latex || "X_{t+1} = X_t + \\alpha_t^*(Y_t - X_t)";
+    formulaDisplay.innerHTML = `$$${fLatex}$$`;
+    if (window.renderMathInElement) {
+      renderMathInElement(formulaDisplay, {
+        delimiters: [{left: '$$', right: '$$', display: true}],
+        throwOnError: false
+      });
+    }
+  }
+  if (progressFill && state.trajectory.length > 0) {
+    progressFill.style.width = `${((state.currentStepIndex + 1) / state.trajectory.length) * 100}%`;
+  }
 
   // Update callout text
   const titleEl = document.getElementById('stepCalloutTitle');
@@ -1896,8 +2216,8 @@ function selectStep(idx) {
   // Render Cardano Line Search Chart
   renderQuarticChart(stepData.quartic_coeffs, stepData.alpha_opt, stepData.F_val);
 
-  if (window.renderMathInElement) {
-    renderMathInElement(document.getElementById('stepCalloutDesc'), { throwOnError: false });
+  if (window.renderMathInElement && descEl) {
+    renderMathInElement(descEl, { throwOnError: false });
   }
 }
 
@@ -2132,9 +2452,16 @@ function animateLoop() {
   if (controls) {
     controls.update();
     if (!controls.state || controls.state === -1) {
-      if (mol1Group) mol1Group.rotation.y += 0.001;
-      if (mol2Group) mol2Group.rotation.y += 0.001;
-      if (linesGroup) linesGroup.rotation.y += 0.001;
+      if (mol1Group) mol1Group.rotation.y += 0.0012;
+      if (mol2Group) mol2Group.rotation.y += 0.0012;
+      if (linesGroup) linesGroup.rotation.y += 0.0012;
+    }
+    // Dynamic pulsing luminescence for correspondence links
+    if (linesGroup && linesGroup.children.length > 0) {
+      const pulseOpacity = 0.55 + 0.35 * Math.sin(Date.now() * 0.005);
+      linesGroup.children.forEach(line => {
+        if (line.material) line.material.opacity = pulseOpacity;
+      });
     }
     renderer.render(scene, camera);
   }
@@ -2212,8 +2539,8 @@ function renderMoleculesIn3D() {
     }
   }
 
-  // Dashed correspondence lines between matched pairs
-  const lineMat = new THREE.LineDashedMaterial({ color: 0xd97706, dashSize: 0.35, gapSize: 0.2, linewidth: 2.2 });
+  // Dashed correspondence lines between matched pairs with glowing green luminescence
+  const lineMat = new THREE.LineDashedMaterial({ color: 0x16a34a, dashSize: 0.35, gapSize: 0.2, transparent: true, opacity: 0.85, linewidth: 2.2 });
   matches.forEach(m => {
     const p1 = mol1MeshPositions[m[0]];
     const p2 = mol2MeshPositions[m[1]];
@@ -2255,7 +2582,7 @@ function onKabschSliderDrag(val) {
   }
 
   const stat3d = document.getElementById('overlay-status');
-  if (stat3d) stat3d.textContent = pct === 100 ? '🎯 Ideal Superposition' : `${pct}% Aligned`;
+  if (stat3d) stat3d.textContent = pct === 100 ? 'Ideal Superposition' : `${pct}% Aligned`;
 
   renderMoleculesIn3D();
   updateBadgesList();
@@ -2496,15 +2823,21 @@ function updateScorecardTable(models) {
   models.forEach(m => {
     const tr = document.createElement('tr');
     if (m.is_ours) tr.className = 'row-highlight-ours';
+    const timeDisplay = m.time_str || (m.time_ms ? `${m.time_ms.toFixed(2)} ms` : '—');
+    const logTime = (m.time_ms && m.time_ms > 0) ? Math.log10(m.time_ms).toFixed(2) : '—';
+    const logSpan = `<span style="font-size:11px; font-weight:500; color:#64748b; margin-left:3px;">(log₁₀: ${logTime})</span>`;
+    const accDisplay = m.acc_str || (m.accuracy !== undefined ? `${m.accuracy.toFixed(1)}%` : '—');
+    const rmsdDisplay = m.rmsd_str || (m.rmsd !== undefined ? `${m.rmsd.toFixed(3)} Å` : '—');
+    const statusDisplay = m.status || (m.is_ours ? 'Optimal (Gap < 1e-3)' : 'Converged');
+
     tr.innerHTML = `
       <td>${m.is_ours ? '<strong>' + m.name + '</strong> <span class="badge-ours-tag">OUR FRAMEWORK</span>' : m.name}</td>
       <td>${m.complexity}</td>
-      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${m.time_ms.toFixed(2)} ms</td>
+      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${timeDisplay} ${logSpan}</td>
       <td><span class="${m.is_ours ? 'badge-speedup' : ''}">${m.speedup}</span></td>
-      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${m.accuracy.toFixed(1)}%</td>
-      <td>${m.f_val.toFixed(3)}</td>
-      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${m.rmsd.toFixed(3)} &Aring;</td>
-      <td>${m.is_ours ? '<span style="color:#166534; font-weight:600;">Optimal (Gap &lt; 1e-3)</span>' : 'Converged'}</td>
+      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${accDisplay}</td>
+      <td style="color:${m.is_ours ? '#166534; font-weight:700;' : '#1B1917;'}">${rmsdDisplay}</td>
+      <td>${m.is_ours ? `<span style="color:#166534; font-weight:600;">${statusDisplay}</span>` : statusDisplay}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -2571,7 +2904,7 @@ function initBenchmarkCharts() {
       },
       scales: {
         x: { ticks: { color: '#4B4742', font: chartFont }, grid: { display: false } },
-        y: { title: { display: true, text: 'Execution Time (ms) — Lower is Better', font: titleFont }, ticks: { color: '#4B4742', font: chartFont, callback: v => `${v}ms` }, grid: { color: gridColor } }
+        y: { type: 'logarithmic', title: { display: true, text: 'Execution Time (ms, log scale) — Lower is Better', font: titleFont }, ticks: { color: '#4B4742', font: chartFont, callback: v => `${v}ms` }, grid: { color: gridColor } }
       }
     }
   });
@@ -2595,7 +2928,7 @@ function initBenchmarkCharts() {
         plugins: { legend: { display: false } },
         scales: {
           x: { ticks: { color: '#4B4742', font: { family: 'IBM Plex Sans', size: 9.5 } }, grid: { display: false } },
-          y: { ticks: { color: '#4B4742', font: { family: 'IBM Plex Sans', size: 9.5 }, callback: v => `${v}ms` }, grid: { color: gridColor } }
+          y: { type: 'logarithmic', ticks: { color: '#4B4742', font: { family: 'IBM Plex Sans', size: 9.5 }, callback: v => `${v}ms` }, grid: { color: gridColor } }
         }
       }
     });

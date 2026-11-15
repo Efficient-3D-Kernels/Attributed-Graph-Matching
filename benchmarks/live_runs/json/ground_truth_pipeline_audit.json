@@ -1,0 +1,315 @@
+{
+  "modules": {
+    "gnccp_advanced_v3": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\gnccp_advanced_v3.py",
+      "size": 59153,
+      "has_AdvancedGNCCP": true,
+      "has_robust_kabsch": true
+    },
+    "gnccp_advanced_v4_wloa": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\gnccp_advanced_v4_wloa.py",
+      "size": 13688,
+      "has_WLTreeEngine": true,
+      "imports_v3": true
+    }
+  },
+  "datasets": {
+    "oxford_affine": {
+      "bark": {
+        "img1": "img1.ppm",
+        "img2": "img2.ppm",
+        "H1to2_det": 0.6752480940766036
+      },
+      "bikes": {
+        "img1": "img1.ppm",
+        "img2": "img2.ppm",
+        "H1to2_det": 1.026140621425265
+      },
+      "boat": {
+        "img1": "img1.pgm",
+        "img2": "img2.pgm",
+        "H1to2_det": 0.7825848245234607
+      },
+      "graf": {
+        "img1": "img1.ppm",
+        "img2": "img2.ppm",
+        "H1to2_det": 0.9018071102245613
+      },
+      "leuven": {
+        "img1": "img1.ppm",
+        "img2": "img2.ppm",
+        "H1to2_det": 0.19372931864987933
+      },
+      "trees": {
+        "img1": "img1.ppm",
+        "img2": "img2.ppm",
+        "H1to2_det": 0.9893435101707561
+      },
+      "ubc": {
+        "img1": "img1.ppm",
+        "img2": "img2.ppm",
+        "H1to2_det": 1.0
+      },
+      "wall": {
+        "img1": "img1.ppm",
+        "img2": "img2.ppm",
+        "H1to2_det": 0.7305345057361303
+      }
+    },
+    "stanford_snap_collegemsg": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\socialnetwork\\data\\CollegeMsg.txt",
+      "size": 1150439,
+      "records": 59835
+    }
+  },
+  "scripts": {
+    "Synthetic Replication (Script 1)": {
+      "file": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\scripts\\run_synthetic_replication_live.py",
+      "verified_imports": [
+        "live_common"
+      ]
+    },
+    "Synthetic Topologies (ER, RR, BA)": {
+      "file": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\scripts\\run_topologies_benchmark_live.py",
+      "verified_imports": [
+        "gnccp_advanced_v3",
+        "gnccp_advanced_v4_wloa",
+        "live_common"
+      ]
+    },
+    "Large Scale Grid (Script 3)": {
+      "file": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\scripts\\run_large_scale_grid_live.py",
+      "verified_imports": [
+        "live_common"
+      ]
+    },
+    "Image SIFT Keypoints (Script 2)": {
+      "file": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\scripts\\run_image_keypoints_live.py",
+      "verified_imports": [
+        "live_common",
+        "oxford_affine"
+      ]
+    },
+    "3D Molecular Superposition (Script 5)": {
+      "file": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\scripts\\run_3d_superposition_live.py",
+      "verified_imports": [
+        "gnccp_advanced_v3",
+        "robust_kabsch_superposition",
+        "live_common"
+      ]
+    },
+    "Social Network Benchmark": {
+      "file": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\socialnetwork\\benchmark_social_network.py",
+      "verified_imports": [
+        "gnccp_advanced_v3",
+        "gnccp_advanced_v4_wloa",
+        "load_college_msg"
+      ]
+    },
+    "Live Common Infrastructure": {
+      "file": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\scripts\\live_common.py",
+      "verified_imports": [
+        "gnccp_advanced_v3",
+        "gnccp_baseline_2018"
+      ]
+    }
+  },
+  "models": {
+    "synthetic": [
+      "Fast-WCS v3",
+      "RLX1 (Yang 2018)",
+      "RLX2 (Yang 2018)",
+      "RLX1F",
+      "FAQ",
+      "SM",
+      "IPFP",
+      "RRWM",
+      "NGM",
+      "FGW",
+      "Partial GW"
+    ],
+    "image": [
+      "Fast-WCS v3",
+      "RLX1",
+      "RLX2",
+      "RLX1F",
+      "FAQ",
+      "SM",
+      "IPFP",
+      "RRWM",
+      "NGM",
+      "FGW",
+      "Partial FGW"
+    ],
+    "social": [
+      "Fast-WCS v3",
+      "Fast-WCS v4",
+      "Yang et al. RLX1F",
+      "WL-OA",
+      "Feature-Only Hungarian",
+      "SciPy FAQ",
+      "WL Subtree Kernel",
+      "Shortest-Path Kernel",
+      "Graphlet Kernel"
+    ],
+    "molecular": [
+      "Fast-WCS v3 hierarchical",
+      "FAQ + Kabsch",
+      "SM + Kabsch",
+      "RRWM + Kabsch",
+      "IPFP + Kabsch",
+      "FGW + Kabsch",
+      "ICP",
+      "RANSAC + FPFH + ICP",
+      "CPD"
+    ]
+  },
+  "trial_data": {
+    "synthetic_trials.csv": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\live_runs\\csv\\synthetic_trials.csv",
+      "rows": 19600,
+      "cols": [
+        "scenario",
+        "setting",
+        "x",
+        "M",
+        "N",
+        "L",
+        "sigma",
+        "density",
+        "topology",
+        "trial",
+        "seed",
+        "method",
+        "ms",
+        "F_gt",
+        "error",
+        "acc",
+        "F",
+        "F_ratio",
+        "F_le_gt"
+      ]
+    },
+    "topologies_trials.csv": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\live_runs\\csv\\topologies_trials.csv",
+      "rows": 8160,
+      "cols": [
+        "topology",
+        "scenario",
+        "setting",
+        "x",
+        "x_name",
+        "M",
+        "N",
+        "L",
+        "sigma",
+        "density",
+        "trial",
+        "seed",
+        "method",
+        "ms",
+        "F_gt",
+        "error",
+        "acc",
+        "F",
+        "F_ratio",
+        "F_le_gt"
+      ]
+    },
+    "image_trials.csv": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\live_runs\\csv\\image_trials.csv",
+      "rows": 9152,
+      "cols": [
+        "group",
+        "setting",
+        "x",
+        "M",
+        "N",
+        "L",
+        "pair",
+        "sampling",
+        "seed",
+        "method",
+        "ms",
+        "F_gt",
+        "error",
+        "acc",
+        "F",
+        "F_ratio",
+        "F_le_gt"
+      ]
+    },
+    "superposition_3d_trials.csv": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\live_runs\\csv\\superposition_3d_trials.csv",
+      "rows": 3600,
+      "cols": [
+        "scenario",
+        "trial",
+        "seed",
+        "molecule",
+        "M",
+        "N",
+        "L",
+        "sigma",
+        "method",
+        "ms",
+        "oracle_rmsd",
+        "error",
+        "rmsd",
+        "det_R",
+        "proper_rotation",
+        "reflection_corrected",
+        "rot_err_deg",
+        "match_acc"
+      ]
+    },
+    "large_scale_grid_trials.csv": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\benchmarks\\live_runs\\csv\\large_scale_grid_trials.csv",
+      "rows": 1120,
+      "cols": [
+        "N",
+        "M",
+        "L",
+        "ratio",
+        "trial",
+        "seed",
+        "method",
+        "ms",
+        "F_gt",
+        "error",
+        "acc",
+        "F",
+        "F_ratio"
+      ]
+    },
+    "social_network_comprehensive.csv": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\socialnetwork\\results\\tables\\social_network_comprehensive_methods.csv",
+      "rows": 70,
+      "cols": [
+        "N",
+        "L",
+        "Noise_pct",
+        "Method",
+        "Accuracy_pct",
+        "Objective",
+        "Similarity_Kernel",
+        "Runtime_ms",
+        "Type"
+      ]
+    },
+    "social_network_global_kernels.csv": {
+      "path": "C:\\Users\\abdus\\Downloads\\FYP\\Efficient-3D-Kernels-for-molecular-property-prediction\\socialnetwork\\results\\tables\\social_network_global_kernels.csv",
+      "rows": 10,
+      "cols": [
+        "N",
+        "Noise_pct",
+        "WL_Subtree_Kernel",
+        "WL_Time_ms",
+        "Shortest_Path_Kernel",
+        "SP_Time_ms",
+        "Graphlet_Kernel",
+        "Graphlet_Time_ms"
+      ]
+    }
+  }
+}

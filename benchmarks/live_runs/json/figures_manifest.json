@@ -8,7 +8,9 @@
     "benchmarks\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
     "benchmarks\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf",
     "paper\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
-    "paper\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf"
+    "paper\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf",
+    "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_noise.png",
+    "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_noise.pdf"
    ]
   },
   "fig_matching_accuracy_vs_outliers": {
@@ -19,7 +21,9 @@
     "benchmarks\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
     "benchmarks\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf",
     "paper\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
-    "paper\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf"
+    "paper\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_outliers.png",
+    "els-cas-templates\\figures\\standalone/fig_matching_accuracy_vs_outliers.pdf"
    ]
   },
   "fig_synthetic_accuracy_vs_size": {
@@ -30,7 +34,9 @@
     "benchmarks\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
     "benchmarks\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf",
     "paper\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
-    "paper\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf"
+    "paper\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf",
+    "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_size.png",
+    "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_size.pdf"
    ]
   },
   "fig_synthetic_accuracy_vs_density": {
@@ -41,7 +47,9 @@
     "benchmarks\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
     "benchmarks\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf",
     "paper\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
-    "paper\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf"
+    "paper\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf",
+    "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_density.png",
+    "els-cas-templates\\figures\\standalone/fig_synthetic_accuracy_vs_density.pdf"
    ]
   },
   "fig_image_accuracy_vs_outliers": {
@@ -52,7 +60,9 @@
     "benchmarks\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
     "benchmarks\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf",
     "paper\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
-    "paper\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf"
+    "paper\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf",
+    "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_outliers.png",
+    "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_outliers.pdf"
    ]
   },
   "fig_image_accuracy_vs_size": {
@@ -63,7 +73,9 @@
     "benchmarks\\figures\\standalone/fig_image_accuracy_vs_size.png",
     "benchmarks\\figures\\standalone/fig_image_accuracy_vs_size.pdf",
     "paper\\figures\\standalone/fig_image_accuracy_vs_size.png",
-    "paper\\figures\\standalone/fig_image_accuracy_vs_size.pdf"
+    "paper\\figures\\standalone/fig_image_accuracy_vs_size.pdf",
+    "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_size.png",
+    "els-cas-templates\\figures\\standalone/fig_image_accuracy_vs_size.pdf"
    ]
   },
   "fig_scaling_runtime_vs_n": {
@@ -74,7 +86,9 @@
     "benchmarks\\figures\\standalone/fig_scaling_runtime_vs_n.png",
     "benchmarks\\figures\\standalone/fig_scaling_runtime_vs_n.pdf",
     "paper\\figures\\standalone/fig_scaling_runtime_vs_n.png",
-    "paper\\figures\\standalone/fig_scaling_runtime_vs_n.pdf"
+    "paper\\figures\\standalone/fig_scaling_runtime_vs_n.pdf",
+    "els-cas-templates\\figures\\standalone/fig_scaling_runtime_vs_n.png",
+    "els-cas-templates\\figures\\standalone/fig_scaling_runtime_vs_n.pdf"
    ]
   },
   "fig_speedup_factor_vs_baseline": {
@@ -85,7 +99,9 @@
     "benchmarks\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
     "benchmarks\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf",
     "paper\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
-    "paper\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf"
+    "paper\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf",
+    "els-cas-templates\\figures\\standalone/fig_speedup_factor_vs_baseline.png",
+    "els-cas-templates\\figures\\standalone/fig_speedup_factor_vs_baseline.pdf"
    ]
   },
   "fig_empirical_complexity_slopes": {
@@ -96,7 +112,9 @@
     "benchmarks\\figures\\standalone/fig_empirical_complexity_slopes.png",
     "benchmarks\\figures\\standalone/fig_empirical_complexity_slopes.pdf",
     "paper\\figures\\standalone/fig_empirical_complexity_slopes.png",
-    "paper\\figures\\standalone/fig_empirical_complexity_slopes.pdf"
+    "paper\\figures\\standalone/fig_empirical_complexity_slopes.pdf",
+    "els-cas-templates\\figures\\standalone/fig_empirical_complexity_slopes.png",
+    "els-cas-templates\\figures\\standalone/fig_empirical_complexity_slopes.pdf"
    ]
   },
   "fig_cardano_vs_gridsearch_latency": {
@@ -107,7 +125,9 @@
     "benchmarks\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
     "benchmarks\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf",
     "paper\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
-    "paper\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf"
+    "paper\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf",
+    "els-cas-templates\\figures\\standalone/fig_cardano_vs_gridsearch_latency.png",
+    "els-cas-templates\\figures\\standalone/fig_cardano_vs_gridsearch_latency.pdf"
    ]
   },
   "fig_2opt_refinement_objective_drop": {
@@ -118,7 +138,9 @@
     "benchmarks\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
     "benchmarks\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf",
     "paper\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
-    "paper\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf"
+    "paper\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf",
+    "els-cas-templates\\figures\\standalone/fig_2opt_refinement_objective_drop.png",
+    "els-cas-templates\\figures\\standalone/fig_2opt_refinement_objective_drop.pdf"
    ]
   },
   "fig_rmsd_cumulative_distribution": {
@@ -129,7 +151,9 @@
     "benchmarks\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
     "benchmarks\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf",
     "paper\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
-    "paper\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf"
+    "paper\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf",
+    "els-cas-templates\\figures\\standalone/fig_rmsd_cumulative_distribution.png",
+    "els-cas-templates\\figures\\standalone/fig_rmsd_cumulative_distribution.pdf"
    ]
   },
   "fig_pareto_latency_vs_rmsd": {
@@ -141,12 +165,14 @@
     "benchmarks\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
     "benchmarks\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf",
     "paper\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
-    "paper\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf"
+    "paper\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf",
+    "els-cas-templates\\figures\\standalone/fig_pareto_latency_vs_rmsd.png",
+    "els-cas-templates\\figures\\standalone/fig_pareto_latency_vs_rmsd.pdf"
    ]
   }
  },
  "provenance": {
-  "generated_at": "2026-10-17T01:37:20",
+  "generated_at": "2026-11-14T23:44:59",
   "python": "3.13.5",
   "platform": "Windows-11-10.0.26200-SP0",
   "cpu": "Intel64 Family 6 Model 186 Stepping 3, GenuineIntel",
@@ -177,10 +203,10 @@
    }
   ],
   "sha256": {
-   "benchmarks\\scripts\\make_standalone_figures_live.py": "3086cdba3474fccfb3e6992ad8f333c53789f4f0b145eb3133fcb0273ad62a3d",
-   "gnccp_advanced_v3.py": "bbb734dacaf07fd88600947ca3aecf018ff85a8e7eb9b9bfa70090e8e960902d",
-   "gnccp_baseline_2018.py": "656823ae149c273523722738f75d0b4ae34da4ef71e88f06ea9cd45e27f8e8f7",
-   "benchmarks\\scripts\\live_common.py": "12fcf2f98741c91bd018a76463d61305221aaa6d8748cd50eb86386ac7a45d58"
+   "benchmarks\\scripts\\make_standalone_figures_live.py": "f8d5ffd06866fcef5419d296a116af762806ec6bc34a5c83843799e723117344",
+   "gnccp_advanced_v3.py": "3faf0f107e955c2883c96eb9ef52778126e0a654c24a885c41e9044e23740e5c",
+   "gnccp_baseline_2018.py": "966775d6809f8f47e912e88612b523e97fd416944836cc100df961c0616214a8",
+   "benchmarks\\scripts\\live_common.py": "926deb2fb196c34511da0ca7329816845f20948b273e7834cff43da37eeea3c7"
   }
  }
 }

@@ -93,6 +93,8 @@ def compute_reflection_safe_kabsch(P: np.ndarray, Q: np.ndarray,
 
 
 def superpose_3d_molecules(coords_G: np.ndarray, coords_H: np.ndarray,
+                           features_G: Optional[np.ndarray] = None,
+                           features_H: Optional[np.ndarray] = None,
                            L: Optional[int] = None,
                            alpha: float = 0.7,
                            n_dgm_iters: int = 4,
@@ -112,7 +114,10 @@ def superpose_3d_molecules(coords_G: np.ndarray, coords_H: np.ndarray,
     solver = AdvancedGNCCP(alpha=alpha, seed=seed)
 
     match_out = solver.match_point_clouds(
-        coords_G, coords_H, L=L,
+        coords_G, coords_H,
+        features_G=features_G,
+        features_H=features_H,
+        L=L,
         n_dgm_iters=n_dgm_iters,
         rbf_sigma_scale=rbf_sigma_scale,
     )
@@ -157,19 +162,25 @@ class FastWCS_Molecular3D:
         self.seed = seed
 
     def superpose(self, coords_G: np.ndarray, coords_H: np.ndarray,
+                  features_G: Optional[np.ndarray] = None,
+                  features_H: Optional[np.ndarray] = None,
                   L: Optional[int] = None) -> MolecularSuperpositionResult:
         """Superposes 3D coordinates of molecule G onto molecule H.
         
         Args:
             coords_G: (M, 3) Cartesian coordinates of molecule G in Angstroms
             coords_H: (N, 3) Cartesian coordinates of molecule H in Angstroms
+            features_G: Optional (M, d) atomic features / element classes
+            features_H: Optional (N, d) atomic features / element classes
             L: Number of core matching atoms (default: min(M, N))
             
         Returns:
             MolecularSuperpositionResult with R, t, RMSD, and aligned coordinates.
         """
         R, t, rmsd, matches, P_aligned, runtime_ms, is_proper = superpose_3d_molecules(
-            coords_G=coords_G, coords_H=coords_H, L=L,
+            coords_G=coords_G, coords_H=coords_H,
+            features_G=features_G, features_H=features_H,
+            L=L,
             alpha=self.alpha,
             n_dgm_iters=self.n_dgm_iters,
             rbf_sigma_scale=self.rbf_sigma_scale,

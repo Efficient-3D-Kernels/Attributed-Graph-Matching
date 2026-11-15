@@ -1,0 +1,31 @@
+\begin{table*}[!t]
+\centering
+\caption{Synthetic WCS benchmark (protocol of~\cite{yang2018algorithm}, 50 trials per setting, identical instances for all solvers). Mean matching accuracy (\%) at representative settings of the four scenarios and median wall-clock time (ms). Bold: best per column. Full noise and outlier sweeps: Figs.~\ref{fig:acc_noise}--\ref{fig:acc_outliers}.}
+\label{tab:synthetic}
+\fontsize{6.6}{7.9}\selectfont
+\setlength{\tabcolsep}{2.6pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{Noise ($M{=}30,N{=}35,L{=}25$)} & \multicolumn{3}{c}{Size ($N{=}M{+}5,L{=}M{-}5$)} & \multicolumn{2}{c}{Outliers ($M{=}30,N{=}35$)} & \multicolumn{2}{c}{Density} & \multicolumn{2}{c}{Time (ms)} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}\cmidrule(l){12-13}
+Method & $\sigma{=}0$ & $\sigma{=}.04$ & $\sigma{=}.10$ & $M{=}20$ & $M{=}40$ & $M{=}60$ & $M{-}L{=}0$ & $M{-}L{=}10$ & $\rho{=}.2$ & $\rho{=}1$ & $\sigma{=}.04$ & $M{=}60$ \\
+\midrule
+\textbf{Fast-WCS (Multi-Start)} & 88.9 & 63.1 & 24.1 & 36.0 & 89.5 & 98.2 & \textbf{100.0} & 11.0 & 17.1 & \textbf{57.8} & 620 & 877 \\
+\textbf{Fast-WCS (Single-Start)} & 30.2 & 17.2 & 8.7 & 12.4 & 39.0 & 60.3 & 89.9 & 6.1 & 9.3 & 33.8 & 88.1 & 241 \\
+\textbf{Fast-WCS (long path)} & 26.6 & 19.6 & 8.4 & 11.1 & 57.6 & 58.7 & 88.7 & 3.1 & 4.6 & 33.2 & 232 & 530 \\
+\midrule
+RLX1~\cite{yang2018algorithm} & 23.2 & 13.8 & 5.0 & 7.2 & 26.0 & 37.2 & 71.4 & 5.0 & 10.1 & 11.0 & 984 & 3{,}363 \\
+RLX2~\cite{yang2018algorithm} & 5.4 & 4.6 & 4.7 & 5.9 & 4.3 & 8.8 & 71.4 & 2.8 & 4.4 & 4.2 & 1{,}207 & 4{,}657 \\
+RLX1F~\cite{yang2018algorithm} & 30.7 & 22.1 & 9.0 & 13.6 & 31.9 & 38.8 & 69.4 & 5.8 & 10.8 & 17.3 & 99.7 & 261 \\
+\midrule
+FAQ~\cite{vogelstein2015fast} & 12.3 & 13.1 & 4.5 & 8.5 & 11.0 & 11.8 & 31.4 & 6.1 & 7.8 & 13.2 & \textbf{5.3} & \textbf{21.6} \\
+SM~\cite{leordeanu2005} & 85.5 & 40.6 & 7.8 & 41.1 & 59.6 & 69.0 & 82.5 & 31.3 & 65.4 & 48.0 & 71.4 & 855 \\
+IPFP~\cite{leordeanu2009ipfp} & \textbf{100.0} & 95.7 & 31.9 & 70.5 & \textbf{99.8} & \textbf{100.0} & \textbf{100.0} & 80.5 & \textbf{95.3} & 52.6 & 44.5 & 607 \\
+RRWM~\cite{cho2010rrwm} & 98.6 & \textbf{98.4} & \textbf{79.8} & \textbf{86.8} & 99.7 & 99.9 & \textbf{100.0} & \textbf{83.1} & 93.0 & 49.4 & 384 & 1{,}463 \\
+NGM (VOC)~\cite{wang2021ngm} & 64.2 & 31.0 & 8.2 & 28.3 & 47.5 & 54.0 & 66.0 & 23.3 & 37.8 & 39.9 & 110 & 1{,}645 \\
+FGW, $\varepsilon{=}10^{-2}$~\cite{titouan2019optimal} & 61.0 & 54.2 & 14.3 & 15.9 & 65.7 & 84.1 & 98.4 & 14.7 & 28.2 & 24.8 & 1{,}741 & 1{,}792 \\
+FGW, $\varepsilon{=}10^{-3}$~\cite{titouan2019optimal} & 40.5 & 31.0 & 7.3 & 13.1 & 45.8 & 87.5 & 86.9 & 8.3 & 15.7 & 20.8 & 23{,}358 & 9{,}725 \\
+Partial GW~\cite{chapel2020partial} & 8.5 & 9.2 & 7.6 & 8.9 & 13.4 & 6.3 & 25.0 & 5.3 & 4.6 & 19.3 & 11.3 & 35.9 \\
+\bottomrule
+\end{tabular*}
+\end{table*}

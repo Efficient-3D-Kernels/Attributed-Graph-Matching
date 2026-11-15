@@ -1,0 +1,18 @@
+\begin{table}[!t]
+\centering
+\caption{One gradient evaluation (single thread, minimum of 30 repetitions): Theorem~\ref{thm:gradient} vs.\ the RLX1 gradient (Eq.~\ref{eq:rlx1_grad}) and central finite differences (FD, $2MN$ objective calls) of the true objective.}
+\label{tab:gradient}
+\fontsize{6.2}{7.4}\selectfont
+\setlength{\tabcolsep}{2.0pt}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}rrrrrrc@{}}
+\toprule
+$N$ & Thm.~1 (ms) & RLX1 (ms) & FD (ms) & /FD & /RLX1 & max rel.\ err. vs FD \\
+\midrule
+10 & 0.019 & 0.029 & 7.4 & 388.0 & 1.50 & $1.6\times 10^{-10}$ \\
+20 & 0.034 & 0.053 & 23.6 & 697.4 & 1.56 & $2.1\times 10^{-10}$ \\
+30 & 0.030 & 0.055 & 59.2 & 1{,}968 & 1.83 & $4.0\times 10^{-10}$ \\
+50 & 0.044 & 0.101 & 250 & 5{,}651 & 2.28 & $7.9\times 10^{-10}$ \\
+100 & 0.133 & 0.440 & 4{,}389 & 32{,}997 & 3.31 & $1.2\times 10^{-9}$ \\
+\bottomrule
+\end{tabular*}
+\end{table}

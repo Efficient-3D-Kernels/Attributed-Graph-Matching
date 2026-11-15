@@ -1,0 +1,31 @@
+\begin{table*}[!t]
+\centering
+\caption{Comprehensive Social Network Alignment Benchmark on Stanford CollegeMsg (1,899 users, 59,835 interactions). Comparison of node-matching accuracy (\%), final WCS objective energy $F^*(X)$, and latency (ms) across synthetic structural noise sweeps (0\%, 5\%, 10\%, 20\%, 30\%) on $N=40$ ($L=30$) and $N=100$ ($L=75$). Bold indicates superior performance.}
+\label{tab:social_network}
+\fontsize{7.5}{9.0}\selectfont
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrrrrrrrr@{}}
+\toprule
+& & \multicolumn{5}{c}{\textbf{Node Matching Accuracy (\%)}} & \multicolumn{5}{c}{\textbf{Objective Energy $F^*(X)$}} & \textbf{Latency} \\
+\cmidrule(lr){3-7} \cmidrule(lr){8-12} \cmidrule(lr){13-13}
+\textbf{Regime} & \textbf{Method} & \textbf{0\%} & \textbf{5\%} & \textbf{10\%} & \textbf{20\%} & \textbf{30\%} & \textbf{0\%} & \textbf{5\%} & \textbf{10\%} & \textbf{20\%} & \textbf{30\%} & \textbf{ms (avg)} \\
+\midrule
+\multirow{7}{*}{$N{=}40, L{=}30$} & \textbf{Fast-WCS v4 (WL-OA Augmented, Ours)} & \textbf{100.0} & \textbf{100.0} & \textbf{100.0} & \textbf{100.0} & \textbf{100.0} & 0.00 & 0.14 & 0.33 & 0.79 & 1.28 & \textbf{25.0} \\
+ & Fast-WCS v3 (Homotopy, Ours) & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 0.00 & 0.13 & 0.11 & 0.76 & 1.46 & 17.0 \\
+ & Fast-WCS v3 (No 2-Opt Ablation) & 100.0 & 100.0 & 100.0 & 90.0 & 100.0 & 0.00 & 0.13 & 0.11 & 1.05 & 1.46 & 20.1 \\
+ & WL-OA Tree Kernel (Hungarian)~\cite{shervashidze2011weisfeiler} & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & -- & -- & -- & -- & -- & 11.0 \\
+ & Feature-Only Hungarian (Ablation) & 100.0 & 100.0 & 96.7 & 90.0 & 56.7 & -- & -- & -- & -- & -- & 0.1 \\
+ & SciPy FAQ (Topology Only)~\cite{vogelstein2015fast} & 100.0 & 100.0 & 83.3 & 56.7 & 33.3 & -- & -- & -- & -- & -- & 3.3 \\
+ & Yang et al. (RLX1F Baseline)~\cite{yang2018algorithm} & 100.0 & 100.0 & 100.0 & 33.3 & 3.3 & 0.00 & 0.17 & 139.18 & 24917 & 18233 & 91.8 \\
+\midrule
+\multirow{7}{*}{$N{=}100, L{=}75$} & \textbf{Fast-WCS v4 (WL-OA Augmented, Ours)} & \textbf{100.0} & \textbf{100.0} & \textbf{100.0} & \textbf{100.0} & \textbf{100.0} & 0.00 & 1.01 & 1.65 & 3.30 & 3.07 & \textbf{102.8} \\
+ & Fast-WCS v3 (Homotopy, Ours) & 100.0 & 100.0 & 100.0 & 97.3 & 93.3 & 0.00 & 0.75 & 1.15 & 3.45 & 3.16 & 84.5 \\
+ & Fast-WCS v3 (No 2-Opt Ablation) & 100.0 & 100.0 & 100.0 & 97.3 & 90.7 & 0.00 & 0.75 & 1.30 & 3.45 & 3.37 & 85.5 \\
+ & WL-OA Tree Kernel (Hungarian)~\cite{shervashidze2011weisfeiler} & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & -- & -- & -- & -- & -- & 45.2 \\
+ & Feature-Only Hungarian (Ablation) & 100.0 & 89.3 & 65.3 & 33.3 & 25.3 & -- & -- & -- & -- & -- & 0.8 \\
+ & SciPy FAQ (Topology Only)~\cite{vogelstein2015fast} & 100.0 & 54.7 & 72.0 & 38.7 & 18.7 & -- & -- & -- & -- & -- & 67.4 \\
+ & Yang et al. (RLX1F Baseline)~\cite{yang2018algorithm} & 100.0 & 94.7 & 53.3 & 22.7 & 25.3 & 0.00 & 11246 & 72099 & 88323 & 51628 & 955.0 \\
+\midrule
+\bottomrule
+\end{tabular*}
+\end{table*}

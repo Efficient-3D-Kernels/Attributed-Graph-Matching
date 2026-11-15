@@ -23,6 +23,7 @@ env/
 *.synctex.gz
 *.bbl
 *.blg
+*.abs
 
 # Operating System files
 .DS_Store
