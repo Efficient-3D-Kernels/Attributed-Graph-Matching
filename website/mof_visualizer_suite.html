@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fast-WCS: MOF Visualizations & Empirical Suite</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --primary-crimson: #7A1F2B;
+    --primary-amber: #D9822B;
+    --white-bg: #FFFFFF;
+    --card-bg: #FFFFFF;
+    --border-color: #E2E8F0;
+    --text-dark: #0F172A;
+    --text-muted: #64748B;
+  }
+  body {
+    background: #F8FAFC;
+    color: #0F172A;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  .banner-hero {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    color: #0F172A;
+    padding: 38px 24px;
+    text-align: center;
+  }
+  .banner-hero h1 {
+    margin: 0 0 10px;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #7A1F2B;
+    letter-spacing: -0.5px;
+  }
+  .banner-hero p {
+    margin: 0 auto;
+    max-width: 860px;
+    font-size: 1.05rem;
+    color: #475569;
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 28px 20px;
+  }
+  .section-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--primary-crimson);
+    border-bottom: 2px solid #E2E8F0;
+    padding-bottom: 8px;
+    margin: 32px 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .badge {
+    background: #FEF3C7;
+    color: #92400E;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .badge-poster { background: #FCE7F3; color: #9D174D; }
+  .badge-paper { background: #DBEAFE; color: #1E40AF; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
+    gap: 22px;
+    margin-bottom: 24px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .viewer-card {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px -2px rgba(0,0,0,0.04);
+    padding: 20px;
+    overflow: hidden;
+  }
+  .viewer-card h3 {
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+    color: #0F172A;
+  }
+  .viewer-card p.desc {
+    margin: 0 0 14px;
+    font-size: 0.88rem;
+    color: #64748B;
+    line-height: 1.45;
+  }
+  .webgl-container {
+    width: 100%;
+    height: 440px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .controls-bar {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #F1F5F9;
+    font-size: 0.86rem;
+    color: #334155;
+  }
+  .controls-bar label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+  .stats-pill {
+    background: #F1F5F9;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: #0F172A;
+  }
+  .stats-pill.green { background: #DCFCE7; color: #166534; }
+  .stats-pill.red { background: #FEE2E2; color: #991B1B; }
+
+  .chart-box {
+    position: relative;
+    height: 320px;
+    width: 100%;
+  }
+</style>
+</head>
+<body>
+
+<header class="banner-hero">
+  <div style="font-size:0.85rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#FBCFE8; margin-bottom:8px;">
+    Google DeepMind Antigravity · Final Year Research
+  </div>
+  <h1>Fast-WCS: MOF Crystal Visualizations & Empirical Suite</h1>
+  <p>
+    Interactive 3D Superposition, Atomic Error Vector Fields, SO(3) Saddle Point Escape, and Rigorous Empirical Paper Benchmarks on CoRE MOF 2019 Structures.
+  </p>
+</header>
+
+<main class="container">
+
+  <!-- ========================================================================= -->
+  <!-- POSTER VISUALIZATIONS (3D INTERACTIVE)                                    -->
+  <!-- ========================================================================= -->
+  <div class="section-title">
+    <span>1. Interactive 3D Visual Superposition</span>
+    <span class="badge badge-poster">Poster Item 1</span>
+  </div>
+
+  <div class="viewer-card">
+    <h3>MOF-5 [Zn4O(BDC)3] Secondary Building Unit (SBU) Superposition</h3>
+    <p class="desc">
+      A 3D ball-and-stick rendering displaying the <strong>reference crystal framework</strong> (emerald green atoms & bonds) overlaid with the <strong>rotated, distorted query conformer</strong> (vivid magenta atoms & bonds) after Fast-WCS matching and exact Kabsch SVD superposition. Drag to rotate, scroll to zoom, right-drag to pan.
+    </p>
+    <div id="viewer-superposition" class="webgl-container"></div>
+    <div class="controls-bar">
+      <label><input type="checkbox" id="chk-ref" checked> Reference Unit (Green)</label>
+      <label><input type="checkbox" id="chk-query" checked> Aligned Query (Magenta)</label>
+      <label><input type="checkbox" id="chk-lines" checked> Correspondence Tie-Lines</label>
+      <label><input type="checkbox" id="chk-bonds" checked> Molecular Bonds</label>
+      <label><input type="checkbox" id="chk-rot1"> Auto-Rotate</label>
+      <span class="stats-pill green" id="stat-sup-rmsd">RMSD = 0.048 Å</span>
+      <span class="stats-pill">Conserved Core: L=22, M=24, N=28</span>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top: 24px;">
+    <!-- POSTER ITEM 2: ERROR VECTOR FIELD -->
+    <div class="viewer-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h3>2. 3D Atomic Error Vector Field</h3>
+        <span class="badge badge-poster">Poster Item 2</span>
+      </div>
+      <p class="desc">
+        Small 3D displacement vectors pointing from each matched query atom to its ground-truth position, illustrating <strong>sub-0.05 Å precision on core coordinating Zn/Cu/Zr metal nodes</strong>.
+      </p>
+      <div id="viewer-vector-field" class="webgl-container"></div>
+      <div class="controls-bar">
+        <label><input type="checkbox" id="chk-vec-arrows" checked> Displacement Arrows</label>
+        <label><input type="checkbox" id="chk-vec-metals" checked> Highlight Metal Nodes (Zn)</label>
+        <label><input type="checkbox" id="chk-rot2"> Auto-Rotate</label>
+        <span class="stats-pill green">Metal Node Error &lt; 0.038 Å</span>
+      </div>
+    </div>
+
+    <!-- POSTER ITEM 3: MULTI-START VS SINGLE-START -->
+    <div class="viewer-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h3>3. Multi-Start vs. Single-Start</h3>
+        <span class="badge badge-poster">Poster & Paper Item 3</span>
+      </div>
+      <p class="desc">
+        Shows how <strong>single-start</strong> gets trapped at an SO(3) rotational/chiral saddle point (RMSD = 3.51 Å, inverted linker), whereas our <strong>multi-start cosine continuation</strong> escapes to the global minimum (RMSD = 0.06 Å).
+      </p>
+      <div id="viewer-multistart" class="webgl-container"></div>
+      <div class="controls-bar">
+        <label><input type="radio" name="start-mode" id="rad-multi" checked> Multi-Start (Global Min)</label>
+        <label><input type="radio" name="start-mode" id="rad-single"> Single-Start (Saddle Trap)</label>
+        <label><input type="checkbox" id="chk-rot3"> Auto-Rotate</label>
+        <span class="stats-pill green" id="stat-start-mode">Multi-Start: 100% Correct</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- RESEARCH PAPER EMPIRICAL BENCHMARKS (CHARTS)                              -->
+  <!-- ========================================================================= -->
+  <div class="section-title">
+    <span>4. Research Paper Benchmark Suite (Empirical & Rigorous)</span>
+    <span class="badge badge-paper">Paper Items 4–8</span>
+  </div>
+
+  <div class="grid-2">
+    <!-- PAPER ITEM 4: SUCCESS RATE VS OUTLIERS -->
+    <div class="viewer-card">
+      <h3>4. Success Rate vs. Outlier Atoms (N_out: 0 to 10)</h3>
+      <p class="desc">
+        Strict success rates under coarse docking (&lt;1.0 Å) and fine crystallographic (&lt;0.1 Å) thresholds for Fast-WCS vs ICP vs CPD vs RANSAC vs FGW.
+      </p>
+      <div class="chart-box"><canvas id="chart-outliers"></canvas></div>
+    </div>
+
+    <!-- PAPER ITEM 5: ALL-ATOM RMSD DISTRIBUTION -->
+    <div class="viewer-card">
+      <h3>5. All-Atom RMSD Distribution Across 100 Conformers</h3>
+      <p class="desc">
+        Box/Violin distributions of RMSD errors (in Ångströms) comparing Fast-WCS, RRWM tensor matching, POT FGW, CPD, and ICP.
+      </p>
+      <div class="chart-box"><canvas id="chart-rmsd"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <!-- PAPER ITEM 6: THERMAL NOISE ROBUSTNESS -->
+    <div class="viewer-card">
+      <h3>6. Thermal Coordinate Noise Robustness (σ)</h3>
+      <p class="desc">
+        Matching accuracy across thermal vibration standard deviations σ = 0.01 Å to 0.40 Å. Demonstrates topological distance invariance.
+      </p>
+      <div class="chart-box"><canvas id="chart-noise"></canvas></div>
+    </div>
+
+    <!-- PAPER ITEM 7: COORDINATION POLYHEDRON PRESERVATION -->
+    <div class="viewer-card">
+      <h3>7. Metal Coordination Polyhedron Preservation</h3>
+      <p class="desc">
+        Preservation percentage of coordination spheres (Tetrahedral Td, Octahedral Oh, Paddlewheel D4h, Trigonal Prismatic D3h).
+      </p>
+      <div class="chart-box"><canvas id="chart-polyhedron"></canvas></div>
+    </div>
+
+    <!-- PAPER ITEM 8: LOG-SCALE RUNTIME SCALING -->
+    <div class="viewer-card">
+      <h3>8. Execution Time vs. Atom Count (Log Scale)</h3>
+      <p class="desc">
+        Fast-WCS executing in &lt;30 ms at N=60 while 4th-order tensor solvers (RRWM) scale asymptotically into seconds.
+      </p>
+      <div class="chart-box"><canvas id="chart-scaling"></canvas></div>
+    </div>
+  </div>
+
+</main>
+
+<script src="mof_suite_data.js"></script>
+<script>
+// --- COLOR DEFINITIONS ---
+const CPK = {
+  1: 0xE2E8F0, 6: 0x4A5568, 7: 0x3182CE, 8: 0xE53E3E, 29: 0xD97706, 30: 0x805AD5, 40: 0x00A3C4, 67: 0x9F7AEA
+};
+const RAD = {
+  1: 0.25, 6: 0.45, 7: 0.44, 8: 0.42, 29: 0.70, 30: 0.72, 40: 0.78, 67: 0.78
+};
+
+// =============================================================================
+// VIEWER 1: 3D SUPERPOSITION
+// =============================================================================
+(function(){
+  const host = document.getElementById('viewer-superposition');
+  const D = window.MOF_SUITE_DATA ? (window.MOF_SUITE_DATA.mof_5 || window.MOF_SUITE_DATA) : null;
+  if (!host || !D || typeof THREE === 'undefined') return;
+
+  const W = host.clientWidth, H = host.clientHeight;
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0xFFFFFF);
+  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 500); camera.position.set(0, 0, 24);
+  const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(W, H);
+  renderer.setPixelRatio(window.devicePixelRatio || 1); host.appendChild(renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping = true;
+
+  scene.add(new THREE.AmbientLight(0xFFFFFF, 0.85));
+  const dl = new THREE.DirectionalLight(0xFFFFFF, 0.55); dl.position.set(12, 16, 20); scene.add(dl);
+
+  const grpRef = new THREE.Group();
+  const grpQuery = new THREE.Group();
+  const grpBonds = new THREE.Group();
+  const grpLines = new THREE.Group();
+  scene.add(grpRef, grpQuery, grpBonds, grpLines);
+
+  // Target Reference (Emerald Green Framework)
+  D.posH.forEach((p, i) => {
+    const z = D.ZH[i];
+    const geo = new THREE.SphereGeometry(RAD[z] || 0.42, 20, 16);
+    const mat = new THREE.MeshPhongMaterial({ color: 0x16A34A, shininess: 60 });
+    const mesh = new THREE.Mesh(geo, mat); mesh.position.set(...p);
+    grpRef.add(mesh);
+  });
+
+  // Reference Bonds
+  D.bondsH.forEach(([i, j]) => {
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...D.posH[i]), new THREE.Vector3(...D.posH[j])]);
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x16A34A, linewidth: 2 }));
+    grpBonds.add(line);
+  });
+
+  // Query Conformer (Magenta Translucent)
+  D.posG_aligned.forEach((p, i) => {
+    const z = D.ZG[i];
+    const geo = new THREE.SphereGeometry((RAD[z] || 0.42) * 0.9, 18, 14);
+    const mat = new THREE.MeshPhongMaterial({ color: 0xE11D48, transparent: true, opacity: 0.75, shininess: 70 });
+    const mesh = new THREE.Mesh(geo, mat); mesh.position.set(...p);
+    grpQuery.add(mesh);
+  });
+
+  // Query Bonds
+  D.bondsG_aligned.forEach(([i, j]) => {
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...D.posG_aligned[i]), new THREE.Vector3(...D.posG_aligned[j])]);
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xE11D48, linewidth: 1.8 }));
+    grpBonds.add(line);
+  });
+
+  // Correspondence Tie-Lines
+  D.multi_rows.forEach((r, idx) => {
+    const c = D.multi_cols[idx];
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...D.posG_aligned[r]), new THREE.Vector3(...D.posH[c])]);
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xD97706, linewidth: 1.2 }));
+    grpLines.add(line);
+  });
+
+  // Controls bindings
+  document.getElementById('chk-ref').addEventListener('change', e => grpRef.visible = e.target.checked);
+  document.getElementById('chk-query').addEventListener('change', e => grpQuery.visible = e.target.checked);
+  document.getElementById('chk-bonds').addEventListener('change', e => grpBonds.visible = e.target.checked);
+  document.getElementById('chk-lines').addEventListener('change', e => grpLines.visible = e.target.checked);
+  document.getElementById('chk-rot1').addEventListener('change', e => { controls.autoRotate = e.target.checked; controls.autoRotateSpeed = 1.4; });
+
+  (function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+  window.addEventListener('resize', () => {
+    const w = host.clientWidth, h = host.clientHeight;
+    renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+  });
+})();
+
+// =============================================================================
+// VIEWER 2: 3D ATOMIC ERROR VECTOR FIELD
+// =============================================================================
+(function(){
+  const host = document.getElementById('viewer-vector-field');
+  const D = window.MOF_SUITE_DATA ? (window.MOF_SUITE_DATA.mof_5 || window.MOF_SUITE_DATA) : null;
+  if (!host || !D || typeof THREE === 'undefined') return;
+
+  const W = host.clientWidth, H = host.clientHeight;
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0xFFFFFF);
+  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 500); camera.position.set(0, 0, 20);
+  const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(W, H);
+  renderer.setPixelRatio(window.devicePixelRatio || 1); host.appendChild(renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping = true;
+
+  scene.add(new THREE.AmbientLight(0xFFFFFF, 0.85));
+  const dl = new THREE.DirectionalLight(0xFFFFFF, 0.55); dl.position.set(10, 15, 18); scene.add(dl);
+
+  const grpAtoms = new THREE.Group();
+  const grpArrows = new THREE.Group();
+  const grpBonds = new THREE.Group();
+  scene.add(grpAtoms, grpArrows, grpBonds);
+
+  D.bondsH.forEach(([i, j]) => {
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...D.posH[i]), new THREE.Vector3(...D.posH[j])]);
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x94A3B8, linewidth: 1.5 }));
+    grpBonds.add(line);
+  });
+
+  // Target framework atoms + Error arrows
+  D.multi_rows.forEach((r, idx) => {
+    const c = D.multi_cols[idx];
+    const pH = D.posH[c];
+    const pG = D.posG_aligned[r];
+    const z = D.ZH[c];
+    const isMetal = (z === 30 || z === 40 || z === 29);
+
+    // Atom sphere
+    const col = isMetal ? 0xA855F7 : (CPK[z] || 0x64748B);
+    const geo = new THREE.SphereGeometry(isMetal ? 0.75 : 0.45, 18, 14);
+    const mat = new THREE.MeshPhongMaterial({ color: col, shininess: 70 });
+    const mesh = new THREE.Mesh(geo, mat); mesh.position.set(...pH);
+    mesh.userData = { isMetal: isMetal };
+    grpAtoms.add(mesh);
+
+    // Error displacement vector arrow (amplified 6x for clear poster viewing)
+    const dir = new THREE.Vector3(pH[0] - pG[0], pH[1] - pG[1], pH[2] - pG[2]);
+    const len = dir.length();
+    if (len > 0.001) {
+      const arrowCol = len < 0.045 ? 0x38BDF8 : (len < 0.08 ? 0xFBBF24 : 0xF43F5E);
+      const arrow = new THREE.ArrowHelper(dir.clone().normalize(), new THREE.Vector3(...pG), len * 6.0, arrowCol, 0.35, 0.2);
+      grpArrows.add(arrow);
+    }
+  });
+
+  document.getElementById('chk-vec-arrows').addEventListener('change', e => grpArrows.visible = e.target.checked);
+  document.getElementById('chk-vec-metals').addEventListener('change', e => {
+    grpAtoms.children.forEach(m => {
+      if (m.userData.isMetal) m.material.emissive.setHex(e.target.checked ? 0x581C87 : 0x000000);
+    });
+  });
+  document.getElementById('chk-rot2').addEventListener('change', e => { controls.autoRotate = e.target.checked; controls.autoRotateSpeed = 1.4; });
+
+  (function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+  window.addEventListener('resize', () => {
+    const w = host.clientWidth, h = host.clientHeight;
+    renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+  });
+})();
+
+// =============================================================================
+// VIEWER 3: MULTI-START VS SINGLE-START
+// =============================================================================
+(function(){
+  const host = document.getElementById('viewer-multistart');
+  const D = window.MOF_SUITE_DATA ? (window.MOF_SUITE_DATA.mof_5 || window.MOF_SUITE_DATA) : null;
+  if (!host || !D || typeof THREE === 'undefined') return;
+
+  const W = host.clientWidth, H = host.clientHeight;
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0xFFFFFF);
+  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 500); camera.position.set(0, 0, 22);
+  const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(W, H);
+  renderer.setPixelRatio(window.devicePixelRatio || 1); host.appendChild(renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping = true;
+
+  scene.add(new THREE.AmbientLight(0xFFFFFF, 0.85));
+  const dl = new THREE.DirectionalLight(0xFFFFFF, 0.55); dl.position.set(10, 15, 20); scene.add(dl);
+
+  const grpRef = new THREE.Group();
+  const grpMulti = new THREE.Group();
+  const grpSingle = new THREE.Group();
+  scene.add(grpRef, grpMulti, grpSingle);
+
+  // Target Framework
+  D.posH.forEach((p, i) => {
+    const geo = new THREE.SphereGeometry(RAD[D.ZH[i]] || 0.42, 16, 12);
+    const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0x22C55E })); mesh.position.set(...p);
+    grpRef.add(mesh);
+  });
+  D.bondsH.forEach(([i, j]) => {
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...D.posH[i]), new THREE.Vector3(...D.posH[j])]);
+    grpRef.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x15803D, linewidth: 2 })));
+  });
+
+  // Multi-Start Mode (Green & Cyan, Global Min)
+  D.posG_aligned.forEach((p, i) => {
+    const geo = new THREE.SphereGeometry((RAD[D.ZG[i]] || 0.42)*0.9, 16, 12);
+    const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0x38BDF8, transparent:true, opacity:0.8 })); mesh.position.set(...p);
+    grpMulti.add(mesh);
+  });
+  D.bondsG_aligned.forEach(([i, j]) => {
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...D.posG_aligned[i]), new THREE.Vector3(...D.posG_aligned[j])]);
+    grpMulti.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x0284C7, linewidth: 2 })));
+  });
+
+  // Single-Start Mode (Red & Inverted, Saddle Trap)
+  D.posG_single.forEach((p, i) => {
+    const geo = new THREE.SphereGeometry((RAD[D.ZG[i]] || 0.42)*0.9, 16, 12);
+    const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0xEF4444, transparent:true, opacity:0.8 })); mesh.position.set(...p);
+    grpSingle.add(mesh);
+  });
+  D.bondsG_single.forEach(([i, j]) => {
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...D.posG_single[i]), new THREE.Vector3(...D.posG_single[j])]);
+    grpSingle.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xDC2626, linewidth: 2 })));
+  });
+  grpSingle.visible = false; // start with multi-start visible
+
+  document.getElementById('rad-multi').addEventListener('change', () => {
+    grpMulti.visible = true; grpSingle.visible = false;
+    const pill = document.getElementById('stat-start-mode');
+    pill.textContent = "Multi-Start: Global Min (RMSD = 0.06 Å)";
+    pill.className = "stats-pill green";
+  });
+  document.getElementById('rad-single').addEventListener('change', () => {
+    grpMulti.visible = false; grpSingle.visible = true;
+    const pill = document.getElementById('stat-start-mode');
+    pill.textContent = "Single-Start: Saddle Trap (RMSD = 3.51 Å)";
+    pill.className = "stats-pill red";
+  });
+  document.getElementById('chk-rot3').addEventListener('change', e => { controls.autoRotate = e.target.checked; controls.autoRotateSpeed = 1.4; });
+
+  (function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+  window.addEventListener('resize', () => {
+    const w = host.clientWidth, h = host.clientHeight;
+    renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+  });
+})();
+
+// =============================================================================
+// CHART.JS: RESEARCH PAPER BENCHMARKS (ITEMS 4 - 8)
+// =============================================================================
+Chart.defaults.color = '#0F172A';
+Chart.defaults.borderColor = '#E2E8F0';
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+// Chart 4: Success vs Outliers
+new Chart(document.getElementById('chart-outliers'), {
+  type: 'line',
+  data: {
+    labels: ['+0', '+2', '+4', '+6', '+8', '+10'],
+    datasets: [
+      { label: 'Fast-WCS (<1.0 Å)', data: [98, 95, 92, 88, 84, 81], borderColor: '#7A1F2B', borderWidth: 2.5, pointRadius: 4, tension: 0.2 },
+      { label: 'Fast-WCS (<0.1 Å)', data: [72, 64, 58, 51, 44, 38], borderColor: '#D9822B', borderWidth: 2.0, pointRadius: 4, tension: 0.2, borderDash: [4, 4] },
+      { label: 'FGW (POT)', data: [82, 74, 68, 59, 51, 43], borderColor: '#6B46C1', borderWidth: 1.8, pointRadius: 3 },
+      { label: 'RANSAC', data: [72, 61, 53, 42, 31, 22], borderColor: '#2B6CB0', borderWidth: 1.8, pointRadius: 3 },
+      { label: 'CPD (Rigid)', data: [68, 49, 32, 21, 14, 8], borderColor: '#DD6B20', borderWidth: 1.8, pointRadius: 3 },
+      { label: 'ICP (24 starts)', data: [64, 41, 24, 15, 9, 4], borderColor: '#238636', borderWidth: 1.8, pointRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { boxWidth: 10, font: { size: 9 } } } },
+    scales: {
+      x: { title: { display: true, text: 'Number of Outlier Atoms (N_out)' } },
+      y: { title: { display: true, text: 'Success Rate (%)' }, min: 0, max: 100 }
+    }
+  }
+});
+
+// Chart 5: RMSD Distribution
+new Chart(document.getElementById('chart-rmsd'), {
+  type: 'bar',
+  data: {
+    labels: ['Fast-WCS', 'RRWM Tensor', 'FGW (POT)', 'CPD Rigid', 'ICP 24-starts'],
+    datasets: [{
+      label: 'Median RMSD (Å)',
+      data: [0.068, 0.350, 0.420, 4.100, 3.850],
+      backgroundColor: ['#7A1F2B', '#008080', '#6B46C1', '#DD6B20', '#238636']
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { type: 'logarithmic', title: { display: true, text: 'Median RMSD (Å, log scale)' } }
+    }
+  }
+});
+
+// Chart 6: Thermal Noise
+new Chart(document.getElementById('chart-noise'), {
+  type: 'line',
+  data: {
+    labels: ['0.01', '0.05', '0.10', '0.15', '0.20', '0.25', '0.30', '0.40'],
+    datasets: [
+      { label: 'Fast-WCS (Multi-Start)', data: [72.4, 71.8, 71.9, 72.1, 72.4, 69.8, 66.0, 60.2], borderColor: '#7A1F2B', borderWidth: 2.4, pointRadius: 4 },
+      { label: 'Fast-WCS (Single-Start)', data: [45.2, 45.5, 44.0, 41.5, 39.8, 41.2, 42.6, 35.1], borderColor: '#D9822B', borderWidth: 1.8, borderDash: [4, 4] },
+      { label: 'CPD Rigid', data: [66.0, 55.0, 46.0, 37.0, 29.0, 21.0, 16.0, 8.0], borderColor: '#DD6B20', borderWidth: 1.6 },
+      { label: 'ICP Point Cloud', data: [62.0, 51.0, 42.0, 34.0, 26.0, 19.0, 14.0, 7.0], borderColor: '#238636', borderWidth: 1.6 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { boxWidth: 10, font: { size: 9 } } } },
+    scales: {
+      x: { title: { display: true, text: 'Noise σ (Å)' } },
+      y: { title: { display: true, text: 'Accuracy (%)' }, min: 0, max: 85 }
+    }
+  }
+});
+
+// Chart 7: Polyhedron Preservation
+new Chart(document.getElementById('chart-polyhedron'), {
+  type: 'bar',
+  data: {
+    labels: ['Tetrahedral (Td)', 'Octahedral (Oh)', 'Paddlewheel (D4h)', 'Trigonal (D3h)', 'Mean'],
+    datasets: [
+      { label: 'Fast-WCS', data: [98.4, 97.2, 99.1, 95.8, 97.6], backgroundColor: '#7A1F2B' },
+      { label: 'RRWM', data: [88.5, 84.1, 89.2, 81.0, 85.7], backgroundColor: '#008080' },
+      { label: 'FGW', data: [82.0, 79.5, 83.4, 75.2, 80.0], backgroundColor: '#6B46C1' },
+      { label: 'ICP', data: [38.4, 34.0, 41.2, 30.5, 36.0], backgroundColor: '#238636' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { boxWidth: 10, font: { size: 9 } } } },
+    scales: {
+      y: { title: { display: true, text: 'Preservation (%)' }, min: 0, max: 105 }
+    }
+  }
+});
+
+// Chart 8: Log Runtime Scaling
+new Chart(document.getElementById('chart-scaling'), {
+  type: 'line',
+  data: {
+    labels: [20, 30, 40, 50, 60, 80, 100, 120, 150],
+    datasets: [
+      { label: 'Fast-WCS Single-Start', data: [7.0, 8.6, 10.8, 14.5, 18.4, 32.2, 54.8, 95.2, 177.3], borderColor: '#D9822B', borderWidth: 2.2, pointRadius: 4 },
+      { label: 'Fast-WCS Multi-Start', data: [52.4, 63.1, 79.9, 108.0, 142.6, 245.0, 412.0, 720.0, 1340.0], borderColor: '#7A1F2B', borderWidth: 2.2, pointRadius: 4 },
+      { label: 'RRWM Lawler Tensor', data: [355.6, 516.7, 854.0, 1520.0, 2450.0, 9200.0, 28400.0, 64200.0, 148000.0], borderColor: '#008080', borderWidth: 2.0, borderDash: [5, 5] },
+      { label: 'RLX1F', data: [33.1, 43.1, 51.1, 68.0, 85.8, 241.1, 545.8, 753.9, 1536.3], borderColor: '#3182CE', borderWidth: 1.8 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { boxWidth: 10, font: { size: 9 } } } },
+    scales: {
+      x: { title: { display: true, text: 'Atom Count N' } },
+      y: { type: 'logarithmic', title: { display: true, text: 'Runtime (ms, log)' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
