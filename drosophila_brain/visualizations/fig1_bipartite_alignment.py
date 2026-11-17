@@ -38,7 +38,7 @@ COL_B_MATCH = "#8E1638"
 COL_B_UNMATCH = "#D4909A"
 
 COL_EDGE = "#2A7D4F"
-BG_COLOR = "#F3F1EB"
+BG_COLOR = "#FFFFFF"
 
 # ── Load data ─────────────────────────────────────────────────────────
 
